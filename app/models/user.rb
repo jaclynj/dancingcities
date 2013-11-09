@@ -6,7 +6,7 @@ class User < ActiveRecord::Base
     create! do |user|
       user.provider = auth["provider"] #twitter
       user.uid = auth["uid"] #their user ID
-      # user.name = auth["user_info"]["name"] #their name on twitter
+      user.name = auth["info"]["name"] #their name on twitter
     end
   end
 
