@@ -103,6 +103,7 @@ Dancing Cities is a beautiful way to visualize and interact with a city as it mo
 - delete user messages
 - change coordinates of objects that generate
 - Be able to log out
+
 ######other possible features
 - add elevation data to generating shapes
 - As a player, I would like to visit other cities
