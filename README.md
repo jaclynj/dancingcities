@@ -1,7 +1,3 @@
-dancingcities
-=============
-http://pure-garden-5945.herokuapp.com
-
 #Dancing Cities
 
 Dancing Cities is a beautiful way to visualize and interact with a city as it moves to music. The tone is surreal and immersive and the user is open to explore this virtual world however he/she wants, and see how it connects & represents the real city. The user has the chance to leave a personal message in the virtual city, leaving an imprint for all other visitors to see.
