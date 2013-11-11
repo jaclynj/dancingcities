@@ -1,9 +1,50 @@
 <!-- this is a placeholder for the root, to test user authentication. you can comment this all out or delete when the code for our app is in place -->
 
-<h1> Hello World</h1>
-<% if current_user %>
-  Welcome <%= current_user.name %>
-  <%= link_to "Sign Out", signout_path %>
-<% else %>
-  <%= link_to "Sign In with Twitter", "/auth/twitter" %>
-<% end %>
+<!-- <!-- <h1> Hello World</h1>
+ # <%# if current_user %>
+  Welcome <%#=# current_user.name %>
+  <%#= link_to "Sign Out", signout_path %>
+<%# else %>
+  <%#= link_to "Sign In with Twitter", "/auth/twitter" %>
+<%# end %>
+ -->
+
+ <!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+  <link rel="stylesheet" href="base.css">
+</head>
+<body>
+  <div id="blocker">
+
+    <div id="instructions">
+      <span style="font-size:40px">Click to play</span>
+      <br />
+      (up, down, right, left = Move, SPACE = Jump, MOUSE = Look around)
+    </div>
+
+  </div>
+  <div id="graffiti-form">
+    Leave a message for the world. Hit "Enter" when you're finished.
+    <p id="user-input"></p>
+  </div>
+  <div id="ThreeJS" style="position: absolute; left:0px; top:0px"></div>
+</body>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" ></script>
+<script src="https://rawgithub.com/mrdoob/three.js/master/build/three.js"></script>
+<script src="helper_libraries/physi.js"></script>
+<script src="helper_libraries/pointerlockcontrols2.js"></script>
+<script src="helper_libraries/helvetiker_regular.typeface.js"></script>
+<script src="helper_libraries/shaderparticles.min.js"></script>
+<script src="helper_libraries/detector.js"></script>
+<script src="helper_libraries/fullscreen.js"></script>
+<script src="helper_libraries/keyboardstate.js"></script>
+<script src="helper_libraries/orbitcontrols.js"></script>
+<script src="helper_libraries/windowresize.js"></script>
+<script src="helper_libraries/stats.min.js"></script>
+<script src="http://connect.soundcloud.com/sdk.js"></script>
+<!-- <script src="pointerlockcontrols.js"></script> -->
+<script src="main.js"></script>
+</html>
