@@ -63,6 +63,9 @@ var textCount = 0;
 var sendAjax = true;
 var textContents = [];
 
+// CENTRAL PARK VARIABLES
+var dancingGrass = [];
+
 // GOOGLE COORDINATES
 coordinates = [[40.740084,-73.990115], [40.736698,-73.990164], [40.736706,-74.001249], [40.748379,-74.000112], [40.749955,-73.988549], [40.754734,-73.987922], [40.754734,-73.987922], [40.758635,-73.977452], [40.76538,-73.979727], [40.768029,-73.981937], [40.763771,-73.976368], [40.761691,-73.970693], [40.755953,-73.972816], [40.752154,-73.977782], [40.745111,-73.984687], [40.737925,-73.981683], [40.740835,-73.99185] ];
 
@@ -191,6 +194,13 @@ renderer.setSize( window.innerWidth, window.innerHeight );
 // renderer.setClearColor( 0x000000 );
 container.appendChild( renderer.domElement );
 
+// STATS
+stats = new Stats();
+stats.domElement.style.position = 'absolute';
+stats.domElement.style.bottom = '0px';
+stats.domElement.style.zIndex = 100;
+container.appendChild( stats.domElement );
+
 // CHECK FOR WINDOW RESIZE
 window.addEventListener( 'resize', onWindowResize, false );
 
@@ -244,6 +254,7 @@ addMirrorCube( 0, 400 );
 dynamicBuildings( coordinates );
 // words();
 graffitiWall();
+centralPark();
 
 
 }
@@ -254,6 +265,7 @@ function animate() {
 
   controlCheck();
   detectCollision();
+  stats.update();
   render();
 
 }
@@ -578,12 +590,40 @@ function updateWall() {
 
 // GEOMETRY FUNCTIONS
 
+function centralPark() {
+  var xCoord = 1500;
+  var zCoord = -2000;
+  for( i = 0; i < 50; i ++ ) {
+    for( j = 0; j < 50; j ++) {
+      var geometry = new THREE.SphereGeometry( 50, 8, 8 );
+      var material = new THREE.MeshPhongMaterial( {
+        specular: 0x222222,
+        color: 0x111111,
+        emissive: new THREE.Color().setHSL( Math.random() * 0.2 + 0.2, 0.9, Math.random() * 0.25 + 0.7 ),
+        shininess: 100,
+        overdraw: true
+      });
+      var sphere = new THREE.Mesh( geometry, material );
+      sphere.position.y = 1;
+      sphere.position.x = xCoord;
+      sphere.position.z = zCoord;
+      // sphere.receiveShadow = true;
+      // sphere.castShadow = true;
+      // scene.add( sphere );
+      dancingGrass.push( sphere );
+      xCoord += 100;
+    }
+    zCoord -= 100;
+  }
+  console.log("grass");
+}
+
 function graffitiWall() {
   var geometry = new THREE.CubeGeometry( 800, 500, 10, 10 );
   var material = new THREE.MeshLambertMaterial( {
     specular: 0x222222,
     color: 0x000000,
-    emissive: new THREE.Color().setHSL( Math.random() * 0.2 + 0.8, 0.4, Math.random() * 0.25 + 0.2 ),
+    emissive: new THREE.Color().setHSL( Math.random() * 0.2 + 0.8, 0.3, Math.random() * 0.25 + 0.2 ),
     overdraw: true
   } );
   wall = new Physijs.BoxMesh( geometry, material );
