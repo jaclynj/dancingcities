@@ -10,4 +10,27 @@ class SessionsController < ApplicationController
     redirect_to root_url, :notice => "Signed in!"
   end
 
+  def destroy
+    session[:user_id] = nil
+    redirect_to root_url, :notice => "Signed out!"
+  end
+
+  def checker
+    #AJAX request to '/checker.json' will render { session: "true"} or {session: "false"}
+    @session = session[:user_id]
+    respond_to do |format|
+      if @session.nil?
+        format.json { render :json => {:session => 'false'}}
+      else
+        format.json { render :json => {:session => 'true'}}
+      end
+    end
+  end
+
+  def current_user
+    @user = User.find_by_id(session[:user_id])
+    respond_to do  |format|
+      format.json { render :json => @user}
+    end
+  end
 end
