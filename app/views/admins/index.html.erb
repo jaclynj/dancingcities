@@ -1,0 +1,8 @@
+<h1>Dancing Cities Administrator Control Panel</h1>
+<% if current_admin %>
+  Logged in as: <%= current_admin.admin_name %><br>
+  <%= link_to "Add New Administrator", new_admin_path %><br><br>
+<%= link_to "Sign Out", "/admin_logout" %>
+<% else %>
+  <%= link_to "Login As Admin", "/admin_login" %>
+<% end %>

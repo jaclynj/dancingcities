@@ -1,0 +1,10 @@
+<h1>Admin Log In</h1>
+
+<%= form_tag admin_sessions_path do %>
+    <%=label_tag :admin_name %>
+  <%=text_field_tag :admin_name, params[:admin_name] %></br>
+  <%=label_tag :password %>
+  <%=password_field_tag :password %></br>
+  <%=submit_tag%>
+<% end %>
+

@@ -1,0 +1,30 @@
+<% #TODO Create first admin, then uncomment this code %>
+<!--  if current_admin  -->
+  <h1>Add Admin</h1>
+
+  <%= form_for @admin do |f| %>
+    <% if @admin.errors.any? %>
+    <div class = "error_messages">
+      <h2>Invalid info</h2>
+      <ul>
+        <% for message in @user.errors.full_messages %>
+        <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+    <% end %>
+      <%=f.label :admin_name %>
+      <%=f.text_field :admin_name %></br>
+      <%=f.label :password %>
+      <%=f.password_field :password %></br>
+      <%=f.label :password_confirmation %>
+      <%=f.password_field :password_confirmation %><br>
+      <%=f.submit%>
+      <%end%>
+
+<% #TODO Create first admin, then uncomment this code %>
+<!--
+This makes it so that only Admins can add admins
+else
+      You must log in as an administrator.  link_to "Login As Admin", "/admin_login"
+end -->
