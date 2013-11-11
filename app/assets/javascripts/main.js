@@ -251,7 +251,7 @@ addBigSphere( 0, 0 );
 addMirrorSphere( 500, 400 );
 addMirrorCube( 0, 400 );
 
-dynamicBuildings( coordinates );
+optimizedDynamicBuildings( coordinates );
 // words();
 graffitiWall();
 centralPark();
@@ -791,18 +791,25 @@ function optimizedDynamicBuildings( locationPoints ) {
     buildingMesh.position.x = xCoord;
     buildingMesh.position.y = 0;
     buildingMesh.position.z = zCoord;
-    var geometry = buildingMesh.geometry;
-    for( var j = 0; j < geometry.faces.length; j++ ) {
-      var face = geometry.faces[j];
-      face.vertexColors[ 0 ] = new THREE.Color().setHSL( Math.random() * 0.9 + 0.5, 0.9, Math.random() * 0.25 + 0.9 );
-      face.vertexColors[ 1 ] = new THREE.Color().setHSL( Math.random() * 0.9 + 0.5, 0.9, Math.random() * 0.25 + 0.9 );
-      face.vertexColors[ 2 ] = new THREE.Color().setHSL( Math.random() * 0.9 + 0.5, 0.9, Math.random() * 0.25 + 0.9 );
-    }
     allObjects.push( buildingMesh );
     movingObjects.push( buildingMesh );
+    var geometry = buildingMesh.geometry;
+
+    var color1 = new THREE.Color().setHSL( Math.random() * 0.9 + 0.5, 0.9, Math.random() * 0.25 + 0.9 );
+    var color2 = new THREE.Color().setHSL( Math.random() * 0.9 + 0.5, 0.9, Math.random() * 0.25 + 0.9 );
+    var color3 = new THREE.Color().setHSL( Math.random() * 0.9 + 0.5, 0.9, Math.random() * 0.25 + 0.9 );
+    for( var j = 0; j < geometry.faces.length; j++ ) {
+      geometry.faces[j].vertexColors = [ color1, color2, color3, color1 ];
+    }
+    // buildingMesh.material = colorMaterial;
     THREE.GeometryUtils.merge( buildingGeometry, buildingMesh );
   }
-  scene.add( buildingGeometry );
+  // debugger;
+  var basicMaterial = new THREE.MeshLambertMaterial({
+    vertexColors: THREE.VertexColors
+  });
+  var allBuildingMesh = new THREE.Mesh( buildingGeometry, basicMaterial );
+  scene.add( allBuildingMesh );
 }
 
 function addCube( x, y, z ) {
