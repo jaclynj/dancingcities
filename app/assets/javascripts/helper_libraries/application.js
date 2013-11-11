@@ -12,6 +12,4 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require helper_libraries/three
-//= require_tree ./helper_libraries
-//
+//= require_tree .

@@ -72,7 +72,7 @@ var xray;
 var zray;
 
 // PHYSIJS SETUP
-Physijs.scripts.worker = 'physijs_worker.js';
+Physijs.scripts.worker = 'assets/helper_libraries/physijs_worker.js';
 Physijs.scripts.ammo = 'ammo.js';
 
 var blocker = document.getElementById( 'blocker' );
@@ -600,7 +600,7 @@ scene.add( mesh );
 
 function initParticles() {
   particleGroup = new ShaderParticleGroup({
-    texture: THREE.ImageUtils.loadTexture('images/particle.png'),
+    texture: THREE.ImageUtils.loadTexture('assets/particle.png'),
     maxAge: 2,
     blending: THREE.AdditiveBlending
   });

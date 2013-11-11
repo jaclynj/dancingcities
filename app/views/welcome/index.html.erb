@@ -7,14 +7,16 @@
 <%# else %>
   <%#= link_to "Sign In with Twitter", "/auth/twitter" %>
 <%# end %>
- -->
+-->
 
- <!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
+  <script src="http://connect.soundcloud.com/sdk.js"></script>
+
   <meta charset="UTF-8">
   <title></title>
-  <link rel="stylesheet" href="base.css">
+  <!-- <link rel="stylesheet" href="base.css"> -->
 </head>
 <body>
   <div id="blocker">
@@ -32,9 +34,10 @@
   </div>
   <div id="ThreeJS" style="position: absolute; left:0px; top:0px"></div>
 </body>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" ></script>
-<script src="https://rawgithub.com/mrdoob/three.js/master/build/three.js"></script>
-<script src="helper_libraries/physi.js"></script>
+
+<%= javascript_include_tag "main.js" %>
+
+<!-- <script src="helper_libraries/physi.js"></script>
 <script src="helper_libraries/pointerlockcontrols2.js"></script>
 <script src="helper_libraries/helvetiker_regular.typeface.js"></script>
 <script src="helper_libraries/shaderparticles.min.js"></script>
@@ -43,8 +46,7 @@
 <script src="helper_libraries/keyboardstate.js"></script>
 <script src="helper_libraries/orbitcontrols.js"></script>
 <script src="helper_libraries/windowresize.js"></script>
-<script src="helper_libraries/stats.min.js"></script>
-<script src="http://connect.soundcloud.com/sdk.js"></script>
+<script src="helper_libraries/stats.min.js"></script> -->
 <!-- <script src="pointerlockcontrols.js"></script> -->
-<script src="main.js"></script>
-</html>
+
+  </html>
