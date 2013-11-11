@@ -15,4 +15,16 @@ class SessionsController < ApplicationController
     redirect_to root_url, :notice => "Signed out!"
   end
 
+  def checker
+    #GET '/checker.json' will render { session: "true"} or {session: "false"}
+    @session = session[:user_id]
+    respond_to do |format|
+      if @session.nil?
+        format.json { render :json => {:session => 'false'}}
+      else
+        format.json { render :json => {:session => 'true'}}
+      end
+    end
+  end
+
 end
