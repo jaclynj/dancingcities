@@ -16,7 +16,7 @@ class SessionsController < ApplicationController
   end
 
   def checker
-    #GET '/checker.json' will render { session: "true"} or {session: "false"}
+    #AJAX request to '/checker.json' will render { session: "true"} or {session: "false"}
     @session = session[:user_id]
     respond_to do |format|
       if @session.nil?
@@ -27,4 +27,10 @@ class SessionsController < ApplicationController
     end
   end
 
+  def current_user
+    @user = User.find_by_id(session[:user_id])
+    respond_to do  |format|
+      format.json { render :json => @user}
+    end
+  end
 end
