@@ -778,6 +778,33 @@ function dynamicBuildings( locationPoints ) {
   }
 }
 
+function optimizedDynamicBuildings( locationPoints ) {
+  var geometry = new THREE.CubeGeometry( 50, 100, 50, 1, 1 );
+  var buildingMesh = new THREE.Mesh( geometry );
+  var buildingGeometry = new THREE.Geometry();
+
+  for( var i = 0; i < locationPoints.length; i++ ) {
+    var lat = locationPoints[i][0];
+    var lng = locationPoints[i][1];
+    var xCoord = ( ( lat - 40 ) * 10 ) + Math.floor( Math.random() * 1000 ) ;
+    var zCoord = ( ( lng - 70 ) / Math.round( Math.random() * 10 ) ) + Math.floor( Math.random() * 1000 );
+    buildingMesh.position.x = xCoord;
+    buildingMesh.position.y = 0;
+    buildingMesh.position.z = zCoord;
+    var geometry = buildingMesh.geometry;
+    for( var j = 0; j < geometry.faces.length; j++ ) {
+      var face = geometry.faces[j];
+      face.vertexColors[ 0 ] = new THREE.Color().setHSL( Math.random() * 0.9 + 0.5, 0.9, Math.random() * 0.25 + 0.9 );
+      face.vertexColors[ 1 ] = new THREE.Color().setHSL( Math.random() * 0.9 + 0.5, 0.9, Math.random() * 0.25 + 0.9 );
+      face.vertexColors[ 2 ] = new THREE.Color().setHSL( Math.random() * 0.9 + 0.5, 0.9, Math.random() * 0.25 + 0.9 );
+    }
+    allObjects.push( buildingMesh );
+    movingObjects.push( buildingMesh );
+    THREE.GeometryUtils.merge( buildingGeometry, buildingMesh );
+  }
+  scene.add( buildingGeometry );
+}
+
 function addCube( x, y, z ) {
   var geometry = new THREE.CubeGeometry( 50, 100, 50, 1, 1 );
   // var material = new THREE.MeshPhongMaterial();
