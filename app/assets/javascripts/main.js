@@ -242,6 +242,7 @@ dynamicBuildings( coordinates );
 // words();
 graffitiWall();
 
+
 }
 
 function animate() {
@@ -250,6 +251,7 @@ function animate() {
 
   controlCheck();
   detectCollision();
+  updateWall();
   render();
 
 }
@@ -359,23 +361,28 @@ function unlockAllDirection(){
 
 
 function leaveAMessage(e) {
-    thisPress = Date.now();
-    e.preventDefault();
+  thisPress = Date.now();
+  e.preventDefault();
   var keycode = (e.keyCode ? e.keyCode : e.which );
   if( keycode == '13' ) {
     messageLeft = true;
     // $( '#graffiti-form' ).css( "display", "none" );
     $( '#graffiti-form' ).fadeOut(400);
     $( document.body ).off( "keypress", leaveAMessage );
+    $.ajax({
+      type: "POST",
+      data: {message: {message: userMessage}},
+      url: '/messages.json'
+    });
   }
   else {
     c = String.fromCharCode( e.which );
-    if( (thisPress - lastPress) > 1000 ) {
-    userMessage += c;
-    $( '#user-input').append(c).fadeIn(200);
-    console.log(userMessage);
-    lastPress = thisPress;
-  }
+    if( (thisPress - lastPress) > 100 ) {
+      userMessage += c;
+      $( '#user-input').append(c).fadeIn(200);
+      console.log(userMessage);
+      lastPress = thisPress;
+    }
 // record each keystroke as part of a variable, message
 }
 }
@@ -495,7 +502,6 @@ function fallingWords() {
   }
 }
 
-
 function takeMirrorSnapshot() {
   mirrorCube.visible = false;
   mirrorCubeCamera.updateCubeMap( renderer, scene );
@@ -511,6 +517,40 @@ function updateWeather( temp ) {
 
   }
 
+}
+
+function updateWall() {
+ $.ajax({
+  type: "GET",
+  url: '/messages.json'
+}).done(function(data) {
+  for( var i = 0; i < data.length; i ++ ) {
+    var newCanvas = document.createElement( 'canvas' );
+    var newContext = newCanvas.getContext( '2d' );
+    newContext.font = "Bold 20px Arial";
+    newContext.fillStyle = "rgba(255, 255, 255, 0.8)";
+    var message = data[i].message;
+    newContext.fillText( message, 0, 50 );
+
+    var newTexture = new THREE.Texture( newCanvas );
+    newTexture.needsUpdate = true;
+
+    var newMaterial = new THREE.MeshBasicMaterial( {
+      map: newTexture,
+      side: THREE.DoubleSide
+    });
+    newMaterial.transparent = true;
+    var newGeometry = new THREE.PlaneGeometry( newCanvas.width, newCanvas.height );
+    newGeometry.applyMatrix( new THREE.Matrix4().makeRotationY( - Math.PI) );
+    var newMesh = new THREE.Mesh(
+      newGeometry, newMaterial );
+
+    newMesh.position.x = 900 +  ( Math.random() * 50 );
+    newMesh.position.z = 1450;
+    newMesh.position.y = ( Math.random() * 50 ) + ( Math.random() * 100 );
+    scene.add( newMesh );
+  }
+});
 }
 
 
