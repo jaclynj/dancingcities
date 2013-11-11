@@ -591,7 +591,7 @@ function updateWall() {
 // GEOMETRY FUNCTIONS
 
 function centralPark() {
-  var xCoord = 500;
+  var xCoord = -1000;
   var zCoord = -500;
   var centralParkGeometry = new THREE.Geometry();
   var geometry = new THREE.SphereGeometry( 50, 8, 8 );
@@ -611,14 +611,17 @@ function centralPark() {
       // sphere.receiveShadow = true;
       // sphere.castShadow = true;
       dancingGrass.push( sphere );
+      allObjects.push( sphere );
       xCoord += 100;
       THREE.GeometryUtils.merge( centralParkGeometry, sphere );
     }
-    zCoord -= 100;
+    zCoord += 100;
+    xCoord = -1000;
   }
   console.log("grass");
   var centralParkMesh = new THREE.Mesh( centralParkGeometry, material );
   scene.add( centralParkMesh );
+  allObjects.push( centralParkMesh );
 }
 
 function graffitiWall() {
@@ -632,7 +635,7 @@ function graffitiWall() {
   wall = new Physijs.BoxMesh( geometry, material );
   wall.position.x = 1000;
   wall.position.y = 0;
-  wall.position.z = 1500;
+  wall.position.z = 1000;
   scene.add( wall );
   allObjects.push( wall );
   console.log( "wall" );
@@ -680,19 +683,19 @@ scene.add( mesh );
 
   // SQUARE PLANE GEOMETRY
   var geometry = new THREE.Geometry();
-  geometry.vertices.push(new THREE.Vector3( - 500, 0, 0 ) );
-  geometry.vertices.push(new THREE.Vector3( 500, 0, 0 ) );
+  geometry.vertices.push(new THREE.Vector3( 1000, 0, 0 ) );
+  geometry.vertices.push(new THREE.Vector3( -1000, 0, 0 ) );
 
   linesMaterial = new THREE.LineBasicMaterial( { color: 0x787878, opacity: 0.2, linewidth: 0.1 } );
 
   for ( var i = 0; i <= 200; i ++ ) {
 
     var line = new THREE.Line( geometry, linesMaterial );
-    line.position.z = ( i * 50 ) - 2000;
+    line.position.z = ( i * 50 ) - 1000;
     scene.add( line );
 
     var line = new THREE.Line( geometry, linesMaterial );
-    line.position.x = ( i * 50 ) - 2000;
+    line.position.x = ( i * 50 ) - 1000;
     line.rotation.y = 90 * Math.PI / 180;
     scene.add( line );
   }
