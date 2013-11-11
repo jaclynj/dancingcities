@@ -15,6 +15,8 @@
     alert("Web Audio API is not supported in this browser");
   }
 
+  // variables for loadAudioRequest()
+
   var source, sourceJs;
   var analyser;
   var buffer;
@@ -89,7 +91,7 @@ function init()
   var ambientLight = new THREE.AmbientLight(0xffffff);
   scene.add(ambientLight);
 
-  f
+
   // FLOOR
   // var floorTexture = new THREE.ImageUtils.loadTexture( 'images/checkerboard.jpg' );
   // floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;

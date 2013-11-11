@@ -7,14 +7,14 @@ Dancing Cities is a beautiful way to visualize and interact with a city as it mo
 
 ###APIs:
 
-- GoogleMaps API - provides latitude and longitude coordinates where buildings will be generate. 
+- GoogleMaps API - provides latitude and longitude coordinates where buildings will be generate.
 - Twitter API - for authentication and for finding location-based tweets
 - SoundCloud API - hosts the streaming audio
 - WebAudio API - uses the soundcloud track to control the music, and provides array of data. The array of data is used to move the shapes.
 
 ###Languages/Librarys:
 - Ruby: Rails
-- JavaScript: ThreeJS(built on WEBGL), ShaderParticlesJS(also built on WebGL), AJAX & jQuery
+- JavaScript: ThreeJS (library for WebGL), ShaderParticles (helper library for ThreeJS), PhysiJS (Physics library for ThreeJS using Ammo), AmmoJS (Physics library) AJAX & jQuery
 
 ## Data Models
 - Users
@@ -52,7 +52,7 @@ Dancing Cities is a beautiful way to visualize and interact with a city as it mo
 ###User Stories
 #####As A non-logged in User:
 
-- I want to see a page that tells me what the game is, what the controls are, and what logging-in does("log in with twitter  to personalize your experience"). 
+- I want to see a page that tells me what the game is, what the controls are, and what logging-in does("log in with twitter  to personalize your experience").
 - On this page I want to see a button that will log me in to twitter, and a button that will allow me to play without logging in.
 
 #####As a non-logged in User who clicked 'log in':
@@ -68,7 +68,7 @@ Dancing Cities is a beautiful way to visualize and interact with a city as it mo
 
 - hear music
 - see objects dancing to the music
-- move using arrow keys 
+- move using arrow keys
 - jump (on objects)
 - see twitter messages based on location(twitter messages from people in that area of the city)
 
