@@ -251,7 +251,7 @@ addBigSphere( 0, 0 );
 addMirrorSphere( 500, 400 );
 addMirrorCube( 0, 400 );
 
-dynamicBuildings( coordinates );
+optimizedDynamicBuildings( coordinates );
 // words();
 graffitiWall();
 centralPark();
@@ -591,8 +591,8 @@ function updateWall() {
 // GEOMETRY FUNCTIONS
 
 function centralPark() {
-  var xCoord = 1500;
-  var zCoord = -2000;
+  var xCoord = 500;
+  var zCoord = -500;
   var centralParkGeometry = new THREE.Geometry();
   var geometry = new THREE.SphereGeometry( 50, 8, 8 );
   var material = new THREE.MeshPhongMaterial( {
@@ -603,8 +603,8 @@ function centralPark() {
     overdraw: true
   });
   var sphere = new THREE.Mesh( geometry );
-  for( i = 0; i < 50; i ++ ) {
-    for( j = 0; j < 50; j ++) {
+  for( i = 0; i < 10; i ++ ) {
+    for( j = 0; j < 10; j ++) {
       sphere.position.y = 1;
       sphere.position.x = xCoord;
       sphere.position.z = zCoord;
@@ -640,7 +640,7 @@ function graffitiWall() {
 
 function generateFloor() {
   // BASIC PLANE GEOMETRY
-  var geometry = new THREE.PlaneGeometry( 4000, 4000, 200, 200 );
+  var geometry = new THREE.PlaneGeometry( 2000, 2000, 200, 200 );
   geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2) );
 
 
@@ -776,6 +776,41 @@ function dynamicBuildings( locationPoints ) {
     console.log(xCoord);
     console.log(zCoord);
   }
+}
+
+function optimizedDynamicBuildings( locationPoints ) {
+  var geometry = new THREE.CubeGeometry( 50, 100, 50, 1, 1 );
+  var buildingMesh = new THREE.Mesh( geometry );
+  var buildingGeometry = new THREE.Geometry();
+
+  for( var i = 0; i < locationPoints.length; i++ ) {
+    var lat = locationPoints[i][0];
+    var lng = locationPoints[i][1];
+    var xCoord = ( ( lat - 40 ) * 10 ) + Math.floor( Math.random() * 1000 ) ;
+    var zCoord = ( ( lng - 70 ) / Math.round( Math.random() * 10 ) ) + Math.floor( Math.random() * 1000 );
+    buildingMesh.position.x = xCoord;
+    buildingMesh.position.y = 0;
+    buildingMesh.position.z = zCoord;
+    allObjects.push( buildingMesh );
+    movingObjects.push( buildingMesh );
+
+    var geometry = buildingMesh.geometry;
+
+    var color1 = new THREE.Color().setHSL( Math.random() * 0.9 + 0.5, 0.9, Math.random() * 0.25 + 0.9 );
+    var color2 = new THREE.Color().setHSL( Math.random() * 0.9 + 0.5, 0.9, Math.random() * 0.25 + 0.9 );
+    var color3 = new THREE.Color().setHSL( Math.random() * 0.9 + 0.5, 0.9, Math.random() * 0.25 + 0.9 );
+    for( var j = 0; j < geometry.faces.length; j++ ) {
+      geometry.faces[j].vertexColors = [ color1, color2, color3, color1 ];
+    }
+    // buildingMesh.material = colorMaterial;
+    THREE.GeometryUtils.merge( buildingGeometry, buildingMesh );
+  }
+  // debugger;
+  var basicMaterial = new THREE.MeshLambertMaterial({
+    vertexColors: THREE.VertexColors
+  });
+  var allBuildingMesh = new THREE.Mesh( buildingGeometry, basicMaterial );
+  scene.add( allBuildingMesh );
 }
 
 function addCube( x, y, z ) {
