@@ -1,0 +1,17 @@
+<h1>Dancing Cities Administrator Control Panel</h1>
+<% if current_admin %>
+  Logged in as: <%= current_admin.admin_name %><br>
+  <%= link_to "Sign Out", "/admin_logout" %><br>
+  <%= link_to "Add New Administrator", new_admin_path %><br>
+
+<!-- This lists each message -->
+<h2>Messages</h2>
+<ul><% Message.all.each do |message|%>
+<li><%=message.message %> <%= link_to "Delete", message_path(message.id), :confirm => 'Are you sure you want to delete this message?', method: :delete %></li>
+<%end%>
+</ul>
+
+<!-- if not logged in as admin -->
+<% else %>
+  <%= link_to "Login As Admin", "/admin_login" %>
+<% end %>

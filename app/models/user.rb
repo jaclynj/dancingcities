@@ -7,6 +7,7 @@ class User < ActiveRecord::Base
       user.provider = auth["provider"] #twitter
       user.uid = auth["uid"] #their user ID
       user.name = auth["info"]["name"] #their name on twitter
+      user.image = auth["info"]["image"] #their twitter profile pic
     end
   end
 
