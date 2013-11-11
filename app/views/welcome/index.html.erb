@@ -30,6 +30,17 @@
     Leave a message for the world. Hit "Enter" when you're finished.
     <p id="user-input"></p>
   </div>
+<!--   <div id="ending-splash">
+    <% # TODO write better twitter message %>
+    <h1> Thanks for playing! We hope you enjoyed the experience.</h1>
+    <% twitter_message = URI.parse('http://twitter.com/home') %>
+    <% twitter_message.query = URI.encode_www_form('status' => "I just played #DancingCities at dancingcities.heroku.com")%>
+    <%= link_to "Tweet this", twitter_message.to_s %>
+    <%= link_to "Play again", root_path%>
+    <% if current_user %>
+    <%= link_to "Sign Out of Twitter", signout_path %>
+    <% end %> -->
+  </div>
   <div id="ThreeJS" style="position: absolute; left:0px; top:0px"></div>
 </body>
 
