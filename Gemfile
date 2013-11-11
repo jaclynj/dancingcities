@@ -8,6 +8,7 @@ gem 'rails', '3.2.14'
 gem 'pg'
 gem 'omniauth'
 gem 'omniauth-twitter'
+gem 'twitter'
 
 group :development, :test do
   gem 'pry-rails'           # Causes rails console to open pry
