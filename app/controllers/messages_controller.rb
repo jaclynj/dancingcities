@@ -60,10 +60,15 @@ class MessagesController < ApplicationController
     end
   end
 
+  def delete
+
+  end
+
   def destroy
     @message = Message.find_by_id(params[:id])
     @message.destroy
     respond_to do |format|
+      format.html {redirect_to admins_path}
       format.json {redirect_to :root}
     end
   end
