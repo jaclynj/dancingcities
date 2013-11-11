@@ -368,6 +368,7 @@ function unlockAllDirection(){
 
 
 function leaveAMessage(e) {
+  controls.blockJump( true );
   thisPress = Date.now();
   e.preventDefault();
   var keycode = (e.keyCode ? e.keyCode : e.which );
@@ -383,6 +384,7 @@ function leaveAMessage(e) {
         url: '/messages.json'
       });
       sendAjax = false;
+      controls.blockJump( false );
     }
   }
   else {
@@ -557,7 +559,7 @@ function updateWall() {
       var newMesh = new THREE.Mesh(
         newGeometry, newMaterial );
 
-      newMesh.position.x = 900 +  ( Math.random() * 100 );
+      newMesh.position.x = 500 +  ( Math.random() * 500 );
       newMesh.position.z = 1450;
       newMesh.position.y = ( Math.random() * 50 ) + ( Math.random() * 100 );
       scene.add( newMesh );

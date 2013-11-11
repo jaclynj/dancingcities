@@ -2,7 +2,7 @@
  * @author mrdoob / http://mrdoob.com/
  */
 
-THREE.PointerLockControls = function ( camera ) {
+ THREE.PointerLockControls = function ( camera ) {
 
   var scope = this;
 
@@ -27,6 +27,7 @@ THREE.PointerLockControls = function ( camera ) {
 
   var isOnObject = false;
   var canJump = false;
+  var blockJump;
 
   var velocity = new THREE.Vector3();
 
@@ -52,28 +53,28 @@ THREE.PointerLockControls = function ( camera ) {
 
       case 38: // up
       case 87: // w
-        moveForward = true;
-        break;
+      moveForward = true;
+      break;
 
       case 37: // left
       case 65: // a
-        moveLeft = true;
-        break;
+      moveLeft = true;
+      break;
 
       case 40: // down
       case 83: // s
-        moveBackward = true;
-        break;
+      moveBackward = true;
+      break;
 
       case 39: // right
       case 68: // d
-        moveRight = true;
-        break;
+      moveRight = true;
+      break;
 
       case 32: // space
-        if ( canJump === true ) velocity.y += 10;
-        canJump = false;
-        break;
+      if ( canJump === true ) velocity.y += 10;
+      canJump = false;
+      break;
 
     }
 
@@ -85,23 +86,23 @@ THREE.PointerLockControls = function ( camera ) {
 
       case 38: // up
       case 87: // w
-        moveForward = false;
-        break;
+      moveForward = false;
+      break;
 
       case 37: // left
       case 65: // a
-        moveLeft = false;
-        break;
+      moveLeft = false;
+      break;
 
       case 40: // down
       case 83: // a
-        moveBackward = false;
-        break;
+      moveBackward = false;
+      break;
 
       case 39: // right
       case 68: // d
-        moveRight = false;
-        break;
+      moveRight = false;
+      break;
 
     }
   };
@@ -174,9 +175,12 @@ THREE.PointerLockControls = function ( camera ) {
     if ( yawObject.position.y < 10 ) {
       velocity.y = 0;
       yawObject.position.y = 10;
+      if( !blockJump ) {
 
-      canJump = true;
+        canJump = true;
+      }
     }
+
 
   };
 
@@ -212,5 +216,8 @@ THREE.PointerLockControls = function ( camera ) {
 
   this.lockMoveRight = function(boolean){
     lockMoveRight = boolean;
+  };
+  this.blockJump = function(boolean) {
+    blockJump = boolean;
   };
 };
