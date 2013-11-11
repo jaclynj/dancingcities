@@ -591,8 +591,8 @@ function updateWall() {
 // GEOMETRY FUNCTIONS
 
 function centralPark() {
-  var xCoord = 1500;
-  var zCoord = -2000;
+  var xCoord = 500;
+  var zCoord = -500;
   var centralParkGeometry = new THREE.Geometry();
   var geometry = new THREE.SphereGeometry( 50, 8, 8 );
   var material = new THREE.MeshPhongMaterial( {
@@ -603,8 +603,8 @@ function centralPark() {
     overdraw: true
   });
   var sphere = new THREE.Mesh( geometry );
-  for( i = 0; i < 50; i ++ ) {
-    for( j = 0; j < 50; j ++) {
+  for( i = 0; i < 10; i ++ ) {
+    for( j = 0; j < 10; j ++) {
       sphere.position.y = 1;
       sphere.position.x = xCoord;
       sphere.position.z = zCoord;
@@ -640,7 +640,7 @@ function graffitiWall() {
 
 function generateFloor() {
   // BASIC PLANE GEOMETRY
-  var geometry = new THREE.PlaneGeometry( 4000, 4000, 200, 200 );
+  var geometry = new THREE.PlaneGeometry( 2000, 2000, 200, 200 );
   geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2) );
 
 
@@ -793,6 +793,7 @@ function optimizedDynamicBuildings( locationPoints ) {
     buildingMesh.position.z = zCoord;
     allObjects.push( buildingMesh );
     movingObjects.push( buildingMesh );
+
     var geometry = buildingMesh.geometry;
 
     var color1 = new THREE.Color().setHSL( Math.random() * 0.9 + 0.5, 0.9, Math.random() * 0.25 + 0.9 );
