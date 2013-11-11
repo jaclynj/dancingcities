@@ -59,6 +59,8 @@ var wall;
 var messageLeft = false;
 var userMessage = "";
 var lastPress = Date.now();
+var textCount = 0;
+var sendAjax = true;
 
 // GOOGLE COORDINATES
 coordinates = [[40.740084,-73.990115], [40.736698,-73.990164], [40.736706,-74.001249], [40.748379,-74.000112], [40.749955,-73.988549], [40.754734,-73.987922], [40.754734,-73.987922], [40.758635,-73.977452], [40.76538,-73.979727], [40.768029,-73.981937], [40.763771,-73.976368], [40.761691,-73.970693], [40.755953,-73.972816], [40.752154,-73.977782], [40.745111,-73.984687], [40.737925,-73.981683], [40.740835,-73.99185] ];
@@ -251,7 +253,6 @@ function animate() {
 
   controlCheck();
   detectCollision();
-  updateWall();
   render();
 
 }
@@ -281,9 +282,14 @@ function render() {
     particleGroup.tick( array[k] / 1000);
     // console.log("should be working");
   }
-  if ( ( timeElapsed > 60 ) && (((Math.round(timeElapsed * 10) % 100 === 0 )))) {
+  if ( ( timeElapsed > 60 ) && ((( Math.round( timeElapsed * 10 ) % 100 === 0 )))) {
     words( testWords, coordinates );
     console.log( "words");
+  }
+
+  if( Math.round( timeElapsed * 10 ) % 100 === 0 ) {
+    updateWall();
+
   }
 
   takeMirrorSnapshot();
@@ -369,15 +375,18 @@ function leaveAMessage(e) {
     // $( '#graffiti-form' ).css( "display", "none" );
     $( '#graffiti-form' ).fadeOut(400);
     $( document.body ).off( "keypress", leaveAMessage );
-    $.ajax({
-      type: "POST",
-      data: {message: {message: userMessage}},
-      url: '/messages.json'
-    });
+    if ( sendAjax ) {
+      $.ajax({
+        type: "POST",
+        data: {message: {message: userMessage}},
+        url: '/messages.json'
+      });
+      sendAjax = false;
+    }
   }
   else {
     c = String.fromCharCode( e.which );
-    if( (thisPress - lastPress) > 100 ) {
+    if( (thisPress - lastPress) > 50 ) {
       userMessage += c;
       $( '#user-input').append(c).fadeIn(200);
       console.log(userMessage);
@@ -524,7 +533,7 @@ function updateWall() {
   type: "GET",
   url: '/messages.json'
 }).done(function(data) {
-  for( var i = 0; i < data.length; i ++ ) {
+  for( var i = textCount; i < data.length; i ++ ) {
     var newCanvas = document.createElement( 'canvas' );
     var newContext = newCanvas.getContext( '2d' );
     newContext.font = "Bold 20px Arial";
@@ -545,10 +554,11 @@ function updateWall() {
     var newMesh = new THREE.Mesh(
       newGeometry, newMaterial );
 
-    newMesh.position.x = 900 +  ( Math.random() * 50 );
+    newMesh.position.x = 900 +  ( Math.random() * 100 );
     newMesh.position.z = 1450;
     newMesh.position.y = ( Math.random() * 50 ) + ( Math.random() * 100 );
     scene.add( newMesh );
+    textCount += 1;
   }
 });
 }
