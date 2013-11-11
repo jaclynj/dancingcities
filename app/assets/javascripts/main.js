@@ -61,6 +61,7 @@ var userMessage = "";
 var lastPress = Date.now();
 var textCount = 0;
 var sendAjax = true;
+var textContents = [];
 
 // GOOGLE COORDINATES
 coordinates = [[40.740084,-73.990115], [40.736698,-73.990164], [40.736706,-74.001249], [40.748379,-74.000112], [40.749955,-73.988549], [40.754734,-73.987922], [40.754734,-73.987922], [40.758635,-73.977452], [40.76538,-73.979727], [40.768029,-73.981937], [40.763771,-73.976368], [40.761691,-73.970693], [40.755953,-73.972816], [40.752154,-73.977782], [40.745111,-73.984687], [40.737925,-73.981683], [40.740835,-73.99185] ];
@@ -287,7 +288,7 @@ function render() {
     console.log( "words");
   }
 
-  if( Math.round( timeElapsed * 10 ) % 100 === 0 ) {
+  if( Math.round( timeElapsed * 5 ) % 50 === 0 ) {
     updateWall();
 
   }
@@ -533,35 +534,41 @@ function updateWall() {
   type: "GET",
   url: '/messages.json'
 }).done(function(data) {
-  for( var i = textCount; i < data.length; i ++ ) {
-    var newCanvas = document.createElement( 'canvas' );
-    var newContext = newCanvas.getContext( '2d' );
-    newContext.font = "Bold 20px Arial";
-    newContext.fillStyle = "rgba(255, 255, 255, 0.8)";
-    var message = data[i].message;
-    newContext.fillText( message, 0, 50 );
+  for( var i = 0; i < data.length; i ++ ) {
+    if( textContents.indexOf( data[i].message ) == -1 ) {
+      var newCanvas = document.createElement( 'canvas' );
+      var newContext = newCanvas.getContext( '2d' );
+      newContext.font = "Bold 20px Arial";
+      newContext.fillStyle = "rgba(255, 255, 255, 0.8)";
+      var message = data[i].message;
+      textContents.push( message );
+      newContext.fillText( message, 0, 50 );
 
-    var newTexture = new THREE.Texture( newCanvas );
-    newTexture.needsUpdate = true;
+      var newTexture = new THREE.Texture( newCanvas );
+      newTexture.needsUpdate = true;
 
-    var newMaterial = new THREE.MeshBasicMaterial( {
-      map: newTexture,
-      side: THREE.DoubleSide
-    });
-    newMaterial.transparent = true;
-    var newGeometry = new THREE.PlaneGeometry( newCanvas.width, newCanvas.height );
-    newGeometry.applyMatrix( new THREE.Matrix4().makeRotationY( - Math.PI) );
-    var newMesh = new THREE.Mesh(
-      newGeometry, newMaterial );
+      var newMaterial = new THREE.MeshBasicMaterial( {
+        map: newTexture,
+        side: THREE.DoubleSide
+      });
+      newMaterial.transparent = true;
+      var newGeometry = new THREE.PlaneGeometry( newCanvas.width, newCanvas.height );
+      newGeometry.applyMatrix( new THREE.Matrix4().makeRotationY( - Math.PI) );
+      var newMesh = new THREE.Mesh(
+        newGeometry, newMaterial );
 
-    newMesh.position.x = 900 +  ( Math.random() * 100 );
-    newMesh.position.z = 1450;
-    newMesh.position.y = ( Math.random() * 50 ) + ( Math.random() * 100 );
-    scene.add( newMesh );
-    textCount += 1;
+      newMesh.position.x = 900 +  ( Math.random() * 100 );
+      newMesh.position.z = 1450;
+      newMesh.position.y = ( Math.random() * 50 ) + ( Math.random() * 100 );
+      scene.add( newMesh );
+    // textCount += 1;
+    // console.log(textCount);
+    // console.log(message);
   }
+}
 });
 }
+
 
 
 
