@@ -593,29 +593,32 @@ function updateWall() {
 function centralPark() {
   var xCoord = 1500;
   var zCoord = -2000;
+  var centralParkGeometry = new THREE.Geometry();
+  var geometry = new THREE.SphereGeometry( 50, 8, 8 );
+  var material = new THREE.MeshPhongMaterial( {
+    specular: 0x222222,
+    color: 0x111111,
+    emissive: new THREE.Color().setHSL( Math.random() * 0.2 + 0.2, 0.9, Math.random() * 0.25 + 0.7 ),
+    shininess: 100,
+    overdraw: true
+  });
+  var sphere = new THREE.Mesh( geometry );
   for( i = 0; i < 50; i ++ ) {
     for( j = 0; j < 50; j ++) {
-      var geometry = new THREE.SphereGeometry( 50, 8, 8 );
-      var material = new THREE.MeshPhongMaterial( {
-        specular: 0x222222,
-        color: 0x111111,
-        emissive: new THREE.Color().setHSL( Math.random() * 0.2 + 0.2, 0.9, Math.random() * 0.25 + 0.7 ),
-        shininess: 100,
-        overdraw: true
-      });
-      var sphere = new THREE.Mesh( geometry, material );
       sphere.position.y = 1;
       sphere.position.x = xCoord;
       sphere.position.z = zCoord;
       // sphere.receiveShadow = true;
       // sphere.castShadow = true;
-      // scene.add( sphere );
       dancingGrass.push( sphere );
       xCoord += 100;
+      THREE.GeometryUtils.merge( centralParkGeometry, sphere );
     }
     zCoord -= 100;
   }
   console.log("grass");
+  var centralParkMesh = new THREE.Mesh( centralParkGeometry, material );
+  scene.add( centralParkMesh );
 }
 
 function graffitiWall() {
