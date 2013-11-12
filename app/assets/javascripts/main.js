@@ -898,7 +898,7 @@ function optimizedDynamicBuildings( locationPoints ) {
   var basicMaterial = new THREE.MeshPhongMaterial({
     specular: 0x222222,
     color: 0x000000,
-    emissive: new THREE.Color().setHSL( Math.random() * 0.2 + 0.2, 0.9, Math.random() * 0.25 + 0.7 ),
+    emissive: new THREE.Color().setHSL( Math.random() * 0.2 + 0.5, 0.5, Math.random() * 0.25 + 0.6 ),
     shininess: 100
   });
   allBuildingMesh = new THREE.Mesh( buildingGeometry, basicMaterial );
