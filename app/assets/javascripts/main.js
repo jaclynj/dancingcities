@@ -40,7 +40,8 @@ var allObjects = [];
 
 // BIG SPHERE (SKY)
 var bigSphere, sphereMaterial;
-var startTime = Date.getHours();
+var d = new Date();
+var startTime = d.getHours();
 
 // MIRROR EFFECT VARIABLES
 var mirrorCube, mirrorCubeCamera;
@@ -922,15 +923,33 @@ function addCube( x, y, z ) {
 }
 
 function addBigSphere( x, y ) {
-  var sphereGeom = new THREE.SphereGeometry(3000, 100, 100);
+  var sphereGeom = new THREE.SphereGeometry( 3000, 100, 100 );
+  var skyColor;
+  if( startTime >= 0 && startTime <= 5 ) {
+    skyColor = new THREE.Color().setHSL(  0.1, 0.96, 0.60 );
+  }
+  else if( 12 >= startTime && startTime >= 5 ) {
+    skyColor = new THREE.Color().setHSL( 0.6, 0.5, 0.5 );
+  }
+  else if( 16 >= startTime && startTime >= 12) {
+    skyColor = new THREE.Color().setHSL( 0.6, 0.7, 0.4  );
+  }
+  else if( 20 >= startTime && startTime >= 16 ) {
+    skyColor = new THREE.Color().setHSL( 0.7, 0.7, 0.2 );
+  }
+  else {
+    skyColor = new THREE.Color().setHSL(  0.6, 0.4, 0.1);
+  }
+
+
   sphereMaterial = new THREE.MeshPhongMaterial(
    {    specular: 0x222222,
     color: 0x000000,
-    emissive: 0x888888,
+    emissive: skyColor,
     side: THREE.DoubleSide,
     // vertexColors: THREE.VertexColors,
     // wireframe: true,
-    // shininess: 100,
+    shininess: 100,
     overdraw: true });
   bigSphere = new THREE.Mesh( sphereGeom, sphereMaterial );
   bigSphere.position.x = x;
