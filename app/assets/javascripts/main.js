@@ -607,7 +607,7 @@ function checkLoggedIn() {
 function generateUserContent() {
   // var canvas = document.createElement('canvas');
   // userImage = canvas.toDataURL(userImage);
-  debugger
+  // debugger;
   var image = THREE.ImageUtils.loadTexture( userImage );
   wall.map = image;
 }
