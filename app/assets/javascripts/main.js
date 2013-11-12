@@ -79,9 +79,11 @@ var userImage= "http://pbs.twimg.com/profile_images/378800000490486404/abf4774fd
 // CHECKS IF USER CONTENT HAS BEEN GENERATED ALREADY
 var userContent = false;
 
-// GOOGLE COORDINATES
+// COORDINATES - PLACEHOLDER
 coordinates = [[40.740084,-73.990115], [40.736698,-73.990164], [40.736706,-74.001249], [40.748379,-74.000112], [40.749955,-73.988549], [40.754734,-73.987922], [40.754734,-73.987922], [40.758635,-73.977452], [40.76538,-73.979727], [40.768029,-73.981937], [40.763771,-73.976368], [40.761691,-73.970693], [40.755953,-73.972816], [40.752154,-73.977782], [40.745111,-73.984687], [40.737925,-73.981683], [40.740835,-73.99185] ];
 
+// COORDINATES - FOURSQUARE
+var placesArray = [];
 
 var testWords = ["new york city", "#i love this town", "beautiful", "lol"];
 
@@ -185,9 +187,9 @@ var startButton = document.getElementById( 'start-button' );
 
         }, false );
 
-        startButton.addEventListener( 'click', function ( event ) {
+startButton.addEventListener( 'click', function ( event ) {
 
-          startMenu.style.display = 'none';
+  startMenu.style.display = 'none';
 
           // Ask the browser to lock the pointer
           element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
@@ -323,6 +325,7 @@ optimizedDynamicBuildings( coordinates );
 graffitiWall();
 centralPark();
 generateUserContent();
+grabFoursquare();
 
 $.ajax({
   type: "GET",
@@ -536,6 +539,25 @@ function onWindowResize() {
 
   renderer.setSize( window.innerWidth, window.innerHeight );
 
+}
+
+// GRAB FOURSQUARE GEODATA
+function grabFoursquare() {
+ places = $.ajax({
+    type: "GET",
+    url: "https://api.foursquare.com/v2/venues/explore?ll=40.7,-74&section=topPicks&limit=50&oauth_token=K4UCTP1LAKJNTMLHCF4ZGITHNAV1344HNO3BATADR0LFLVGI"
+  }).done( function( data ) {
+    var locations = places.responseJSON.response.groups[0].items;
+    for( var i = 0; i < locations.length; i++ ) {
+      var place = [];
+      var lng = locations[i].venue.location.lng;
+      var lat = locations[i].venue.location.lat;
+      var name = locations[i].venue.name;
+      place.push( lat, lng, name );
+      placesArray.push( place );
+    }
+    console.log( placesArray );
+  });
 }
 
 
