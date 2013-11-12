@@ -605,11 +605,13 @@ function checkLoggedIn() {
 }
 
 function generateUserContent() {
-  // var canvas = document.createElement('canvas');
+  var canvas = document.createElement('canvas');
+  var context = canvas.getContext( '2d' );
   // userImage = canvas.toDataURL(userImage);
   // debugger;
-  var image = THREE.ImageUtils.loadTexture( userImage );
-  wall.map = image;
+  // var image = THREE.ImageUtils.loadTexture( userImage );
+  // wall.map = image;
+
 }
 
 function updateWall() {
