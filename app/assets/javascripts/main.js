@@ -821,7 +821,6 @@ function initParticles() {
 
 function words( wordArray, locationPoints ) {
 
-  for( i = 0; i < wordArray.length; i++ ) {
     var text = new THREE.TextGeometry( wordArray[i], {
       size: 50,
       height: 10,
@@ -831,26 +830,34 @@ function words( wordArray, locationPoints ) {
       style: 'normal'
 
     });
-    text.applyMatrix( new THREE.Matrix4().makeRotationY( - Math.PI / 2) );
+    var textGeometry = new THREE.Geometry();
+    textGeometry.dynamic = true;
+    var textMesh = new THREE.Mesh( text );
     var textMaterial = new THREE.MeshLambertMaterial( {
       specular: 0x222222,
       color: 0x000000,
       emissive: new THREE.Color().setHSL( Math.random() * 0.2 + 0.2, 0.9, Math.random() * 0.25 + 0.7 ),
       overdraw: true
     });
-    var textObj = new THREE.Mesh( text, textMaterial );
+  for( i = 0; i < wordArray.length; i++ ) {
+    text.applyMatrix( new THREE.Matrix4().makeRotationY( - Math.PI / 2) );
+    text.applyMatrix( new THREE.Matrix4().makeRotationX( Math.random() * Math.PI / 2) );
     var lat = locationPoints[i][0];
     var lng = locationPoints[i][1];
     var xCoord = ( ( lat - 40 ) * 10 ) + Math.floor( Math.random() * 1000 ) ;
     var zCoord = ( ( lng - 70 ) / Math.round( Math.random() * 10 ) ) + Math.floor( Math.random() * 1000 );
-    textObj.position.x = xCoord;
-    textObj.position.y = 400 + ( Math.random() * 200 );
-    textObj.position.z = zCoord;
-    scene.add( textObj );
-    fallingTexts.push( textObj );
-    allObjects.push( textObj );
+    textMesh.position.x = xCoord;
+    textMesh.position.y = 400 + ( Math.random() * 200 );
+    textMesh.position.z = zCoord;
+    // scene.add( textObj );
+    // fallingTexts.push( textMesh );
+    allObjects.push( textMesh );
+    THREE.GeometryUtils.merge( textGeometry, textMesh );
   }
 
+  var allTextMesh = new THREE.Mesh( textGeometry, textMaterial );
+  scene.add( allTextMesh );
+  fallingTexts.push( allTextMesh );
   // var text = new THREE.TextGeometry( "hi", {font: 'helvetiker', weight: 'normal', style: 'normal'});
   // var material = new THREE.MeshPhongMaterial({ color: 0xdddddd });
   // var textMesh = new THREE.Mesh( text, material );

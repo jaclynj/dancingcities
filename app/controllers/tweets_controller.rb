@@ -2,7 +2,7 @@ class TweetsController < ApplicationController
 
   def index
     #sends an API request to return 15 tweets with search of #NYC and within 7 miles of GA East
-    @tweets = Twitter.search('', options = {geocode: "40.739535,-73.989662,7mi"}).results.map do |status|
+    @tweets = Twitter.search('', options = {geocode: "40.739535,-73.989662,7mi", count: 5}).results.map do |status|
       status.text
     end
     respond_to do |format|
