@@ -65,6 +65,7 @@ var textContents = [];
 
 // CENTRAL PARK VARIABLES
 var dancingGrass = [];
+var centralParkMesh;
 
 // GOOGLE COORDINATES
 coordinates = [[40.740084,-73.990115], [40.736698,-73.990164], [40.736706,-74.001249], [40.748379,-74.000112], [40.749955,-73.988549], [40.754734,-73.987922], [40.754734,-73.987922], [40.758635,-73.977452], [40.76538,-73.979727], [40.768029,-73.981937], [40.763771,-73.976368], [40.761691,-73.970693], [40.755953,-73.972816], [40.752154,-73.977782], [40.745111,-73.984687], [40.737925,-73.981683], [40.740835,-73.99185] ];
@@ -287,7 +288,7 @@ function render() {
     for( var i = 0; i < movingObjects.length; i++ ) {
       var scale = ( array[k] ) / 80;
       var rand = Math.floor(Math.random() * 10);
-      dancingGrass[i].material.color.setHSL( Math.random() * 0.2 + 0.2, 0.9, Math.random() * 0.25 + 0.7 );
+      centralParkMesh.material.emissive.setHSL( Math.random() * 0.2 + 0.2, 0.9, Math.random() * 0.25 + 0.7 );
       if( rand % 3 === 0 ){
         movingObjects[i].scale.x = ( scale < 1 ? 1 : scale );
       }
@@ -636,9 +637,10 @@ function centralPark() {
     xCoord = -1000;
   }
   console.log("grass");
-  var centralParkMesh = new THREE.Mesh( centralParkGeometry, material );
+  centralParkMesh = new THREE.Mesh( centralParkGeometry, material );
   scene.add( centralParkMesh );
   allObjects.push( centralParkMesh );
+  // movingObjects.push( centralParkMesh );
 }
 
 function graffitiWall() {
