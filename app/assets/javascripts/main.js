@@ -290,6 +290,13 @@ function render() {
       }
       k += ( k < array.length? 1 : 0 );
     }
+
+    var j = 0;
+    for( var i = 0; i < dancingGrass.length; i++ ){
+      dancingGrass[i].material.color.setHSL( Math.random() * 0.2 + 0.2, 0.9, Math.random() * 0.25 + 0.7 );
+      j += ( j < array.length? 1 : 0 );
+    }
+
   // time event to begin particles
   if( timeElapsed > 35 ) {
     particleGroup.tick( array[k] / 1000);
@@ -595,6 +602,7 @@ function centralPark() {
   var zCoord = -500;
   var centralParkGeometry = new THREE.Geometry();
   var geometry = new THREE.SphereGeometry( 50, 8, 8 );
+  geometry.dynamic = true;
   var material = new THREE.MeshPhongMaterial( {
     specular: 0x222222,
     color: 0x111111,
