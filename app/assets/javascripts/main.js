@@ -34,6 +34,7 @@ var clock = new THREE.Clock( true );
 
 // ALL OBJECTS THAT MOVE TO THE MUSIC
 var movingObjects = [];
+var allBuildingMesh;
 
 // ARRAY FOR RAYCASTER COLLISION DETECTION
 var allObjects = [];
@@ -291,18 +292,15 @@ function render() {
       var scale = ( array[k] ) / 80;
       var rand = Math.floor(Math.random() * 10);
       centralParkMesh.material.emissive.setRGB( array[k]/100, array[k]/200, array[k]/500 );
-        movingObjects[i].geometry.vertices[1].z = array[k];
-        movingObjects[i].geometry.vertices[2].x = array[k];
-        movingObjects[i].geometry.vertices[3].z = array[k];
-        movingObjects[i].geometry.vertices[4].y = array[k];
       if( rand % 3 === 0 ){
+        allBuildingMesh.scale.y = ( scale < 1 ?  1 : scale );
       }
       else if ( rand % 2 === 0 ) {
-        movingObjects[i].geometry.vertices[6].x = array[k];
-        movingObjects[i].geometry.vertices[5].y = array[k];
-
+        allBuildingMesh.scale.y = ( scale < 1 ?  1 : scale );
       }
       else {
+        allBuildingMesh.scale.y = ( scale < 1 ?  1 : scale );
+
         // movingObjects[i].geometry.vertices[3].y = array[k];
       }
       movingObjects[i].geometry.verticesNeedUpdate = true;
@@ -539,11 +537,11 @@ function fallingWords() {
   if ( timeElapsed< 120 ) {
     for( var i = 0; i < fallingTexts.length; i++ ) {
       if( fallingTexts[i].position.y > -10 ) {
-      fallingTexts[i].position.y -= 2;
-    }
-    else {
-      scene.remove( fallingTexts[i] );
-    }
+        fallingTexts[i].position.y -= 2;
+      }
+      else {
+        scene.remove( fallingTexts[i] );
+      }
     }
   }
   else if ( timeElapsed > 120 ) {
@@ -680,7 +678,7 @@ function graffitiWall() {
 
 function generateFloor() {
   // BASIC PLANE GEOMETRY
-  var geometry = new THREE.PlaneGeometry( 2000, 2000, 200, 200 );
+  var geometry = new THREE.PlaneGeometry( 2500, 2500, 200, 200 );
   geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2) );
 
 
@@ -717,16 +715,16 @@ function generateFloor() {
 var mesh = new Physijs.PlaneMesh( geometry, material );
 scene.add( mesh );
 
-  var wireframeGeometry = new THREE.PlaneGeometry( 2000, 2000, 200, 200 );
-  wireframeGeometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2) );
+var wireframeGeometry = new THREE.PlaneGeometry( 2000, 2000, 200, 200 );
+wireframeGeometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2) );
 
-  var wireframeMaterial = new THREE.MeshBasicMaterial({
-    wireframe: true
-  });
-  var mesh2 = new THREE.Mesh( wireframeGeometry, wireframeMaterial );
-  mesh2.position.y = 1;
+var wireframeMaterial = new THREE.MeshBasicMaterial({
+  wireframe: true
+});
+var mesh2 = new THREE.Mesh( wireframeGeometry, wireframeMaterial );
+mesh2.position.y = 1;
 
-  scene.add( mesh2 );
+scene.add( mesh2 );
 
 
   // // SQUARE PLANE GEOMETRY
@@ -845,7 +843,7 @@ function optimizedDynamicBuildings( locationPoints ) {
     cube.position.y = 0;
     cube.position.z = zCoord;
     allObjects.push( cube );
-    movingObjects.push( cube );
+    // movingObjects.push( cube );
     // debugger;
     // for ( var i = 0; i < geometry.faces.length; i ++ ) {
 
@@ -864,10 +862,11 @@ function optimizedDynamicBuildings( locationPoints ) {
     emissive: new THREE.Color().setHSL( Math.random() * 0.2 + 0.2, 0.9, Math.random() * 0.25 + 0.7 ),
     shininess: 100
   });
-  var allBuildingMesh = new THREE.Mesh( buildingGeometry, basicMaterial );
+  allBuildingMesh = new THREE.Mesh( buildingGeometry, basicMaterial );
   scene.add( allBuildingMesh );
   allObjects.push( allBuildingMesh );
   allObjects.push( buildingGeometry );
+  // movingObjects.push( buildingMesh );
 }
 
 // function optimizedDynamicBuildings( locationPoints ) {
