@@ -99,7 +99,7 @@ Physijs.scripts.ammo = 'ammo.js';
 var blocker = document.getElementById( 'blocker' );
 var instructions = document.getElementById( 'instructions' );
 var startMenu = document.getElementById( 'start-menu' );
-var startButton = document.getElementsByClassName( 'start-button' );
+var startButton = document.getElementById( 'start-button' );
 // instructions.style.display = 'none';
 // startMenu.style.display = '';
 blocker.style.display = "none";
@@ -280,8 +280,8 @@ window.addEventListener( 'resize', onWindowResize, false );
 camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 5000 );
 
 // INITIALIZE NEW SCENE
-// scene = new THREE.Scene();
-scene = new Physijs.Scene;
+scene = new THREE.Scene();
+// scene = new Physijs.Scene;
 
 // FOG OPTIONS
 // scene.fog = new THREE.Fog( 0xff5588, 0, 2000 );
@@ -294,9 +294,9 @@ var light = new THREE.DirectionalLight( 0x888888, 1.5 );
 light.position.set( 1, 1, 1 );
 scene.add( light );
 
-var light = new THREE.DirectionalLight( 0x888888, 0.75 );
-light.position.set( -1, - 0.5, -1 );
-scene.add( light );
+var light2 = new THREE.DirectionalLight( 0x888888, 0.75 );
+light2.position.set( -1, - 0.5, -1 );
+scene.add( light2 );
 
 // var ambientLight = new THREE.AmbientLight( 0xff5577 );
 var ambientLight = new THREE.AmbientLight(  0x404040 );
@@ -335,7 +335,7 @@ $.ajax({
   url: '/tweets.json'
 }).done( function( data ) {
   tweetArray = data;
-})
+});
 
 
 }
@@ -764,7 +764,7 @@ function centralPark() {
   });
   var sphere = new THREE.Mesh( geometry );
   sphere.dynamic = true;
-  for( i = 0; i < 10; i ++ ) {
+  for( var i = 0; i < 10; i ++ ) {
     for( j = 0; j < 10; j ++) {
       sphere.position.y = 1;
       sphere.position.x = xCoord;
@@ -913,7 +913,7 @@ function words( wordArray, locationPoints ) {
     emissive: new THREE.Color().setHSL( Math.random() * 0.2 + 0.2, 0.9, Math.random() * 0.25 + 0.7 ),
     overdraw: true
   });
-  for( i = wordPos; i < wordPosAtStart + 2; i++ ) {
+  for( var i = wordPos; i < wordPosAtStart + 2; i++ ) {
     var text = new THREE.TextGeometry( wordArray[i], {
       size: 50,
       height: 10,
