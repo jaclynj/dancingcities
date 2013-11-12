@@ -287,6 +287,7 @@ function render() {
     for( var i = 0; i < movingObjects.length; i++ ) {
       var scale = ( array[k] ) / 80;
       var rand = Math.floor(Math.random() * 10);
+      dancingGrass[i].material.color.setHSL( Math.random() * 0.2 + 0.2, 0.9, Math.random() * 0.25 + 0.7 );
       if( rand % 3 === 0 ){
         movingObjects[i].scale.x = ( scale < 1 ? 1 : scale );
       }
@@ -301,7 +302,6 @@ function render() {
 
     var j = 0;
     for( var i = 0; i < dancingGrass.length; i++ ){
-      dancingGrass[i].material.color.setHSL( Math.random() * 0.2 + 0.2, 0.9, Math.random() * 0.25 + 0.7 );
       j += ( j < array.length? 1 : 0 );
     }
 
@@ -619,6 +619,7 @@ function centralPark() {
     overdraw: true
   });
   var sphere = new THREE.Mesh( geometry );
+  sphere.dynamic = true;
   for( i = 0; i < 10; i ++ ) {
     for( j = 0; j < 10; j ++) {
       sphere.position.y = 1;
@@ -705,7 +706,7 @@ scene.add( mesh );
 
   linesMaterial = new THREE.LineBasicMaterial( { color: 0x787878, opacity: 0.2, linewidth: 0.1 } );
 
-  for ( var i = 0; i <= 200; i ++ ) {
+  for ( var i = 0; i <= 20; i ++ ) {
 
     var line = new THREE.Line( geometry, linesMaterial );
     line.position.z = ( i * 50 ) - 1000;
@@ -800,8 +801,10 @@ function dynamicBuildings( locationPoints ) {
 
 function optimizedDynamicBuildings( locationPoints ) {
   var geometry = new THREE.CubeGeometry( 50, 100, 50, 1, 1 );
+  geometry.dynamic = true;
   var buildingGeometry = new THREE.Geometry();
   var cube = new THREE.Mesh( geometry );
+  cube.dynamic = true;
 
   for( var i = 0; i < locationPoints.length; i++ ) {
     var lat = locationPoints[i][0];
