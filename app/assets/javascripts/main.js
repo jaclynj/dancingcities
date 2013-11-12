@@ -91,15 +91,15 @@ var xray;
 var zray;
 
 // PHYSIJS SETUP
-Physijs.scripts.worker = 'assets/helper_libraries/physijs_worker.js';
+Physijs.scripts.worker = 'helper_libraries/physijs_worker.js';
 Physijs.scripts.ammo = 'ammo.js';
 
 var blocker = document.getElementById( 'blocker' );
 var instructions = document.getElementById( 'instructions' );
 var startMenu = document.getElementById( 'start-menu' );
 var startButton = document.getElementById( 'start-button' );
-instructions.style.display = 'none';
-startMenu.style.display = '';
+// instructions.style.display = 'none';
+// startMenu.style.display = '';
 
 
 
@@ -116,7 +116,7 @@ startMenu.style.display = '';
 
             controls.enabled = true;
 
-            blocker.style.display = 'none';
+            startMenu.style.display = 'none';
 
           } else {
 
@@ -126,17 +126,17 @@ startMenu.style.display = '';
             blocker.style.display = '-moz-box';
             blocker.style.display = 'box';
 
-            instructions.style.display = '';
+            startMenu.style.display = '';
 
           }
 
-        }
+        };
 
         var pointerlockerror = function ( event ) {
 
-          instructions.style.display = '';
+          startMenu.style.display = '';
 
-        }
+        };
 
         // Hook pointer lock state change events
         document.addEventListener( 'pointerlockchange', pointerlockchange, false );
@@ -149,9 +149,9 @@ startMenu.style.display = '';
 
 
 
-        instructions.addEventListener( 'click', function ( event ) {
+        startButton.addEventListener( 'click', function ( event ) {
 
-          instructions.style.display = 'none';
+          startMenu.style.display = 'none';
 
           // Ask the browser to lock the pointer
           element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
