@@ -27,18 +27,18 @@
       Press UP, DOWN, RIGHT, LEFT to move<br>
       Press SPACEBAR to jump<br><br>
       <% if current_user %>
-      You are signed into Dancing Cities through Twitter.<br>
-      <%= link_to "Sign out of twitter", signout_path, class: "splash-button"  %>
+      You are signed into Dancing Cities through Twitter.
+      <%= link_to "Sign out of twitter", signout_path  %><br><br>
       <% else %>
       <%= link_to "To Personalize your experience, Sign In with Twitter", "/auth/twitter", class: "splash-button" %> <br>
-      <div class = "splash-button", id = "start-button">CLICK HERE to play</div>
       <% end %>
+      <div class = "splash-button", id = "start-button">Click here to play</div>
     </div>
 
   <div id="blocker">
     <div id="instructions">
       <span style="font-size:40px">Click to play</span>
-      <br />
+      <br><br>
       Move MOUSE to look around<br>
       Press UP, DOWN, RIGHT, LEFT to move<br>
       Press SPACEBAR to jump<br>
