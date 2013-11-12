@@ -326,7 +326,12 @@ function render() {
     // console.log("should be working");
   }
   if ( ( timeElapsed > 60 ) && ((( Math.round( timeElapsed * 10 ) % 100 === 0 )))) {
-    words( testWords, coordinates );
+    $.ajax({
+        type: "GET",
+        url: '/tweets.json'
+      }).done( function( data ) {
+          words( data, coordinates );
+      })
     console.log( "words");
   }
 
