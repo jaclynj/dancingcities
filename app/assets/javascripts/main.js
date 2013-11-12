@@ -169,6 +169,14 @@ var instructions = document.getElementById( 'instructions' );
   instructions.innerHTML = 'Your browser doesn\'t seem to support Pointer Lock API';
 
 }
+
+// PREVENT BACKSPACE FROM GOING BACK
+$(document).on("keydown", function (e) {
+  if (e.which === 8) {
+    e.preventDefault();
+  }
+});
+
 // LOAD AUDIO
 loadAudioRequest( url );
 
@@ -579,7 +587,7 @@ function updateWall() {
         newGeometry, newMaterial );
 
       newMesh.position.x = 500 +  ( Math.random() * 500 );
-      newMesh.position.z = 1450;
+      newMesh.position.z = 650;
       newMesh.position.y = ( Math.random() * 50 ) + ( Math.random() * 100 );
       scene.add( newMesh );
     // textCount += 1;
@@ -641,9 +649,10 @@ function graffitiWall() {
     overdraw: true
   } );
   wall = new Physijs.BoxMesh( geometry, material );
-  wall.position.x = 1000;
+  wall.position.x = 900;
   wall.position.y = 0;
-  wall.position.z = 1000;
+  wall.position.z = 700;
+  wall.makeRotationY
   scene.add( wall );
   allObjects.push( wall );
   console.log( "wall" );
@@ -813,15 +822,17 @@ function optimizedDynamicBuildings( locationPoints ) {
     //   face.vertexColors[ 2 ] = new THREE.Color().setHSL( Math.random() * 0.9 + 0.5, 0.9, Math.random() * 0.25 + 0.9 );
 
     // }
-  //   // buildingMesh.material = colorMaterial;
-  //   THREE.GeometryUtils.merge( buildingGeometry, cube );
+    THREE.GeometryUtils.merge( buildingGeometry, cube );
   }
   // // debugger;
-  // var basicMaterial = new THREE.MeshLambertMaterial({
-  //   vertexColors: THREE.VertexColors
-  // });
-  // var allBuildingMesh = new THREE.Mesh( buildingGeometry, basicMaterial );
-  // scene.add( allBuildingMesh );
+  var basicMaterial = new THREE.MeshPhongMaterial({
+    specular: 0x222222,
+    color: 0x000000,
+    emissive: new THREE.Color().setHSL( Math.random() * 0.2 + 0.2, 0.9, Math.random() * 0.25 + 0.7 ),
+    shininess: 100
+  });
+  var allBuildingMesh = new THREE.Mesh( buildingGeometry, basicMaterial );
+  scene.add( allBuildingMesh );
 }
 
 // function optimizedDynamicBuildings( locationPoints ) {
