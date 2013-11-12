@@ -361,7 +361,7 @@ function detectCollision() {
     cameraDirection.applyMatrix4(rotationMatrix);
   }
   var rayCaster = new THREE.Raycaster(controls.getObject().position, cameraDirection);
-  intersects = rayCaster.intersectObjects(scene.children);
+  intersects = rayCaster.intersectObjects(scene.children, true);
 
   if ((intersects.length > 0 && intersects[0].distance < 25)) {
     lockDirection();
