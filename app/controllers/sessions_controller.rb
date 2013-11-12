@@ -17,6 +17,10 @@ class SessionsController < ApplicationController
 
   def checker
     #AJAX request to '/checker.json' will render { session: "true"} or {session: "false"}
+      # $.ajax({
+      #   type: "GET",
+      #   url: '/checker.json'
+      # })
     @session = session[:user_id]
     respond_to do |format|
       if @session.nil?
@@ -28,6 +32,10 @@ class SessionsController < ApplicationController
   end
 
   def current_user
+      # $.ajax({
+      #   type: "GET",
+      #   url: '/checker.json'
+      # })
     @user = User.find_by_id(session[:user_id])
     respond_to do  |format|
       format.json { render :json => @user}
