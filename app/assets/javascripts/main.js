@@ -828,19 +828,9 @@ function initParticles() {
 }
 
 function words( wordArray, locationPoints ) {
-
-  var text = new THREE.TextGeometry( wordArray[i], {
-    size: 50,
-    height: 10,
-    curveSegments: 2,
-    font: "helvetiker",
-    weight: "normal",
-    style: 'normal'
-
-  });
+  // debugger;
   var textGeometry = new THREE.Geometry();
   textGeometry.dynamic = true;
-  var textMesh = new THREE.Mesh( text );
   var textMaterial = new THREE.MeshLambertMaterial( {
     specular: 0x222222,
     color: 0x000000,
@@ -848,6 +838,16 @@ function words( wordArray, locationPoints ) {
     overdraw: true
   });
   for( i = 0; i < wordArray.length; i++ ) {
+    var text = new THREE.TextGeometry( wordArray[i], {
+      size: 50,
+      height: 10,
+      curveSegments: 2,
+      font: "helvetiker",
+      weight: "normal",
+      style: 'normal'
+
+    });
+  var textMesh = new THREE.Mesh( text );
     text.applyMatrix( new THREE.Matrix4().makeRotationY( - Math.PI / 2) );
     text.applyMatrix( new THREE.Matrix4().makeRotationX( Math.random() * Math.PI / 2) );
     var lat = locationPoints[i][0];
