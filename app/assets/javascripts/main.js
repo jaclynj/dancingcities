@@ -70,6 +70,13 @@ var textContents = [];
 var dancingGrass = [];
 var centralParkMesh;
 
+// USER VARIABLES IF LOGGED IN
+var userName;
+var userImage= "http://pbs.twimg.com/profile_images/378800000490486404/abf4774fdb37f08ee36f5918c7bf2e1c_normal.jpeg";
+
+// CHECKS IF USER CONTENT HAS BEEN GENERATED ALREADY
+var userContent = false;
+
 // GOOGLE COORDINATES
 coordinates = [[40.740084,-73.990115], [40.736698,-73.990164], [40.736706,-74.001249], [40.748379,-74.000112], [40.749955,-73.988549], [40.754734,-73.987922], [40.754734,-73.987922], [40.758635,-73.977452], [40.76538,-73.979727], [40.768029,-73.981937], [40.763771,-73.976368], [40.761691,-73.970693], [40.755953,-73.972816], [40.752154,-73.977782], [40.745111,-73.984687], [40.737925,-73.981683], [40.740835,-73.99185] ];
 
@@ -267,6 +274,7 @@ optimizedDynamicBuildings( coordinates );
 // words();
 graffitiWall();
 centralPark();
+generateUserContent();
 
 
 }
@@ -573,6 +581,35 @@ function updateWeather( temp ) {
 
 function updateTime() {
 
+}
+
+function checkLoggedIn() {
+  $.ajax({ 
+    type: "GET", 
+    url: '/checker.json' 
+  }).done( function( data ) {
+    if(data.session === true){
+      $.ajax({
+        type: "GET",
+        url: '/current_user.json'
+      }).done( function( data ) {
+        if( !userContent ) {
+          userName = data.name;
+          userImage = data.image;
+          generateUserContent();
+        }
+      })
+
+    }
+  })
+}
+
+function generateUserContent() {
+  // var canvas = document.createElement('canvas');
+  // userImage = canvas.toDataURL(userImage);
+  debugger
+  var image = THREE.ImageUtils.loadTexture( userImage );
+  wall.map = image;
 }
 
 function updateWall() {
