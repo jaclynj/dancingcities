@@ -40,6 +40,7 @@ var allObjects = [];
 
 // BIG SPHERE (SKY)
 var bigSphere, sphereMaterial;
+var startTime = Date.getHours();
 
 // MIRROR EFFECT VARIABLES
 var mirrorCube, mirrorCubeCamera;
@@ -288,7 +289,7 @@ function render() {
     for( var i = 0; i < movingObjects.length; i++ ) {
       var scale = ( array[k] ) / 80;
       var rand = Math.floor(Math.random() * 10);
-      centralParkMesh.material.emissive.setHSL( Math.random() * 0.2 + 0.2, 0.9, Math.random() * 0.25 + 0.7 );
+      centralParkMesh.material.emissive.setRGB( array[k]/100, array[k]/200, array[k]/500 );
       if( rand % 3 === 0 ){
         movingObjects[i].scale.x = ( scale < 1 ? 1 : scale );
       }
@@ -529,7 +530,12 @@ function fallingWords() {
   var timeElapsed = clock.getElapsedTime();
   if ( timeElapsed< 120 ) {
     for( var i = 0; i < fallingTexts.length; i++ ) {
+      if( fallingTexts[i].position.y > -10 ) {
       fallingTexts[i].position.y -= 2;
+    }
+    else {
+      scene.remove(fallingTexts[i]);
+    }
     }
   }
   else if ( timeElapsed > 120 ) {
@@ -556,6 +562,10 @@ function updateWeather( temp ) {
   if( temp <= 0 ) {
 
   }
+
+}
+
+function updateTime() {
 
 }
 
@@ -700,25 +710,36 @@ function generateFloor() {
 var mesh = new Physijs.PlaneMesh( geometry, material );
 scene.add( mesh );
 
+  var wireframeGeometry = new THREE.PlaneGeometry( 2000, 2000, 200, 200 );
+  wireframeGeometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2) );
 
-  // SQUARE PLANE GEOMETRY
-  var geometry = new THREE.Geometry();
-  geometry.vertices.push(new THREE.Vector3( 1000, 0, 0 ) );
-  geometry.vertices.push(new THREE.Vector3( -1000, 0, 0 ) );
+  var wireframeMaterial = new THREE.MeshBasicMaterial({
+    wireframe: true
+  });
+  var mesh2 = new THREE.Mesh( wireframeGeometry, wireframeMaterial );
+  mesh2.position.y = 1;
 
-  linesMaterial = new THREE.LineBasicMaterial( { color: 0x787878, opacity: 0.2, linewidth: 0.1 } );
+  scene.add( mesh2 );
 
-  for ( var i = 0; i <= 20; i ++ ) {
 
-    var line = new THREE.Line( geometry, linesMaterial );
-    line.position.z = ( i * 50 ) - 1000;
-    scene.add( line );
+  // // SQUARE PLANE GEOMETRY
+  // var geometry = new THREE.Geometry();
+  // geometry.vertices.push(new THREE.Vector3( 1000, 0, 0 ) );
+  // geometry.vertices.push(new THREE.Vector3( -1000, 0, 0 ) );
 
-    var line = new THREE.Line( geometry, linesMaterial );
-    line.position.x = ( i * 50 ) - 1000;
-    line.rotation.y = 90 * Math.PI / 180;
-    scene.add( line );
-  }
+  // linesMaterial = new THREE.LineBasicMaterial( { color: 0x787878, opacity: 0.2, linewidth: 0.1 } );
+
+  // for ( var i = 0; i <= 20; i ++ ) {
+
+  //   var line = new THREE.Line( geometry, linesMaterial );
+  //   line.position.z = ( i * 50 ) - 1000;
+  //   scene.add( line );
+
+  //   var line = new THREE.Line( geometry, linesMaterial );
+  //   line.position.x = ( i * 50 ) - 1000;
+  //   line.rotation.y = 90 * Math.PI / 180;
+  //   scene.add( line );
+  // }
 }
 
 
