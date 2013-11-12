@@ -99,9 +99,10 @@ Physijs.scripts.ammo = 'ammo.js';
 var blocker = document.getElementById( 'blocker' );
 var instructions = document.getElementById( 'instructions' );
 var startMenu = document.getElementById( 'start-menu' );
-var startButton = document.getElementById( 'start-button' );
+var startButton = document.getElementsByClassName( 'start-button' );
 // instructions.style.display = 'none';
 // startMenu.style.display = '';
+blocker.style.display = "none";
 
 
 
@@ -119,6 +120,7 @@ var startButton = document.getElementById( 'start-button' );
             controls.enabled = true;
 
             startMenu.style.display = 'none';
+            blocker.style.display = 'none';
 
           } else {
 
@@ -128,7 +130,7 @@ var startButton = document.getElementById( 'start-button' );
             blocker.style.display = '-moz-box';
             blocker.style.display = 'box';
 
-            startMenu.style.display = '';
+            blocker.style.display = '';
 
           }
 
@@ -154,6 +156,7 @@ var startButton = document.getElementById( 'start-button' );
         startButton.addEventListener( 'click', function ( event ) {
 
           startMenu.style.display = 'none';
+          blocker.style.display = 'none';
 
           // Ask the browser to lock the pointer
           element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
