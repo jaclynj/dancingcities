@@ -4,12 +4,14 @@
   <title>DancingCityApp</title>
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script src="http://connect.soundcloud.com/sdk.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/three.js/r61/three.min.js"></script>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
 </head>
 <body>
 
-<%= yield %>
+  <%= yield %>
 
 </body>
 </html>
