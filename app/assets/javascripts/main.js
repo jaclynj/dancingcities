@@ -34,12 +34,15 @@ var clock = new THREE.Clock( true );
 
 // ALL OBJECTS THAT MOVE TO THE MUSIC
 var movingObjects = [];
+var allBuildingMesh;
 
 // ARRAY FOR RAYCASTER COLLISION DETECTION
 var allObjects = [];
 
 // BIG SPHERE (SKY)
 var bigSphere, sphereMaterial;
+var d = new Date();
+var startTime = d.getHours();
 
 // MIRROR EFFECT VARIABLES
 var mirrorCube, mirrorCubeCamera;
@@ -65,6 +68,14 @@ var textContents = [];
 
 // CENTRAL PARK VARIABLES
 var dancingGrass = [];
+var centralParkMesh;
+
+// USER VARIABLES IF LOGGED IN
+var userName;
+var userImage= "http://pbs.twimg.com/profile_images/378800000490486404/abf4774fdb37f08ee36f5918c7bf2e1c_normal.jpeg";
+
+// CHECKS IF USER CONTENT HAS BEEN GENERATED ALREADY
+var userContent = false;
 
 // GOOGLE COORDINATES
 coordinates = [[40.740084,-73.990115], [40.736698,-73.990164], [40.736706,-74.001249], [40.748379,-74.000112], [40.749955,-73.988549], [40.754734,-73.987922], [40.754734,-73.987922], [40.758635,-73.977452], [40.76538,-73.979727], [40.768029,-73.981937], [40.763771,-73.976368], [40.761691,-73.970693], [40.755953,-73.972816], [40.752154,-73.977782], [40.745111,-73.984687], [40.737925,-73.981683], [40.740835,-73.99185] ];
@@ -169,6 +180,14 @@ var instructions = document.getElementById( 'instructions' );
   instructions.innerHTML = 'Your browser doesn\'t seem to support Pointer Lock API';
 
 }
+
+// PREVENT BACKSPACE FROM GOING BACK
+$(document).on("keydown", function (e) {
+  if (e.which === 8) {
+    e.preventDefault();
+  }
+});
+
 // LOAD AUDIO
 loadAudioRequest( url );
 
@@ -255,6 +274,7 @@ optimizedDynamicBuildings( coordinates );
 // words();
 graffitiWall();
 centralPark();
+generateUserContent();
 
 
 }
@@ -279,21 +299,24 @@ function render() {
     for( var i = 0; i < movingObjects.length; i++ ) {
       var scale = ( array[k] ) / 80;
       var rand = Math.floor(Math.random() * 10);
+      centralParkMesh.material.emissive.setRGB( array[k]/100, array[k]/200, array[k]/500 );
       if( rand % 3 === 0 ){
-        movingObjects[i].scale.x = ( scale < 1 ? 1 : scale );
+        allBuildingMesh.scale.y = ( scale < 1 ?  1 : scale );
       }
       else if ( rand % 2 === 0 ) {
-        movingObjects[i].scale.y = ( scale < 1 ? 1 : scale );
+        allBuildingMesh.scale.y = ( scale < 1 ?  1 : scale );
       }
       else {
-        movingObjects[i].scale.z = ( scale < 1 ? 1 : scale );
+        allBuildingMesh.scale.y = ( scale < 1 ?  1 : scale );
+
+        // movingObjects[i].geometry.vertices[3].y = array[k];
       }
+      movingObjects[i].geometry.verticesNeedUpdate = true;
       k += ( k < array.length? 1 : 0 );
     }
 
     var j = 0;
     for( var i = 0; i < dancingGrass.length; i++ ){
-      dancingGrass[i].material.color.setHSL( Math.random() * 0.2 + 0.2, 0.9, Math.random() * 0.25 + 0.7 );
       j += ( j < array.length? 1 : 0 );
     }
 
@@ -307,7 +330,7 @@ function render() {
     console.log( "words");
   }
 
-  if( Math.round( timeElapsed * 5 ) % 50 === 0 ) {
+  if( Math.round( timeElapsed * 2 ) % 20 === 0 ) {
     updateWall();
 
   }
@@ -346,10 +369,11 @@ function detectCollision() {
     cameraDirection.applyMatrix4(rotationMatrix);
   }
   var rayCaster = new THREE.Raycaster(controls.getObject().position, cameraDirection);
-  intersects = rayCaster.intersectObjects(allObjects, true);
+  intersects = rayCaster.intersectObjects(scene.children, true);
 
   if ((intersects.length > 0 && intersects[0].distance < 25)) {
     lockDirection();
+    // console.log("intersect");
   }
   if ( intersects.length > 0 && intersects[0].distance < 300 ) {
     if( intersects[0].object == wall ) {
@@ -520,7 +544,12 @@ function fallingWords() {
   var timeElapsed = clock.getElapsedTime();
   if ( timeElapsed< 120 ) {
     for( var i = 0; i < fallingTexts.length; i++ ) {
-      fallingTexts[i].position.y -= 2;
+      if( fallingTexts[i].position.y > -10 ) {
+        fallingTexts[i].position.y -= 2;
+      }
+      else {
+        scene.remove( fallingTexts[i] );
+      }
     }
   }
   else if ( timeElapsed > 120 ) {
@@ -548,6 +577,39 @@ function updateWeather( temp ) {
 
   }
 
+}
+
+function updateTime() {
+
+}
+
+function checkLoggedIn() {
+  $.ajax({ 
+    type: "GET", 
+    url: '/checker.json' 
+  }).done( function( data ) {
+    if(data.session === true){
+      $.ajax({
+        type: "GET",
+        url: '/current_user.json'
+      }).done( function( data ) {
+        if( !userContent ) {
+          userName = data.name;
+          userImage = data.image;
+          generateUserContent();
+        }
+      })
+
+    }
+  })
+}
+
+function generateUserContent() {
+  // var canvas = document.createElement('canvas');
+  // userImage = canvas.toDataURL(userImage);
+  // debugger;
+  var image = THREE.ImageUtils.loadTexture( userImage );
+  wall.map = image;
 }
 
 function updateWall() {
@@ -579,7 +641,7 @@ function updateWall() {
         newGeometry, newMaterial );
 
       newMesh.position.x = 500 +  ( Math.random() * 500 );
-      newMesh.position.z = 1450;
+      newMesh.position.z = 650;
       newMesh.position.y = ( Math.random() * 50 ) + ( Math.random() * 100 );
       scene.add( newMesh );
     // textCount += 1;
@@ -611,6 +673,7 @@ function centralPark() {
     overdraw: true
   });
   var sphere = new THREE.Mesh( geometry );
+  sphere.dynamic = true;
   for( i = 0; i < 10; i ++ ) {
     for( j = 0; j < 10; j ++) {
       sphere.position.y = 1;
@@ -627,9 +690,10 @@ function centralPark() {
     xCoord = -1000;
   }
   console.log("grass");
-  var centralParkMesh = new THREE.Mesh( centralParkGeometry, material );
+  centralParkMesh = new THREE.Mesh( centralParkGeometry, material );
   scene.add( centralParkMesh );
   allObjects.push( centralParkMesh );
+  // movingObjects.push( centralParkMesh );
 }
 
 function graffitiWall() {
@@ -640,10 +704,10 @@ function graffitiWall() {
     emissive: new THREE.Color().setHSL( Math.random() * 0.2 + 0.8, 0.3, Math.random() * 0.25 + 0.2 ),
     overdraw: true
   } );
-  wall = new Physijs.BoxMesh( geometry, material );
-  wall.position.x = 1000;
+  wall = new THREE.Mesh( geometry, material );
+  wall.position.x = 900;
   wall.position.y = 0;
-  wall.position.z = 1000;
+  wall.position.z = 700;
   scene.add( wall );
   allObjects.push( wall );
   console.log( "wall" );
@@ -651,7 +715,7 @@ function graffitiWall() {
 
 function generateFloor() {
   // BASIC PLANE GEOMETRY
-  var geometry = new THREE.PlaneGeometry( 2000, 2000, 200, 200 );
+  var geometry = new THREE.PlaneGeometry( 2500, 2500, 200, 200 );
   geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2) );
 
 
@@ -688,25 +752,36 @@ function generateFloor() {
 var mesh = new Physijs.PlaneMesh( geometry, material );
 scene.add( mesh );
 
+var wireframeGeometry = new THREE.PlaneGeometry( 2000, 2000, 200, 200 );
+wireframeGeometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2) );
 
-  // SQUARE PLANE GEOMETRY
-  var geometry = new THREE.Geometry();
-  geometry.vertices.push(new THREE.Vector3( 1000, 0, 0 ) );
-  geometry.vertices.push(new THREE.Vector3( -1000, 0, 0 ) );
+var wireframeMaterial = new THREE.MeshBasicMaterial({
+  wireframe: true
+});
+var mesh2 = new THREE.Mesh( wireframeGeometry, wireframeMaterial );
+mesh2.position.y = 1;
 
-  linesMaterial = new THREE.LineBasicMaterial( { color: 0x787878, opacity: 0.2, linewidth: 0.1 } );
+scene.add( mesh2 );
 
-  for ( var i = 0; i <= 200; i ++ ) {
 
-    var line = new THREE.Line( geometry, linesMaterial );
-    line.position.z = ( i * 50 ) - 1000;
-    scene.add( line );
+  // // SQUARE PLANE GEOMETRY
+  // var geometry = new THREE.Geometry();
+  // geometry.vertices.push(new THREE.Vector3( 1000, 0, 0 ) );
+  // geometry.vertices.push(new THREE.Vector3( -1000, 0, 0 ) );
 
-    var line = new THREE.Line( geometry, linesMaterial );
-    line.position.x = ( i * 50 ) - 1000;
-    line.rotation.y = 90 * Math.PI / 180;
-    scene.add( line );
-  }
+  // linesMaterial = new THREE.LineBasicMaterial( { color: 0x787878, opacity: 0.2, linewidth: 0.1 } );
+
+  // for ( var i = 0; i <= 20; i ++ ) {
+
+  //   var line = new THREE.Line( geometry, linesMaterial );
+  //   line.position.z = ( i * 50 ) - 1000;
+  //   scene.add( line );
+
+  //   var line = new THREE.Line( geometry, linesMaterial );
+  //   line.position.x = ( i * 50 ) - 1000;
+  //   line.rotation.y = 90 * Math.PI / 180;
+  //   scene.add( line );
+  // }
 }
 
 
@@ -756,7 +831,7 @@ function words( wordArray, locationPoints ) {
       emissive: new THREE.Color().setHSL( Math.random() * 0.2 + 0.2, 0.9, Math.random() * 0.25 + 0.7 ),
       overdraw: true
     });
-    var textObj = new Physijs.ConcaveMesh( text, textMaterial );
+    var textObj = new THREE.Mesh( text, textMaterial );
     var lat = locationPoints[i][0];
     var lng = locationPoints[i][1];
     var xCoord = ( ( lat - 40 ) * 10 ) + Math.floor( Math.random() * 1000 ) ;
@@ -791,38 +866,80 @@ function dynamicBuildings( locationPoints ) {
 
 function optimizedDynamicBuildings( locationPoints ) {
   var geometry = new THREE.CubeGeometry( 50, 100, 50, 1, 1 );
-  var buildingMesh = new THREE.Mesh( geometry );
+  geometry.dynamic = true;
   var buildingGeometry = new THREE.Geometry();
+  var cube = new THREE.Mesh( geometry );
+  cube.dynamic = true;
 
   for( var i = 0; i < locationPoints.length; i++ ) {
     var lat = locationPoints[i][0];
     var lng = locationPoints[i][1];
     var xCoord = ( ( lat - 40 ) * 10 ) + Math.floor( Math.random() * 1000 ) ;
     var zCoord = ( ( lng - 70 ) / Math.round( Math.random() * 10 ) ) + Math.floor( Math.random() * 1000 );
-    buildingMesh.position.x = xCoord;
-    buildingMesh.position.y = 0;
-    buildingMesh.position.z = zCoord;
-    allObjects.push( buildingMesh );
-    movingObjects.push( buildingMesh );
+    cube.position.x = xCoord;
+    cube.position.y = 0;
+    cube.position.z = zCoord;
+    allObjects.push( cube );
+    // movingObjects.push( cube );
+    // debugger;
+    // for ( var i = 0; i < geometry.faces.length; i ++ ) {
 
-    var geometry = buildingMesh.geometry;
+    //   var face = geometry.faces[ i ];
+    //   face.vertexColors[ 0 ] = new THREE.Color().setHSL( Math.random() * 0.9 + 0.5, 0.9, Math.random() * 0.25 + 0.9 );
+    //   face.vertexColors[ 1 ] = new THREE.Color().setHSL( Math.random() * 0.9 + 0.5, 0.9, Math.random() * 0.25 + 0.9 );
+    //   face.vertexColors[ 2 ] = new THREE.Color().setHSL( Math.random() * 0.9 + 0.5, 0.9, Math.random() * 0.25 + 0.9 );
 
-    var color1 = new THREE.Color().setHSL( Math.random() * 0.9 + 0.5, 0.9, Math.random() * 0.25 + 0.9 );
-    var color2 = new THREE.Color().setHSL( Math.random() * 0.9 + 0.5, 0.9, Math.random() * 0.25 + 0.9 );
-    var color3 = new THREE.Color().setHSL( Math.random() * 0.9 + 0.5, 0.9, Math.random() * 0.25 + 0.9 );
-    for( var j = 0; j < geometry.faces.length; j++ ) {
-      geometry.faces[j].vertexColors = [ color1, color2, color3, color1 ];
-    }
-    // buildingMesh.material = colorMaterial;
-    THREE.GeometryUtils.merge( buildingGeometry, buildingMesh );
+    // }
+    THREE.GeometryUtils.merge( buildingGeometry, cube );
   }
-  // debugger;
-  var basicMaterial = new THREE.MeshLambertMaterial({
-    vertexColors: THREE.VertexColors
+  // // debugger;
+  var basicMaterial = new THREE.MeshPhongMaterial({
+    specular: 0x222222,
+    color: 0x000000,
+    emissive: new THREE.Color().setHSL( Math.random() * 0.2 + 0.2, 0.9, Math.random() * 0.25 + 0.7 ),
+    shininess: 100
   });
-  var allBuildingMesh = new THREE.Mesh( buildingGeometry, basicMaterial );
+  allBuildingMesh = new THREE.Mesh( buildingGeometry, basicMaterial );
   scene.add( allBuildingMesh );
+  allObjects.push( allBuildingMesh );
+  allObjects.push( buildingGeometry );
+  // movingObjects.push( buildingMesh );
 }
+
+// function optimizedDynamicBuildings( locationPoints ) {
+//   var geometry = new THREE.CubeGeometry( 50, 100, 50, 1, 1 );
+//   var buildingGeometry = new THREE.Geometry();
+//   var cube = new THREE.Mesh( geometry );
+
+//   for( var i = 0; i < locationPoints.length; i++ ) {
+//     var lat = locationPoints[i][0];
+//     var lng = locationPoints[i][1];
+//     var xCoord = ( ( lat - 40 ) * 10 ) + Math.floor( Math.random() * 1000 ) ;
+//     var zCoord = ( ( lng - 70 ) / Math.round( Math.random() * 10 ) ) + Math.floor( Math.random() * 1000 );
+//     cube.position.x = xCoord;
+//     cube.position.y = 0;
+//     cube.position.z = zCoord;
+//     allObjects.push( cube );
+//     movingObjects.push( cube );
+
+//     for ( var i = 0, l = geometry.faces.length; i < l; i ++ ) {
+
+//       var face = geometry.faces[ i ];
+//       face.vertexColors[ 0 ] = new THREE.Color().setHSL( Math.random() * 0.9 + 0.5, 0.9, Math.random() * 0.25 + 0.9 );
+//       face.vertexColors[ 1 ] = new THREE.Color().setHSL( Math.random() * 0.9 + 0.5, 0.9, Math.random() * 0.25 + 0.9 );
+//       face.vertexColors[ 2 ] = new THREE.Color().setHSL( Math.random() * 0.9 + 0.5, 0.9, Math.random() * 0.25 + 0.9 );
+
+//     }
+//     // buildingMesh.material = colorMaterial;
+//     THREE.GeometryUtils.merge( buildingGeometry, cube );
+//   }
+//   // debugger;
+//   var basicMaterial = new THREE.MeshLambertMaterial({
+//     vertexColors: THREE.VertexColors
+//   });
+//   var allBuildingMesh = new THREE.Mesh( buildingGeometry, basicMaterial );
+//   scene.add( allBuildingMesh );
+// }
 
 function addCube( x, y, z ) {
   var geometry = new THREE.CubeGeometry( 50, 100, 50, 1, 1 );
@@ -850,15 +967,33 @@ function addCube( x, y, z ) {
 }
 
 function addBigSphere( x, y ) {
-  var sphereGeom = new THREE.SphereGeometry(3000, 100, 100);
+  var sphereGeom = new THREE.SphereGeometry( 3000, 100, 100 );
+  var skyColor;
+  if( startTime >= 0 && startTime <= 5 ) {
+    skyColor = new THREE.Color().setHSL(  0.1, 0.96, 0.60 );
+  }
+  else if( 12 >= startTime && startTime >= 5 ) {
+    skyColor = new THREE.Color().setHSL( 0.6, 0.5, 0.5 );
+  }
+  else if( 16 >= startTime && startTime >= 12) {
+    skyColor = new THREE.Color().setHSL( 0.6, 0.7, 0.4  );
+  }
+  else if( 20 >= startTime && startTime >= 16 ) {
+    skyColor = new THREE.Color().setHSL( 0.7, 0.7, 0.2 );
+  }
+  else {
+    skyColor = new THREE.Color().setHSL(  0.6, 0.4, 0.1);
+  }
+
+
   sphereMaterial = new THREE.MeshPhongMaterial(
    {    specular: 0x222222,
     color: 0x000000,
-    emissive: 0x888888,
+    emissive: skyColor,
     side: THREE.DoubleSide,
     // vertexColors: THREE.VertexColors,
     // wireframe: true,
-    // shininess: 100,
+    shininess: 100,
     overdraw: true });
   bigSphere = new THREE.Mesh( sphereGeom, sphereMaterial );
   bigSphere.position.x = x;
@@ -872,7 +1007,7 @@ function addMirrorSphere( x, y ) {
   // mirrorCubeCamera.renderTarget.minFilter = THREE.LinearMipMapLinearFilter;
   scene.add( mirrorSphereCamera );
   var mirrorSphereMaterial = new THREE.MeshBasicMaterial( { envMap: mirrorSphereCamera.renderTarget } );
-  mirrorSphere = new Physijs.SphereMesh( sphereGeom, mirrorSphereMaterial );
+  mirrorSphere = new THREE.Mesh( sphereGeom, mirrorSphereMaterial );
   mirrorSphere.position.set(x, y, 0);
   mirrorSphereCamera.position = mirrorSphere.position;
   scene.add(mirrorSphere);
@@ -886,7 +1021,7 @@ function addMirrorCube( x, y ) {
   // mirrorCubeCamera.renderTarget.minFilter = THREE.LinearMipMapLinearFilter;
   scene.add( mirrorCubeCamera );
   var mirrorCubeMaterial = new THREE.MeshBasicMaterial( { envMap: mirrorCubeCamera.renderTarget } );
-  mirrorCube = new Physijs.BoxMesh( cubeGeom, mirrorCubeMaterial );
+  mirrorCube = new THREE.Mesh( cubeGeom, mirrorCubeMaterial );
   mirrorCube.position.set( x, y, 0 );
   mirrorCubeCamera.position = mirrorCube.position;
   scene.add(mirrorCube);
