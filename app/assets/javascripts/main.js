@@ -791,38 +791,73 @@ function dynamicBuildings( locationPoints ) {
 
 function optimizedDynamicBuildings( locationPoints ) {
   var geometry = new THREE.CubeGeometry( 50, 100, 50, 1, 1 );
-  var buildingMesh = new THREE.Mesh( geometry );
   var buildingGeometry = new THREE.Geometry();
+  var cube = new THREE.Mesh( geometry );
 
   for( var i = 0; i < locationPoints.length; i++ ) {
     var lat = locationPoints[i][0];
     var lng = locationPoints[i][1];
     var xCoord = ( ( lat - 40 ) * 10 ) + Math.floor( Math.random() * 1000 ) ;
     var zCoord = ( ( lng - 70 ) / Math.round( Math.random() * 10 ) ) + Math.floor( Math.random() * 1000 );
-    buildingMesh.position.x = xCoord;
-    buildingMesh.position.y = 0;
-    buildingMesh.position.z = zCoord;
-    allObjects.push( buildingMesh );
-    movingObjects.push( buildingMesh );
+    cube.position.x = xCoord;
+    cube.position.y = 0;
+    cube.position.z = zCoord;
+    allObjects.push( cube );
+    movingObjects.push( cube );
+    // debugger;
+    // for ( var i = 0; i < geometry.faces.length; i ++ ) {
 
-    var geometry = buildingMesh.geometry;
+    //   var face = geometry.faces[ i ];
+    //   face.vertexColors[ 0 ] = new THREE.Color().setHSL( Math.random() * 0.9 + 0.5, 0.9, Math.random() * 0.25 + 0.9 );
+    //   face.vertexColors[ 1 ] = new THREE.Color().setHSL( Math.random() * 0.9 + 0.5, 0.9, Math.random() * 0.25 + 0.9 );
+    //   face.vertexColors[ 2 ] = new THREE.Color().setHSL( Math.random() * 0.9 + 0.5, 0.9, Math.random() * 0.25 + 0.9 );
 
-    var color1 = new THREE.Color().setHSL( Math.random() * 0.9 + 0.5, 0.9, Math.random() * 0.25 + 0.9 );
-    var color2 = new THREE.Color().setHSL( Math.random() * 0.9 + 0.5, 0.9, Math.random() * 0.25 + 0.9 );
-    var color3 = new THREE.Color().setHSL( Math.random() * 0.9 + 0.5, 0.9, Math.random() * 0.25 + 0.9 );
-    for( var j = 0; j < geometry.faces.length; j++ ) {
-      geometry.faces[j].vertexColors = [ color1, color2, color3, color1 ];
-    }
-    // buildingMesh.material = colorMaterial;
-    THREE.GeometryUtils.merge( buildingGeometry, buildingMesh );
+    // }
+  //   // buildingMesh.material = colorMaterial;
+  //   THREE.GeometryUtils.merge( buildingGeometry, cube );
   }
-  // debugger;
-  var basicMaterial = new THREE.MeshLambertMaterial({
-    vertexColors: THREE.VertexColors
-  });
-  var allBuildingMesh = new THREE.Mesh( buildingGeometry, basicMaterial );
-  scene.add( allBuildingMesh );
+  // // debugger;
+  // var basicMaterial = new THREE.MeshLambertMaterial({
+  //   vertexColors: THREE.VertexColors
+  // });
+  // var allBuildingMesh = new THREE.Mesh( buildingGeometry, basicMaterial );
+  // scene.add( allBuildingMesh );
 }
+
+// function optimizedDynamicBuildings( locationPoints ) {
+//   var geometry = new THREE.CubeGeometry( 50, 100, 50, 1, 1 );
+//   var buildingGeometry = new THREE.Geometry();
+//   var cube = new THREE.Mesh( geometry );
+
+//   for( var i = 0; i < locationPoints.length; i++ ) {
+//     var lat = locationPoints[i][0];
+//     var lng = locationPoints[i][1];
+//     var xCoord = ( ( lat - 40 ) * 10 ) + Math.floor( Math.random() * 1000 ) ;
+//     var zCoord = ( ( lng - 70 ) / Math.round( Math.random() * 10 ) ) + Math.floor( Math.random() * 1000 );
+//     cube.position.x = xCoord;
+//     cube.position.y = 0;
+//     cube.position.z = zCoord;
+//     allObjects.push( cube );
+//     movingObjects.push( cube );
+
+//     for ( var i = 0, l = geometry.faces.length; i < l; i ++ ) {
+
+//       var face = geometry.faces[ i ];
+//       face.vertexColors[ 0 ] = new THREE.Color().setHSL( Math.random() * 0.9 + 0.5, 0.9, Math.random() * 0.25 + 0.9 );
+//       face.vertexColors[ 1 ] = new THREE.Color().setHSL( Math.random() * 0.9 + 0.5, 0.9, Math.random() * 0.25 + 0.9 );
+//       face.vertexColors[ 2 ] = new THREE.Color().setHSL( Math.random() * 0.9 + 0.5, 0.9, Math.random() * 0.25 + 0.9 );
+
+//     }
+//     // buildingMesh.material = colorMaterial;
+//     THREE.GeometryUtils.merge( buildingGeometry, cube );
+//   }
+//   // debugger;
+//   var basicMaterial = new THREE.MeshLambertMaterial({
+//     vertexColors: THREE.VertexColors
+//   });
+//   var allBuildingMesh = new THREE.Mesh( buildingGeometry, basicMaterial );
+//   scene.add( allBuildingMesh );
+// }
 
 function addCube( x, y, z ) {
   var geometry = new THREE.CubeGeometry( 50, 100, 50, 1, 1 );
