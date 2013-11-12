@@ -291,15 +291,21 @@ function render() {
       var scale = ( array[k] ) / 80;
       var rand = Math.floor(Math.random() * 10);
       centralParkMesh.material.emissive.setRGB( array[k]/100, array[k]/200, array[k]/500 );
+        movingObjects[i].geometry.vertices[1].z = array[k];
+        movingObjects[i].geometry.vertices[2].x = array[k];
+        movingObjects[i].geometry.vertices[3].z = array[k];
+        movingObjects[i].geometry.vertices[4].y = array[k];
       if( rand % 3 === 0 ){
-        movingObjects[i].scale.x = ( scale < 1 ? 1 : scale );
       }
       else if ( rand % 2 === 0 ) {
-        movingObjects[i].scale.y = ( scale < 1 ? 1 : scale );
+        movingObjects[i].geometry.vertices[6].x = array[k];
+        movingObjects[i].geometry.vertices[5].y = array[k];
+
       }
       else {
-        movingObjects[i].scale.z = ( scale < 1 ? 1 : scale );
+        // movingObjects[i].geometry.vertices[3].y = array[k];
       }
+      movingObjects[i].geometry.verticesNeedUpdate = true;
       k += ( k < array.length? 1 : 0 );
     }
 
@@ -318,7 +324,7 @@ function render() {
     console.log( "words");
   }
 
-  if( Math.round( timeElapsed * 5 ) % 50 === 0 ) {
+  if( Math.round( timeElapsed * 2 ) % 20 === 0 ) {
     updateWall();
 
   }
@@ -357,10 +363,11 @@ function detectCollision() {
     cameraDirection.applyMatrix4(rotationMatrix);
   }
   var rayCaster = new THREE.Raycaster(controls.getObject().position, cameraDirection);
-  intersects = rayCaster.intersectObjects(allObjects, true);
+  intersects = rayCaster.intersectObjects(scene.children);
 
   if ((intersects.length > 0 && intersects[0].distance < 25)) {
     lockDirection();
+    // console.log("intersect");
   }
   if ( intersects.length > 0 && intersects[0].distance < 300 ) {
     if( intersects[0].object == wall ) {
@@ -535,7 +542,7 @@ function fallingWords() {
       fallingTexts[i].position.y -= 2;
     }
     else {
-      scene.remove(fallingTexts[i]);
+      scene.remove( fallingTexts[i] );
     }
     }
   }
@@ -662,11 +669,10 @@ function graffitiWall() {
     emissive: new THREE.Color().setHSL( Math.random() * 0.2 + 0.8, 0.3, Math.random() * 0.25 + 0.2 ),
     overdraw: true
   } );
-  wall = new Physijs.BoxMesh( geometry, material );
+  wall = new THREE.Mesh( geometry, material );
   wall.position.x = 900;
   wall.position.y = 0;
   wall.position.z = 700;
-  wall.makeRotationY
   scene.add( wall );
   allObjects.push( wall );
   console.log( "wall" );
@@ -790,7 +796,7 @@ function words( wordArray, locationPoints ) {
       emissive: new THREE.Color().setHSL( Math.random() * 0.2 + 0.2, 0.9, Math.random() * 0.25 + 0.7 ),
       overdraw: true
     });
-    var textObj = new Physijs.ConcaveMesh( text, textMaterial );
+    var textObj = new THREE.Mesh( text, textMaterial );
     var lat = locationPoints[i][0];
     var lng = locationPoints[i][1];
     var xCoord = ( ( lat - 40 ) * 10 ) + Math.floor( Math.random() * 1000 ) ;
@@ -860,6 +866,8 @@ function optimizedDynamicBuildings( locationPoints ) {
   });
   var allBuildingMesh = new THREE.Mesh( buildingGeometry, basicMaterial );
   scene.add( allBuildingMesh );
+  allObjects.push( allBuildingMesh );
+  allObjects.push( buildingGeometry );
 }
 
 // function optimizedDynamicBuildings( locationPoints ) {
@@ -963,7 +971,7 @@ function addMirrorSphere( x, y ) {
   // mirrorCubeCamera.renderTarget.minFilter = THREE.LinearMipMapLinearFilter;
   scene.add( mirrorSphereCamera );
   var mirrorSphereMaterial = new THREE.MeshBasicMaterial( { envMap: mirrorSphereCamera.renderTarget } );
-  mirrorSphere = new Physijs.SphereMesh( sphereGeom, mirrorSphereMaterial );
+  mirrorSphere = new THREE.Mesh( sphereGeom, mirrorSphereMaterial );
   mirrorSphere.position.set(x, y, 0);
   mirrorSphereCamera.position = mirrorSphere.position;
   scene.add(mirrorSphere);
@@ -977,7 +985,7 @@ function addMirrorCube( x, y ) {
   // mirrorCubeCamera.renderTarget.minFilter = THREE.LinearMipMapLinearFilter;
   scene.add( mirrorCubeCamera );
   var mirrorCubeMaterial = new THREE.MeshBasicMaterial( { envMap: mirrorCubeCamera.renderTarget } );
-  mirrorCube = new Physijs.BoxMesh( cubeGeom, mirrorCubeMaterial );
+  mirrorCube = new THREE.Mesh( cubeGeom, mirrorCubeMaterial );
   mirrorCube.position.set( x, y, 0 );
   mirrorCubeCamera.position = mirrorCube.position;
   scene.add(mirrorCube);
