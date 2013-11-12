@@ -543,10 +543,10 @@ function onWindowResize() {
 
 // GRAB FOURSQUARE GEODATA
 function grabFoursquare() {
-  $.ajax({
+ places = $.ajax({
     type: "GET",
     url: "https://api.foursquare.com/v2/venues/explore?ll=40.7,-74&section=topPicks&limit=50&oauth_token=K4UCTP1LAKJNTMLHCF4ZGITHNAV1344HNO3BATADR0LFLVGI"
-  }).done( function() {
+  }).done( function( data ) {
     var locations = places.responseJSON.response.groups[0].items;
     for( var i = 0; i < locations.length; i++ ) {
       var place = [];
