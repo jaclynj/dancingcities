@@ -327,11 +327,11 @@ function render() {
   }
   if ( ( timeElapsed > 60 ) && ((( Math.round( timeElapsed * 10 ) % 100 === 0 )))) {
     $.ajax({
-        type: "GET",
-        url: '/tweets.json'
-      }).done( function( data ) {
-          words( data, coordinates );
-      })
+      type: "GET",
+      url: '/tweets.json'
+    }).done( function( data ) {
+      words( data, coordinates );
+    })
     console.log( "words");
   }
 
@@ -547,10 +547,14 @@ function loadAudioBuffer() {
 
 function fallingWords() {
   var timeElapsed = clock.getElapsedTime();
-  if ( timeElapsed< 120 ) {
+  if ( timeElapsed < 120 ) {
     for( var i = 0; i < fallingTexts.length; i++ ) {
       if( fallingTexts[i].position.y > -10 ) {
-        fallingTexts[i].position.y -= 2;
+        for( var j = 0; j < fallingTexts[i].geometry.vertices.length; j ++ ) {
+          fallingTexts[i].geometry.vertices[j].y -= 2;
+        }
+        // fallingTexts[i].position.y -= 2;
+        fallingTexts[i].geometry.verticesNeedUpdate = true;
       }
       else {
         scene.remove( fallingTexts[i] );
@@ -560,7 +564,11 @@ function fallingWords() {
   else if ( timeElapsed > 120 ) {
     for( var i = 0; i < fallingTexts.length; i++ ) {
       if( fallingTexts[i].position.y > 0 ) {
-        fallingTexts[i].position.y -= 2;
+        for( var j = 0; j < fallingTexts[i].geometry.vertices.length; j ++ ) {
+          fallingTexts[i].geometry.vertices[j].y -= 2;
+        }
+        // fallingTexts[i].position.y -= 2;
+        fallingTexts[i].geometry.verticesNeedUpdate = true;
       }
     }
 
@@ -821,24 +829,24 @@ function initParticles() {
 
 function words( wordArray, locationPoints ) {
 
-    var text = new THREE.TextGeometry( wordArray[i], {
-      size: 50,
-      height: 10,
-      curveSegments: 2,
-      font: "helvetiker",
-      weight: "normal",
-      style: 'normal'
+  var text = new THREE.TextGeometry( wordArray[i], {
+    size: 50,
+    height: 10,
+    curveSegments: 2,
+    font: "helvetiker",
+    weight: "normal",
+    style: 'normal'
 
-    });
-    var textGeometry = new THREE.Geometry();
-    textGeometry.dynamic = true;
-    var textMesh = new THREE.Mesh( text );
-    var textMaterial = new THREE.MeshLambertMaterial( {
-      specular: 0x222222,
-      color: 0x000000,
-      emissive: new THREE.Color().setHSL( Math.random() * 0.2 + 0.2, 0.9, Math.random() * 0.25 + 0.7 ),
-      overdraw: true
-    });
+  });
+  var textGeometry = new THREE.Geometry();
+  textGeometry.dynamic = true;
+  var textMesh = new THREE.Mesh( text );
+  var textMaterial = new THREE.MeshLambertMaterial( {
+    specular: 0x222222,
+    color: 0x000000,
+    emissive: new THREE.Color().setHSL( Math.random() * 0.2 + 0.2, 0.9, Math.random() * 0.25 + 0.7 ),
+    overdraw: true
+  });
   for( i = 0; i < wordArray.length; i++ ) {
     text.applyMatrix( new THREE.Matrix4().makeRotationY( - Math.PI / 2) );
     text.applyMatrix( new THREE.Matrix4().makeRotationX( Math.random() * Math.PI / 2) );
