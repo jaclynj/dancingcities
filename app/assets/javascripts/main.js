@@ -51,8 +51,10 @@ var mirrorSphere, mirrorSphereCamera;
 // PARTICLE GENERATOR OBJECTS
 var emitter, particleGroup;
 
-// FALLING TEXT OBJECTS
+// FALLING TEXT OBJECTS & VARIABLES
 var fallingTexts = [];
+var tweetArray = [];
+var wordPos = 0;
 
 // COUNTING OBJECTS TOUCHED
 var objectsTouched = 0;
@@ -276,6 +278,13 @@ graffitiWall();
 centralPark();
 generateUserContent();
 
+$.ajax({
+  type: "GET",
+  url: '/tweets.json'
+}).done( function( data ) {
+  tweetArray = data;
+})
+
 
 }
 
@@ -326,12 +335,7 @@ function render() {
     // console.log("should be working");
   }
   if ( ( timeElapsed > 60 ) && ((( Math.round( timeElapsed * 10 ) % 100 === 0 )))) {
-    $.ajax({
-      type: "GET",
-      url: '/tweets.json'
-    }).done( function( data ) {
-      words( data, coordinates );
-    })
+    words( tweetArray, coordinates );
     console.log( "words");
   }
 
@@ -829,6 +833,7 @@ function initParticles() {
 
 function words( wordArray, locationPoints ) {
   // debugger;
+  var wordPosAtStart = wordPos;
   var textGeometry = new THREE.Geometry();
   textGeometry.dynamic = true;
   var textMaterial = new THREE.MeshLambertMaterial( {
@@ -837,7 +842,7 @@ function words( wordArray, locationPoints ) {
     emissive: new THREE.Color().setHSL( Math.random() * 0.2 + 0.2, 0.9, Math.random() * 0.25 + 0.7 ),
     overdraw: true
   });
-  for( i = 0; i < wordArray.length; i++ ) {
+  for( i = wordPos; i < wordPosAtStart + 2; i++ ) {
     var text = new THREE.TextGeometry( wordArray[i], {
       size: 50,
       height: 10,
@@ -847,7 +852,7 @@ function words( wordArray, locationPoints ) {
       style: 'normal'
 
     });
-  var textMesh = new THREE.Mesh( text );
+    var textMesh = new THREE.Mesh( text );
     text.applyMatrix( new THREE.Matrix4().makeRotationY( - Math.PI / 2) );
     text.applyMatrix( new THREE.Matrix4().makeRotationX( Math.random() * Math.PI / 2) );
     var lat = locationPoints[i][0];
@@ -861,6 +866,7 @@ function words( wordArray, locationPoints ) {
     // fallingTexts.push( textMesh );
     allObjects.push( textMesh );
     THREE.GeometryUtils.merge( textGeometry, textMesh );
+    wordPos += 1;
   }
 
   var allTextMesh = new THREE.Mesh( textGeometry, textMaterial );
@@ -918,7 +924,7 @@ function optimizedDynamicBuildings( locationPoints ) {
   var basicMaterial = new THREE.MeshPhongMaterial({
     specular: 0x222222,
     color: 0x000000,
-    emissive: new THREE.Color().setHSL( Math.random() * 0.2 + 0.5, 0.5, Math.random() * 0.25 + 0.6 ),
+    emissive: new THREE.Color().setHSL( Math.random() * 0.2 + 0.5, 0.5, Math.random() * 0.20 + 0.6 ),
     shininess: 100
   });
   allBuildingMesh = new THREE.Mesh( buildingGeometry, basicMaterial );
