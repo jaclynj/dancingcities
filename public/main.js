@@ -393,15 +393,15 @@ function render() {
       var rand = Math.floor(Math.random() * 10);
       centralParkMesh.material.emissive.setRGB( array[k]/100, array[k]/200, array[k]/500 );
       if( rand % 3 === 0 ){
-        allObjects[i].scale.y = ( scale < 1 ? 1 : scale );
+        movingObjects[i].scale.y = ( scale < 1 ? 1 : scale );
         allBuildingMesh.scale.y = ( scale < 1 ?  1 : scale );
       }
       else if ( rand % 2 === 0 ) {
-        allObjects[i].scale.z = ( scale < 1 ? 1 : scale );
+        movingObjects[i].scale.z = ( scale < 1 ? 1 : scale );
         allBuildingMesh.scale.y = ( scale < 1 ?  1 : scale );
       }
       else {
-        allObjects[i].scale.x = ( scale < 1 ? 1 : scale );
+        movingObjects[i].scale.x = ( scale < 1 ? 1 : scale );
         allBuildingMesh.scale.y = ( scale < 1 ?  1 : scale );
 
         // movingObjects[i].geometry.vertices[3].y = array[k];
