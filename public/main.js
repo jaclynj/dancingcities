@@ -207,9 +207,9 @@ startMenu.style.display = '';
 
         }, false );
 
-        endMenu.addEventListener( 'click', function ( event ) {
+endMenu.addEventListener( 'click', function ( event ) {
 
-        endMenu.style.display = 'none';
+  endMenu.style.display = 'none';
 
           // Ask the browser to lock the pointer
           element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
@@ -243,9 +243,9 @@ startMenu.style.display = '';
 
         }, false );
 
-        startButton.addEventListener( 'click', function ( event ) {
+startButton.addEventListener( 'click', function ( event ) {
 
-          startMenu.style.display = 'none';
+  startMenu.style.display = 'none';
 
           // Ask the browser to lock the pointer
           element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
@@ -449,13 +449,20 @@ function render() {
       k += ( k < array.length? 1 : 0 );
     }
 
+    if( timeElapsed > 257 ) {
+      var endMenu = document.getElementById('end-menu');
+      var instructions = document.getElementById('instructions');
+      endMenu.style.display = "";
+      blocker.display = 'none';
+
+    }
+
     var j = 0;
-    if( timeElapsed > 180 ) {
+    if( timeElapsed > 181 ) {
       for( var i = 0; i < dancingGrass.length; i++ ){
         var scale = ( array[j] / 100 );
         centralParkMesh.scale.y = ( scale < 0.6 ? 0.6 : scale );
         j += ( j < array.length? 1 : 0 );
-        centralParkMesh.scale.z = ( scale < 0.2 ? 0.2 : scale );
       }
     }
 
@@ -483,10 +490,10 @@ function render() {
     }
   }
 
-  if( timeElapsed > 182 && !endingLight ) {
+  if( timeElapsed > 181 && !endingLight ) {
     generateEndingLight();
   }
-  if( timeElapsed > 182 && endingLight && ( Math.round( timeElapsed ) % 10 === 0 ) ) {
+  if( timeElapsed > 181 && endingLight && ( Math.round( timeElapsed ) % 3 === 0 ) ) {
     flashEndingLight();
   }
 
@@ -865,10 +872,12 @@ function getUserData() {
     type: "GET",
     url: '/current_user.json'
   }).done( function( data ) {
-    userName = data.name;
-    userImage = data.image;
-    customUserGraphics = true;
-    userContent = false;
+    if ( data !== null ){
+      userName = data.name;
+      userImage = data.image;
+      customUserGraphics = true;
+      userContent = false;
+    }
   })
 }
 
