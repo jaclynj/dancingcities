@@ -714,18 +714,21 @@ function checkLoggedIn() {
 function generateUserContent() {
   var i = Math.floor( Math.random() * 10 );
   var str = messageToUser[i] + userName;
-  for( var i = 0; i < 20; i ++ ){
-    var msgDiv = document.createElement('div');
-    msgDiv.textContent = str;
-    msgDiv.style.position = 'absolute';
-    msgDiv.style.top = Math.random() * 300;
-    msgDiv.style.left = Math.random() * 600;
-    msgDiv.className = "usermsg";
-    document.body.appendChild( msgDiv );
-    $('.usermsg').fadeIn( 100 );
-    $('.usermsg').fadeOut( 100 );
-    console.log("trying");
-  }
+
+// DO THIS WITH CANVAS ???
+
+  // for( var i = 0; i < 20; i ++ ){
+  //   var msgDiv = document.createElement('div');
+  //   msgDiv.textContent = str;
+  //   msgDiv.style.position = 'absolute';
+  //   msgDiv.style.top = Math.random() * 300;
+  //   msgDiv.style.left = Math.random() * 600;
+  //   msgDiv.className = "usermsg";
+  //   document.body.appendChild( msgDiv );
+  //   $('.usermsg').fadeIn( 100 );
+  //   $('.usermsg').fadeOut( 100 );
+  //   console.log("trying");
+  // }
 
 }
 
