@@ -435,13 +435,15 @@ function render() {
     }
   }
 
-
   if( timeElapsed > 182 && !endingLight ) {
     generateEndingLight();
   }
-  if( timeElapsed > 182 && endingLight && ( Math.round( timeElapsed * 5 ) % 50 === 0 ) ) {
+  if( timeElapsed > 182 && endingLight && ( Math.round( timeElapsed ) % 10 === 0 ) ) {
     flashEndingLight();
   }
+
+
+
 
 
   takeMirrorSnapshot();
@@ -698,7 +700,7 @@ function loadAudioBuffer() {
 // UPDATE FUNCTIONS
 
 function flashEndingLight() {
-  endingLightAmbient.color.setHex( Math.random() * 0x404040 );
+  endingLightAmbient.material.emissive.setHex( Math.random() * 0xffffff );
 
 }
 
@@ -887,7 +889,41 @@ function updateWall() {
 // GEOMETRY FUNCTIONS
 
 function generateEndingLight() {
-  endingLightAmbient = new THREE.AmbientLight( 0x404040 );
+  var geometry =   new THREE.CylinderGeometry( 20, 20, 1000 );
+  var cylinderMesh = new THREE.Mesh( geometry );
+  var material = new THREE.MeshPhongMaterial({
+    opacity: 0.25,
+    transparent: true,
+    shininess: 0,
+    ambient: 0xffffff,
+    emissive: 0xffffff
+  });
+  var endingLightGeom = new THREE.Geometry();
+
+  for( var i = 0; i < 2000; i++ ) {
+    var xCoord, zCoord;
+    if ( i % 2 === 0 ) {
+      var xCoord = ( Math.random() * 1000 );
+      var zCoord = ( Math.random() * 1000 );
+    }
+    else if ( i % 3 === 0 ) {
+      var xCoord = ( -Math.random() * 1000 );
+      var zCoord = ( Math.random() * 1000 );
+    }
+    else if ( i % 5 === 0 ) {
+      var xCoord = ( Math.random() * 1000 );
+      var zCoord = ( -Math.random() * 1000 );
+    }
+    else {
+      var xCoord = ( -Math.random() * 1000 );
+      var zCoord = ( -Math.random() * 1000 );
+    }
+
+    cylinderMesh.position.x = xCoord;
+    cylinderMesh.position.z = zCoord;
+    THREE.GeometryUtils.merge( endingLightGeom, cylinderMesh );
+  }
+  endingLightAmbient = new THREE.Mesh( endingLightGeom, material );
   scene.add( endingLightAmbient );
   endingLight = true;
 }
