@@ -720,6 +720,8 @@ function generateUserContent() {
 
   for( var i = 0; i < 20; i ++ ){
     var newCanvas = document.createElement( 'canvas' );
+    newCanvas.height = window.innerHeight;
+    newCanvas.width = window.innerWidth;
     var newContext = newCanvas.getContext( '2d' );
     newContext.font = "Bold 20px Arial";
     newContext.fillStyle = "rgba(255, 255, 255, 0.8)";
@@ -734,15 +736,15 @@ function generateUserContent() {
     });
     newMaterial.transparent = true;
     var newGeometry = new THREE.PlaneGeometry( newCanvas.width, newCanvas.height );
-    newGeometry.applyMatrix( new THREE.Matrix4().makeRotationY( - Math.PI / 4) );
+    newGeometry.applyMatrix( new THREE.Matrix4().makeRotationY(  Math.PI / 6) );
     // newGeometry.applyMatrix( new THREE.Matrix4().makeRotationZ( -Math.PI/ 4 ) );
       // newGeometry.applyMatrix( new THREE.Matrix4().makeRotationX( Math.PI/ 4 ) );
     var newMesh = new THREE.Mesh(
       newGeometry, newMaterial );
 
-    newMesh.position.x = direction.x - 100 * Math.random();
-    newMesh.position.z =  direction.z - 200 * Math.random();
-    newMesh.position.y = direction.y + 100 * Math.random();
+    newMesh.position.x = direction.x + 400 * Math.random();
+    newMesh.position.z =  direction.z - 500 * Math.random();
+    newMesh.position.y = direction.y - 200 * Math.random();
     scene.add( newMesh );
     allUserMessages.push( newMesh );
   }
