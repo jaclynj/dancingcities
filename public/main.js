@@ -68,6 +68,10 @@ var textCount = 0;
 var sendAjax = true;
 var textContents = [];
 
+// TIME BASED STUFF
+var endingLight = false;
+var endingLightAmbient;
+
 // CENTRAL PARK VARIABLES
 var dancingGrass = [];
 var centralParkMesh;
@@ -377,12 +381,15 @@ function render() {
       var rand = Math.floor(Math.random() * 10);
       centralParkMesh.material.emissive.setRGB( array[k]/100, array[k]/200, array[k]/500 );
       if( rand % 3 === 0 ){
+        allObjects[i].scale.y = ( scale < 1 ? 1 : scale );
         allBuildingMesh.scale.y = ( scale < 1 ?  1 : scale );
       }
       else if ( rand % 2 === 0 ) {
+        allObjects[i].scale.z = ( scale < 1 ? 1 : scale );
         allBuildingMesh.scale.y = ( scale < 1 ?  1 : scale );
       }
       else {
+        allObjects[i].scale.x = ( scale < 1 ? 1 : scale );
         allBuildingMesh.scale.y = ( scale < 1 ?  1 : scale );
 
         // movingObjects[i].geometry.vertices[3].y = array[k];
@@ -392,9 +399,15 @@ function render() {
     }
 
     var j = 0;
-    for( var i = 0; i < dancingGrass.length; i++ ){
-      j += ( j < array.length? 1 : 0 );
+    if( timeElapsed > 182 ) {
+      for( var i = 0; i < dancingGrass.length; i++ ){
+        var scale = ( array[j] / 100 );
+        centralParkMesh.scale.y = ( scale < 0.6 ? 0.6 : scale );
+        j += ( j < array.length? 1 : 0 );
+        centralParkMesh.scale.z = ( scale < 0.2 ? 0.2 : scale );
+      }
     }
+
 
   // time event to begin particles
   if( timeElapsed > 35 ) {
@@ -418,6 +431,15 @@ function render() {
       console.log(" user content ");
     }
   }
+
+
+  if( timeElapsed > 182 && !endingLight ) {
+    generateEndingLight();
+  }
+  if( timeElapsed > 182 && endingLight ) {
+    flashEndingLight();
+  }
+
 
   takeMirrorSnapshot();
 
@@ -453,7 +475,7 @@ function detectCollision() {
     cameraDirection.applyMatrix4(rotationMatrix);
   }
   var rayCaster = new THREE.Raycaster(controls.getObject().position, cameraDirection);
-  intersects = rayCaster.intersectObjects(scene.children, true);
+  intersects = rayCaster.intersectObjects(allObjects, true);
 
   if ((intersects.length > 0 && intersects[0].distance < 25)) {
     lockDirection();
@@ -646,6 +668,11 @@ function loadAudioBuffer() {
 
 // UPDATE FUNCTIONS
 
+function flashEndingLight() {
+  endingLightAmbient.color.setHex( Math.random() * 0xffffff );
+
+}
+
 function fallingWords() {
   var timeElapsed = clock.getElapsedTime();
   if ( timeElapsed < 120 ) {
@@ -829,6 +856,11 @@ function updateWall() {
 
 
 // GEOMETRY FUNCTIONS
+
+function generateEndingLight() {
+  // endingLightAmbient = new THREE.AmbientLight( 0x404040 );
+  // scene.add( endingLightAmbient );
+}
 
 function centralPark() {
   var xCoord = -1000;
