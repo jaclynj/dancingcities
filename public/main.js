@@ -434,7 +434,7 @@ function detectCollision() {
     cameraDirection.applyMatrix4(rotationMatrix);
   }
   var rayCaster = new THREE.Raycaster(controls.getObject().position, cameraDirection);
-  intersects = rayCaster.intersectObjects(scene.children, true);
+  intersects = rayCaster.intersectObjects(allObjects, true);
 
   if ((intersects.length > 0 && intersects[0].distance < 25)) {
     lockDirection();
@@ -552,22 +552,24 @@ function onWindowResize() {
 function grabFoursquare() {
  places = $.ajax({
   type: "GET",
-  url: "https://api.foursquare.com/v2/venues/explore?ll=40.7,-74&section=topPicks&limit=50&oauth_token=K4UCTP1LAKJNTMLHCF4ZGITHNAV1344HNO3BATADR0LFLVGI"
-}).done( function( data ) {
-  var locations = places.responseJSON.response.groups[0].items;
-  for( var i = 0; i < locations.length; i++ ) {
-    var place = [];
-    var lng = locations[i].venue.location.lng;
-    var lat = locations[i].venue.location.lat;
-    var name = locations[i].venue.name;
-    place.push( lat, lng, name );
-    placesArray.push( place );
-  }
+  url: "https://api.foursquare.com/v2/venues/explore?ll=40.7,-74&section=topPicks&limit=50&oauth_token=K4UCTP1LAKJNTMLHCF4ZGITHNAV1344HNO3BATADR0LFLVGI",
+  async: false
+});
+ // debugger;
+ var locations = places.responseJSON.response.groups[0].items;
+ for( var i = 0; i < locations.length; i++ ) {
+  var place = [];
+  var lng = locations[i].venue.location.lng;
+  var lat = locations[i].venue.location.lat;
+  var name = locations[i].venue.name;
+  place.push( lat, lng, name );
+  placesArray.push( place );
+
   console.log( placesArray );
     // optimizedDynamicBuildings( placesArray );
-  });
+  // });
 }
-
+}
 
 // LOAD AUDIO REQUEST TO/FROM SOUNDCLOUD API
 
@@ -1006,8 +1008,8 @@ function optimizedDynamicBuildings( locationPoints ) {
   });
   allBuildingMesh = new THREE.Mesh( buildingGeometry, basicMaterial );
   scene.add( allBuildingMesh );
-  allObjects.push( allBuildingMesh );
-  allObjects.push( buildingGeometry );
+  // allObjects.push( allBuildingMesh );
+  // allObjects.push( buildingGeometry );
   // movingObjects.push( buildingMesh );
 }
 
