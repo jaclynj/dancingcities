@@ -363,6 +363,13 @@ function render() {
 
   var timeElapsed = clock.getElapsedTime();
 
+  if( timeElapsed < 30 && !customUserGraphics ){
+    checkLoggedIn();
+  }
+  if( userContent ){
+    getUserData();
+  }
+
     // animate all shapes in "movingObjects" array based on song
     var k = 0;
     for( var i = 0; i < movingObjects.length; i++ ) {
@@ -404,11 +411,10 @@ function render() {
 
   }
 
-  if( timeElapsed > 200 ) {
-    if( customUserGraphics ) {
-      if( ( ( timeElapsed * 12 ) % 120 ) === 0 ) {
-        generateUserContent();
-      }
+  if( timeElapsed > 30 && customUserGraphics ) {
+    if( Math.floor( timeElapsed) % 3 === 0 ) {
+      generateUserContent();
+      console.log(" user content ");
     }
   }
 
@@ -695,22 +701,22 @@ function checkLoggedIn() {
     type: "GET", 
     url: '/checker.json' 
   }).done( function( data ) {
-    if(data.session === true){
-      $.ajax({
-        type: "GET",
-        url: '/current_user.json'
-      }).done( function( data ) {
-        if( !userContent ) {
-          userName = data.name;
-          userImage = data.image;
-          customUserGraphics = true;
-          userContent = true;
-        }
-      })
-
-    }
+    userContent = true;
   })
 }
+
+function getUserData() {
+  $.ajax({
+    type: "GET",
+    url: '/current_user.json'
+  }).done( function( data ) {
+    userName = data.name;
+    userImage = data.image;
+    customUserGraphics = true;
+    userContent = false;
+  })
+}
+
 
 function generateUserContent() {
   var direction = controls.getDirection(new THREE.Vector3(0, 0, 0)).clone();
@@ -738,15 +744,15 @@ function generateUserContent() {
     newGeometry.applyMatrix( new THREE.Matrix4().makeRotationY(  Math.PI / 6) );
     // newGeometry.applyMatrix( new THREE.Matrix4().makeRotationZ( -Math.PI/ 4 ) );
       // newGeometry.applyMatrix( new THREE.Matrix4().makeRotationX( Math.PI/ 4 ) );
-    var newMesh = new THREE.Mesh(
-      newGeometry, newMaterial );
+      var newMesh = new THREE.Mesh(
+        newGeometry, newMaterial );
 
-    newMesh.position.x = direction.x + 400 * Math.random();
-    newMesh.position.z =  direction.z - 500 * Math.random();
-    newMesh.position.y = direction.y - 200 * Math.random();
-    scene.add( newMesh );
-    allUserMessages.push( newMesh );
-  }
+      newMesh.position.x = direction.x + 400 * Math.random();
+      newMesh.position.z =  direction.z - 500 * Math.random();
+      newMesh.position.y = direction.y - 200 * Math.random();
+      scene.add( newMesh );
+      allUserMessages.push( newMesh );
+    }
 
 // DO THIS WITH CANVAS ???
 
