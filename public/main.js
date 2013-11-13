@@ -286,12 +286,12 @@ startButton.addEventListener( 'click', function ( event ) {
 }
 
 
-// PREVENT BACKSPACE FROM GOING BACK
-$(document).on("keydown", function (e) {
-  if (e.which === 8) {
-    e.preventDefault();
-  }
-});
+// // PREVENT BACKSPACE FROM GOING BACK
+// $(document).on("keydown", function (e) {
+//   if (e.which === 8) {
+//     e.preventDefault();
+//   }
+// });
 
 
 // LOAD AUDIO
@@ -603,9 +603,16 @@ function leaveAMessage(e) {
       controls.blockJump( false );
     }
   }
+  else if( keycode == '8' ) {
+    console.log("i'm getting here");
+    var c = userMessage[userMessage.length - 1];
+    userMessage = userMessage.substring( 0, userMessage.length - 1 );
+    $( "#user-input:last-child" ).remove().fadeOut(200);
+    lastPress = thisPress;
+  }
   else {
     c = String.fromCharCode( e.which );
-    if( (thisPress - lastPress) > 50 ) {
+    if( (thisPress - lastPress) > 20 ) {
       userMessage += c;
       $( '#user-input').append(c).fadeIn(200);
       console.log(userMessage);
