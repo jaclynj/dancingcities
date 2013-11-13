@@ -244,6 +244,9 @@ $(document).on("keydown", function (e) {
 // LOAD AUDIO
 loadAudioRequest( url );
 
+// GET GEODATA
+grabFoursquare();
+
 // CALL MAIN INITIALIZE FUNCTION
 init();
 
@@ -323,12 +326,13 @@ addBigSphere( 0, 0 );
 addMirrorSphere( 500, 400 );
 addMirrorCube( 0, 400 );
 
-optimizedDynamicBuildings( coordinates );
 // words();
 graffitiWall();
 centralPark();
 generateUserContent();
-grabFoursquare();
+
+
+optimizedDynamicBuildings( placesArray );
 
 $.ajax({
   type: "GET",
@@ -547,19 +551,20 @@ function onWindowResize() {
 // GRAB FOURSQUARE GEODATA
 function grabFoursquare() {
  places = $.ajax({
-    type: "GET",
-    url: "https://api.foursquare.com/v2/venues/explore?ll=40.7,-74&section=topPicks&limit=50&oauth_token=K4UCTP1LAKJNTMLHCF4ZGITHNAV1344HNO3BATADR0LFLVGI"
-  }).done( function( data ) {
-    var locations = places.responseJSON.response.groups[0].items;
-    for( var i = 0; i < locations.length; i++ ) {
-      var place = [];
-      var lng = locations[i].venue.location.lng;
-      var lat = locations[i].venue.location.lat;
-      var name = locations[i].venue.name;
-      place.push( lat, lng, name );
-      placesArray.push( place );
-    }
-    console.log( placesArray );
+  type: "GET",
+  url: "https://api.foursquare.com/v2/venues/explore?ll=40.7,-74&section=topPicks&limit=50&oauth_token=K4UCTP1LAKJNTMLHCF4ZGITHNAV1344HNO3BATADR0LFLVGI"
+}).done( function( data ) {
+  var locations = places.responseJSON.response.groups[0].items;
+  for( var i = 0; i < locations.length; i++ ) {
+    var place = [];
+    var lng = locations[i].venue.location.lng;
+    var lat = locations[i].venue.location.lat;
+    var name = locations[i].venue.name;
+    place.push( lat, lng, name );
+    placesArray.push( place );
+  }
+  console.log( placesArray );
+    // optimizedDynamicBuildings( placesArray );
   });
 }
 
@@ -964,6 +969,7 @@ function dynamicBuildings( locationPoints ) {
 }
 
 function optimizedDynamicBuildings( locationPoints ) {
+  // debugger;
   var geometry = new THREE.CubeGeometry( 50, 100, 50, 1, 1 );
   geometry.dynamic = true;
   var buildingGeometry = new THREE.Geometry();
@@ -974,7 +980,7 @@ function optimizedDynamicBuildings( locationPoints ) {
     var lat = locationPoints[i][0];
     var lng = locationPoints[i][1];
     var xCoord = ( ( lat - 40 ) * 10 ) + Math.floor( Math.random() * 1000 ) ;
-    var zCoord = ( ( lng - 70 ) / Math.round( Math.random() * 10 ) ) + Math.floor( Math.random() * 1000 );
+    var zCoord = ( ( lng + 70 ) / Math.round( Math.random() * 10 ) ) + Math.floor( Math.random() * 1000 );
     cube.position.x = xCoord;
     cube.position.y = 0;
     cube.position.z = zCoord;
