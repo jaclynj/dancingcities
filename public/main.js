@@ -414,6 +414,7 @@ function render() {
   if( timeElapsed > 30 && customUserGraphics ) {
     if( Math.floor( timeElapsed * 10 ) % 100 === 0 ) {
       generateUserContent();
+      animateUserContent();
       console.log(" user content ");
     }
   }
@@ -696,6 +697,15 @@ function updateTime() {
 
 }
 
+function animateUserContent() {
+  for( var i = 0; i < allUserMessages.length / 2; i++ ){
+    var message = allUserMessages[i];
+    scene.remove( message );
+
+  }
+  allUserMessages.splice( 0, allUserMessages.length / 2 );
+}
+
 function checkLoggedIn() {
   $.ajax({ 
     type: "GET", 
@@ -729,7 +739,7 @@ function generateUserContent() {
     newCanvas.width = window.innerWidth;
     var newContext = newCanvas.getContext( '2d' );
     newContext.font = "Bold 20px Arial";
-    newContext.fillStyle = "rgba(255, 255, 255, 0.8)";
+    newContext.fillStyle = "rgba(180, 0, 180, 0.5)";
     newContext.fillText( str, 0, 50 );
 
     var newTexture = new THREE.Texture( newCanvas );
