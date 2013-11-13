@@ -49,6 +49,7 @@ var rainTexture = THREE.ImageUtils.loadTexture('assets/rain.jpg');
 var snowTexture = THREE.ImageUtils.loadTexture('assets/snowskyreal.jpg');
 var nightTexture = THREE.ImageUtils.loadTexture('assets/Snowscatter.jpg');
 var sunTexture = THREE.ImageUtils.loadTexture('assets/clouds_COLOR.png');
+var angleOfRotation = 0;
 
 // MIRROR EFFECT VARIABLES
 var mirrorCube, mirrorCubeCamera;
@@ -455,6 +456,11 @@ function render() {
     updateWeather( weatherCode );
     weatherUpdated = true;
   }
+
+  // var quaternion = new THREE.Quaternion().setFromAxisAngle( new THREE.Vector3( 0, 0, 0 ) , angleOfRotation) ;
+  // bigSphere.rotation.setEulerFromQuaternion( quaternion );
+  bigSphere.rotateY( angleOfRotation )
+  angleOfRotation += 0.00001;
 
   takeMirrorSnapshot();
 
