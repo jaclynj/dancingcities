@@ -255,6 +255,8 @@ loadAudioRequest( url );
 // GET GEODATA
 dynamicGrabFoursquare(40.737925,-73.981683);
 dynamicGrabFoursquare(40.740084,-73.990115);
+dynamicGrabFoursquare(40.76538,-73.979727);
+dynamicGrabFoursquare(40.72, -73.85);
 
 // CALL MAIN INITIALIZE FUNCTION
 init();
@@ -400,7 +402,7 @@ function render() {
     }
 
     var j = 0;
-    if( timeElapsed > 182 ) {
+    if( timeElapsed > 180 ) {
       for( var i = 0; i < dancingGrass.length; i++ ){
         var scale = ( array[j] / 100 );
         centralParkMesh.scale.y = ( scale < 0.6 ? 0.6 : scale );
@@ -437,7 +439,7 @@ function render() {
   if( timeElapsed > 182 && !endingLight ) {
     generateEndingLight();
   }
-  if( timeElapsed > 182 && endingLight ) {
+  if( timeElapsed > 182 && endingLight && ( Math.round( timeElapsed * 5 ) % 50 === 0 ) ) {
     flashEndingLight();
   }
 
@@ -602,15 +604,15 @@ function dynamicGrabFoursquare(lat, lng) {
 // debugger;
 var parsedResponse = JSON.parse(places.responseText)
 var locations = parsedResponse.response.groups[0].items;
-  for( var i = 0; i < locations.length; i++ ) {
-    var place = [];
-    var lng = locations[i].venue.location.lng;
-    var lat = locations[i].venue.location.lat;
-    var name = locations[i].venue.name;
-    place.push( lat, lng, name );
-    placesArray.push( place );
-  }
-  console.log( placesArray );
+for( var i = 0; i < locations.length; i++ ) {
+  var place = [];
+  var lng = locations[i].venue.location.lng;
+  var lat = locations[i].venue.location.lat;
+  var name = locations[i].venue.name;
+  place.push( lat, lng, name );
+  placesArray.push( place );
+}
+console.log( placesArray );
     // optimizedDynamicBuildings( placesArray );
   // });
 }
@@ -696,7 +698,7 @@ function loadAudioBuffer() {
 // UPDATE FUNCTIONS
 
 function flashEndingLight() {
-  endingLightAmbient.color.setHex( Math.random() * 0xffffff );
+  endingLightAmbient.color.setHex( Math.random() * 0x404040 );
 
 }
 
@@ -1120,8 +1122,20 @@ function optimizedDynamicBuildings( locationPoints ) {
     // var zCoord = ( ( lng + 70 ) * 1000 );
 
     //  RANDOMIZED LOCATIONS
-    var xCoord = ( ( lat - 40 ) * 10 ) + Math.floor( Math.random() * 1000 ) ;
-    var zCoord = ( ( lng + 70 ) / Math.round( Math.random() * 10 ) ) + Math.floor( Math.random() * 1000 );
+    if ( i % 2 === 0 ) {
+      var xCoord = ( ( lat - 40 ) * 10 ) + Math.floor( Math.random() * 1000 ) ;
+      var zCoord = ( ( lng + 70 ) / Math.round( Math.random() * 10 ) + ( Math.random() * 1000));
+    }
+    else if (i % 3 === 0) {
+      var xCoord = ( ( lat - 40 ) * 10 );
+      var zCoord = ( ( lng + 70 ) * 10 ) - Math.random() * 500;
+    }
+    else {
+      var xCoord = ( ( lat - 40 ) * 10 ) + Math.floor( Math.random() * 1000 ) ;
+      var zCoord = ( ( lng + 70 ) * 10 ) - Math.random() * 500;
+
+    }
+
 
     cube.position.x = xCoord;
     cube.position.y = 0;
