@@ -98,11 +98,12 @@ Physijs.scripts.ammo = 'ammo.js';
 
 var blocker = document.getElementById( 'blocker' );
 var instructions = document.getElementById( 'instructions' );
+instructions.style.display = 'none';
+
 var startMenu = document.getElementById( 'start-menu' );
 var startButton = document.getElementById( 'start-button' );
-// instructions.style.display = 'none';
-// startMenu.style.display = '';
 blocker.style.display = "none";
+startMenu.style.display = '';
 
 
 
@@ -119,7 +120,6 @@ blocker.style.display = "none";
 
             controls.enabled = true;
 
-            startMenu.style.display = 'none';
             blocker.style.display = 'none';
 
           } else {
@@ -130,7 +130,7 @@ blocker.style.display = "none";
             blocker.style.display = '-moz-box';
             blocker.style.display = 'box';
 
-            blocker.style.display = '';
+            instructions.style.display = '';
 
           }
 
@@ -138,7 +138,7 @@ blocker.style.display = "none";
 
         var pointerlockerror = function ( event ) {
 
-          startMenu.style.display = '';
+          instructions.style.display = '';
 
         };
 
@@ -153,10 +153,9 @@ blocker.style.display = "none";
 
 
 
-        startButton.addEventListener( 'click', function ( event ) {
+        instructions.addEventListener( 'click', function ( event ) {
 
-          startMenu.style.display = 'none';
-          blocker.style.display = 'none';
+          instructions.style.display = 'none';
 
           // Ask the browser to lock the pointer
           element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
