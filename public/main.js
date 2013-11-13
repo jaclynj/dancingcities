@@ -99,7 +99,7 @@ Physijs.scripts.ammo = 'ammo.js';
 var blocker = document.getElementById( 'blocker' );
 var instructions = document.getElementById( 'instructions' );
 var startMenu = document.getElementById( 'start-menu' );
-var startButton = document.getElementsByClassName( 'start-button' );
+var startButton = document.getElementById( 'start-button' );
 // instructions.style.display = 'none';
 // startMenu.style.display = '';
 blocker.style.display = "none";
@@ -244,6 +244,9 @@ $(document).on("keydown", function (e) {
 // LOAD AUDIO
 loadAudioRequest( url );
 
+// GET GEODATA
+grabFoursquare();
+
 // CALL MAIN INITIALIZE FUNCTION
 init();
 
@@ -280,8 +283,8 @@ window.addEventListener( 'resize', onWindowResize, false );
 camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 5000 );
 
 // INITIALIZE NEW SCENE
-// scene = new THREE.Scene();
-scene = new Physijs.Scene;
+scene = new THREE.Scene();
+// scene = new Physijs.Scene;
 
 // FOG OPTIONS
 // scene.fog = new THREE.Fog( 0xff5588, 0, 2000 );
@@ -294,9 +297,9 @@ var light = new THREE.DirectionalLight( 0x888888, 1.5 );
 light.position.set( 1, 1, 1 );
 scene.add( light );
 
-var light = new THREE.DirectionalLight( 0x888888, 0.75 );
-light.position.set( -1, - 0.5, -1 );
-scene.add( light );
+var light2 = new THREE.DirectionalLight( 0x888888, 0.75 );
+light2.position.set( -1, - 0.5, -1 );
+scene.add( light2 );
 
 // var ambientLight = new THREE.AmbientLight( 0xff5577 );
 var ambientLight = new THREE.AmbientLight(  0x404040 );
@@ -323,19 +326,20 @@ addBigSphere( 0, 0 );
 addMirrorSphere( 500, 400 );
 addMirrorCube( 0, 400 );
 
-optimizedDynamicBuildings( coordinates );
 // words();
 graffitiWall();
 centralPark();
 generateUserContent();
-grabFoursquare();
+
+
+optimizedDynamicBuildings( placesArray );
 
 $.ajax({
   type: "GET",
   url: '/tweets.json'
 }).done( function( data ) {
   tweetArray = data;
-})
+});
 
 
 }
@@ -430,7 +434,7 @@ function detectCollision() {
     cameraDirection.applyMatrix4(rotationMatrix);
   }
   var rayCaster = new THREE.Raycaster(controls.getObject().position, cameraDirection);
-  intersects = rayCaster.intersectObjects(scene.children, true);
+  intersects = rayCaster.intersectObjects(allObjects, true);
 
   if ((intersects.length > 0 && intersects[0].distance < 25)) {
     lockDirection();
@@ -547,22 +551,25 @@ function onWindowResize() {
 // GRAB FOURSQUARE GEODATA
 function grabFoursquare() {
  places = $.ajax({
-    type: "GET",
-    url: "https://api.foursquare.com/v2/venues/explore?ll=40.7,-74&section=topPicks&limit=50&oauth_token=K4UCTP1LAKJNTMLHCF4ZGITHNAV1344HNO3BATADR0LFLVGI"
-  }).done( function( data ) {
-    var locations = places.responseJSON.response.groups[0].items;
-    for( var i = 0; i < locations.length; i++ ) {
-      var place = [];
-      var lng = locations[i].venue.location.lng;
-      var lat = locations[i].venue.location.lat;
-      var name = locations[i].venue.name;
-      place.push( lat, lng, name );
-      placesArray.push( place );
-    }
-    console.log( placesArray );
-  });
-}
+  type: "GET",
+  url: "https://api.foursquare.com/v2/venues/explore?ll=40.7,-74&section=topPicks&limit=50&oauth_token=K4UCTP1LAKJNTMLHCF4ZGITHNAV1344HNO3BATADR0LFLVGI",
+  async: false
+});
+ // debugger;
+ var locations = places.responseJSON.response.groups[0].items;
+ for( var i = 0; i < locations.length; i++ ) {
+  var place = [];
+  var lng = locations[i].venue.location.lng;
+  var lat = locations[i].venue.location.lat;
+  var name = locations[i].venue.name;
+  place.push( lat, lng, name );
+  placesArray.push( place );
 
+  console.log( placesArray );
+    // optimizedDynamicBuildings( placesArray );
+  // });
+}
+}
 
 // LOAD AUDIO REQUEST TO/FROM SOUNDCLOUD API
 
@@ -764,7 +771,7 @@ function centralPark() {
   });
   var sphere = new THREE.Mesh( geometry );
   sphere.dynamic = true;
-  for( i = 0; i < 10; i ++ ) {
+  for( var i = 0; i < 10; i ++ ) {
     for( j = 0; j < 10; j ++) {
       sphere.position.y = 1;
       sphere.position.x = xCoord;
@@ -913,7 +920,7 @@ function words( wordArray, locationPoints ) {
     emissive: new THREE.Color().setHSL( Math.random() * 0.2 + 0.2, 0.9, Math.random() * 0.25 + 0.7 ),
     overdraw: true
   });
-  for( i = wordPos; i < wordPosAtStart + 2; i++ ) {
+  for( var i = wordPos; i < wordPosAtStart + 2; i++ ) {
     var text = new THREE.TextGeometry( wordArray[i], {
       size: 50,
       height: 10,
@@ -964,6 +971,7 @@ function dynamicBuildings( locationPoints ) {
 }
 
 function optimizedDynamicBuildings( locationPoints ) {
+  // debugger;
   var geometry = new THREE.CubeGeometry( 50, 100, 50, 1, 1 );
   geometry.dynamic = true;
   var buildingGeometry = new THREE.Geometry();
@@ -973,8 +981,14 @@ function optimizedDynamicBuildings( locationPoints ) {
   for( var i = 0; i < locationPoints.length; i++ ) {
     var lat = locationPoints[i][0];
     var lng = locationPoints[i][1];
+
+    // var xCoord = ( ( lat - 40 ) * 1000 ) -;
+    // var zCoord = ( ( lng + 70 ) * 1000 );
+
+    //  RANDOMIZED LOCATIONS
     var xCoord = ( ( lat - 40 ) * 10 ) + Math.floor( Math.random() * 1000 ) ;
-    var zCoord = ( ( lng - 70 ) / Math.round( Math.random() * 10 ) ) + Math.floor( Math.random() * 1000 );
+    var zCoord = ( ( lng + 70 ) / Math.round( Math.random() * 10 ) ) + Math.floor( Math.random() * 1000 );
+
     cube.position.x = xCoord;
     cube.position.y = 0;
     cube.position.z = zCoord;
@@ -1000,8 +1014,8 @@ function optimizedDynamicBuildings( locationPoints ) {
   });
   allBuildingMesh = new THREE.Mesh( buildingGeometry, basicMaterial );
   scene.add( allBuildingMesh );
-  allObjects.push( allBuildingMesh );
-  allObjects.push( buildingGeometry );
+  // allObjects.push( allBuildingMesh );
+  // allObjects.push( buildingGeometry );
   // movingObjects.push( buildingMesh );
 }
 
