@@ -412,7 +412,7 @@ function render() {
   }
 
   if( timeElapsed > 30 && customUserGraphics ) {
-    if( Math.floor( timeElapsed) % 3 === 0 ) {
+    if( Math.floor( timeElapsed * 10 ) % 100 === 0 ) {
       generateUserContent();
       console.log(" user content ");
     }
