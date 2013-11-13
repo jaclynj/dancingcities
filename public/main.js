@@ -98,10 +98,12 @@ Physijs.scripts.ammo = 'ammo.js';
 
 var blocker = document.getElementById( 'blocker' );
 var instructions = document.getElementById( 'instructions' );
+instructions.style.display = 'none';
+
 var startMenu = document.getElementById( 'start-menu' );
 var startButton = document.getElementById( 'start-button' );
-instructions.style.display = 'none';
 startMenu.style.display = '';
+
 
 
 
