@@ -43,6 +43,7 @@ var allObjects = [];
 var bigSphere, sphereMaterial;
 var d = new Date();
 var startTime = d.getHours();
+var weatherCode = 0;
 
 // MIRROR EFFECT VARIABLES
 var mirrorCube, mirrorCubeCamera;
@@ -352,7 +353,8 @@ $.ajax({
   tweetArray = data;
 });
 
-
+// UPDATE WEATHER MAP
+updateWeather( weatherCode );
 }
 
 function animate() {
@@ -441,8 +443,6 @@ function render() {
   if( timeElapsed > 182 && endingLight && ( Math.round( timeElapsed ) % 10 === 0 ) ) {
     flashEndingLight();
   }
-
-
 
 
 
@@ -744,11 +744,24 @@ function takeMirrorSnapshot() {
   mirrorSphere.visible = true;
 }
 
-function updateWeather( temp ) {
-  if( temp <= 0 ) {
+function updateWeather( weatherCode ) {
 
+  if( ( weatherCode < 13 && weatherCode !== 7) || weatherCode ===  17 || weatherCode === 35 || ( weatherCode > 36 && weatherCode <= 40 )  ) {
+// RAIN
+sphereMaterial.map = THREE.ImageUtils.loadTexture('assets/rain.jpg');
+}
+else if( weatherCode === 7 || ( weatherCode > 12 && weatherCode <= 18) || ( weatherCode > 40 && weatherCode < 44) || weatherCode === 46 ){
+    // SNOW
+    sphereMaterial.map = THREE.ImageUtils.loadTexture('assets/snowskyreal.jpg');
   }
-
+  else if( weatherCode === 27 || weatherCode === 29 || weatherCode === 31 || weatherCode === 33 ) {
+    // NIGHT
+    sphereMaterial.map = THREE.ImageUtils.loadTexture('assets/snowscatter.jpg');
+  }
+  else {
+    // CLEAR
+    bigSphere.material.map = THREE.ImageUtils.loadTexture('assets/clouds_COLOR.png');
+  }
 }
 
 function updateTime() {
@@ -1293,9 +1306,8 @@ function addBigSphere( x, y ) {
     // wireframe: true,
     shininess: 100,
     overdraw: true });
-  sphereMaterial.map = THREE.ImageUtils.loadTexture('assets/clouds_COLOR.png');
-  sphereMaterial.bumpMap = THREE.ImageUtils.loadTexture('assets/clouds_NRM.png');
-  sphereMaterial.bumpScale = 0.5;
+  // sphereMaterial.bumpMap = THREE.ImageUtils.loadTexture('assets/clouds_NRM.png');
+  // sphereMaterial.bumpScale = 0.5;
   bigSphere = new THREE.Mesh( sphereGeom, sphereMaterial );
   bigSphere.position.x = x;
   bigSphere.position.y = y;
