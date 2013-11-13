@@ -109,9 +109,12 @@ var blocker = document.getElementById( 'blocker' );
 var instructions = document.getElementById( 'instructions' );
 var startMenu = document.getElementById( 'start-menu' );
 var startButton = document.getElementById( 'start-button' );
-blocker.style.display = "none";
-instructions.style.display = "none";
+var endMenu = document.getElementById( 'end-menu' );
+blocker.style.display = 'none';
+instructions.style.display = 'none';
+endMenu.style.display = 'none';
 startMenu.style.display = '';
+
 
 
 
@@ -197,9 +200,45 @@ startMenu.style.display = '';
 
         }, false );
 
-startButton.addEventListener( 'click', function ( event ) {
+        endMenu.addEventListener( 'click', function ( event ) {
 
-  startMenu.style.display = 'none';
+        endMenu.style.display = 'none';
+
+          // Ask the browser to lock the pointer
+          element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
+
+          if ( /Firefox/i.test( navigator.userAgent ) ) {
+
+            var fullscreenchange = function ( event ) {
+
+              if ( document.fullscreenElement === element || document.mozFullscreenElement === element || document.mozFullScreenElement === element ) {
+
+                document.removeEventListener( 'fullscreenchange', fullscreenchange );
+                document.removeEventListener( 'mozfullscreenchange', fullscreenchange );
+
+                element.requestPointerLock();
+              }
+
+            };
+
+            document.addEventListener( 'fullscreenchange', fullscreenchange, false );
+            document.addEventListener( 'mozfullscreenchange', fullscreenchange, false );
+
+            element.requestFullscreen = element.requestFullscreen || element.mozRequestFullscreen || element.mozRequestFullScreen || element.webkitRequestFullscreen;
+
+            element.requestFullscreen();
+
+          } else {
+
+            element.requestPointerLock();
+
+          }
+
+        }, false );
+
+        startButton.addEventListener( 'click', function ( event ) {
+
+          startMenu.style.display = 'none';
 
           // Ask the browser to lock the pointer
           element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
@@ -440,7 +479,6 @@ function render() {
   if( timeElapsed > 182 && endingLight && ( Math.round( timeElapsed ) % 10 === 0 ) ) {
     flashEndingLight();
   }
-
 
 
 
