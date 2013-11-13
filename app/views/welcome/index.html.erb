@@ -1,4 +1,4 @@
-  <div id="start-menu" style= "display:none">
+  <div id="start-menu" style= "display:none" class = menu>
       <span style="font-size:40px">Welcome to Dancing Cities!</span>
       <br><br>
       Dancing Cities is an interactive, visual representation of New York City. Explore the city as it moves to music!<br><br>
@@ -15,6 +15,18 @@
       <div class = "splash-button", id = "start-button">Click here to play</div>
     </div>
 
+<div id="end-menu" class ="menu" style= "display:none">
+    <h1> Thanks for playing! We hope you enjoyed the experience.</h1>
+    <% twitter_message = URI.parse('http://twitter.com/home') %>
+    <% twitter_message.query = URI.encode_www_form('status' => "I just played #DancingCities at dancingcities.heroku.com")%>
+    <%= link_to "Tweet this", twitter_message.to_s %>
+    <div class = "splash-button", id = "start-button"><%= link_to "Play again", root_path%></div>
+    <% if current_user %>
+    <%= link_to "Sign Out of Twitter", signout_path %>
+    <% end %>
+  </div>
+
+
   <div id="blocker">
     <div id="instructions" style= "display:none">
       <span style="font-size:40px">Click to play</span>
@@ -29,15 +41,5 @@
     Leave a message for the world. Hit "Enter" when you're finished.
     <p id="user-input"></p>
   </div>
-<!--   <div id="ending-splash">
-    <% # TODO write better twitter message %>
-    <h1> Thanks for playing! We hope you enjoyed the experience.</h1>
-    <% twitter_message = URI.parse('http://twitter.com/home') %>
-    <% twitter_message.query = URI.encode_www_form('status' => "I just played #DancingCities at dancingcities.heroku.com")%>
-    <%= link_to "Tweet this", twitter_message.to_s %>
-    <%= link_to "Play again", root_path%>
-    <% if current_user %>
-    <%= link_to "Sign Out of Twitter", signout_path %>
-    <% end %> -->
-  </div>
+
   <div id="ThreeJS" style="position: absolute; left:0px; top:0px"></div>
