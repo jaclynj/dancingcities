@@ -79,6 +79,9 @@ var userImage= "http://pbs.twimg.com/profile_images/378800000490486404/abf4774fd
 // CHECKS IF USER CONTENT HAS BEEN GENERATED ALREADY
 var userContent = false;
 
+// MESSAGES TO USER
+var messageToUser = ["Welcome to New York, ", "New York loves you, ", "You look beautiful today, ", "Love is in the air, ", "This city never sleeps, ", "Take my hand, ", "You're going to love this town, ", "Do you know your favorite city yet, ", "So glad you're here, ", "Nothing like concrete and skyscrapers, "];
+
 // COORDINATES - PLACEHOLDER
 coordinates = [[40.740084,-73.990115], [40.736698,-73.990164], [40.736706,-74.001249], [40.748379,-74.000112], [40.749955,-73.988549], [40.754734,-73.987922], [40.754734,-73.987922], [40.758635,-73.977452], [40.76538,-73.979727], [40.768029,-73.981937], [40.763771,-73.976368], [40.761691,-73.970693], [40.755953,-73.972816], [40.752154,-73.977782], [40.745111,-73.984687], [40.737925,-73.981683], [40.740835,-73.99185] ];
 
@@ -709,12 +712,7 @@ function checkLoggedIn() {
 }
 
 function generateUserContent() {
-  var canvas = document.createElement('canvas');
-  var context = canvas.getContext( '2d' );
-  // userImage = canvas.toDataURL(userImage);
-  // debugger;
-  // var image = THREE.ImageUtils.loadTexture( userImage );
-  // wall.map = image;
+  messageToUser
 
 }
 
