@@ -253,7 +253,8 @@ $(document).on("keydown", function (e) {
 loadAudioRequest( url );
 
 // GET GEODATA
-grabFoursquare();
+dynamicGrabFoursquare(40.737925,-73.981683);
+dynamicGrabFoursquare(40.740084,-73.990115);
 
 // CALL MAIN INITIALIZE FUNCTION
 init();
@@ -590,6 +591,32 @@ function onWindowResize() {
 }
 
 // GRAB FOURSQUARE GEODATA
+
+function dynamicGrabFoursquare(lat, lng) {
+  //example: var lat = 40.7; var lng = -74
+  places = $.ajax({
+    type: "GET",
+    url: "https://api.foursquare.com/v2/venues/explore?ll=" + lat + "," + lng + "&section=topPicks&limit=50&oauth_token=K4UCTP1LAKJNTMLHCF4ZGITHNAV1344HNO3BATADR0LFLVGI",
+    async: false
+  });
+// debugger;
+var parsedResponse = JSON.parse(places.responseText)
+var locations = parsedResponse.response.groups[0].items;
+  for( var i = 0; i < locations.length; i++ ) {
+    var place = [];
+    var lng = locations[i].venue.location.lng;
+    var lat = locations[i].venue.location.lat;
+    var name = locations[i].venue.name;
+    place.push( lat, lng, name );
+    placesArray.push( place );
+  }
+  console.log( placesArray );
+    // optimizedDynamicBuildings( placesArray );
+  // });
+}
+
+
+
 function grabFoursquare() {
  places = $.ajax({
   type: "GET",
@@ -858,8 +885,9 @@ function updateWall() {
 // GEOMETRY FUNCTIONS
 
 function generateEndingLight() {
-  // endingLightAmbient = new THREE.AmbientLight( 0x404040 );
-  // scene.add( endingLightAmbient );
+  endingLightAmbient = new THREE.AmbientLight( 0x404040 );
+  scene.add( endingLightAmbient );
+  endingLight = true;
 }
 
 function centralPark() {
