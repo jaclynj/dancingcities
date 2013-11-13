@@ -447,17 +447,17 @@ function detectCollision() {
     rotationMatrix = new THREE.Matrix4();
     rotationMatrix.makeRotationY((360-90) * Math.PI / 180);
   }
-  else return;
+  // else return;
 
   if (rotationMatrix !== undefined){
     cameraDirection.applyMatrix4(rotationMatrix);
   }
   var rayCaster = new THREE.Raycaster(controls.getObject().position, cameraDirection);
-  intersects = rayCaster.intersectObjects(allObjects, true);
+  intersects = rayCaster.intersectObjects(scene.children, true);
 
   if ((intersects.length > 0 && intersects[0].distance < 25)) {
     lockDirection();
-    // console.log("intersect");
+    console.log("intersect");
   }
   if ( intersects.length > 0 && intersects[0].distance < 300 ) {
     if( intersects[0].object == wall ) {
@@ -1066,7 +1066,7 @@ function optimizedDynamicBuildings( locationPoints ) {
     cube.position.x = xCoord;
     cube.position.y = 0;
     cube.position.z = zCoord;
-    allObjects.push( cube );
+    // allObjects.push( cube );
     // movingObjects.push( cube );
     // debugger;
     // for ( var i = 0; i < geometry.faces.length; i ++ ) {
@@ -1088,7 +1088,8 @@ function optimizedDynamicBuildings( locationPoints ) {
   });
   allBuildingMesh = new THREE.Mesh( buildingGeometry, basicMaterial );
   scene.add( allBuildingMesh );
-  // allObjects.push( allBuildingMesh );
+  allObjects.push( allBuildingMesh );
+  // allBuildingMesh.geometry.computeBoundingBox();
   // allObjects.push( buildingGeometry );
   // movingObjects.push( buildingMesh );
 }
