@@ -68,6 +68,10 @@ var textCount = 0;
 var sendAjax = true;
 var textContents = [];
 
+// TIME BASED STUFF
+var endingLight = false;
+var endingLightAmbient;
+
 // CENTRAL PARK VARIABLES
 var dancingGrass = [];
 var centralParkMesh;
@@ -248,7 +252,10 @@ $(document).on("keydown", function (e) {
 loadAudioRequest( url );
 
 // GET GEODATA
-grabFoursquare();
+dynamicGrabFoursquare(40.737925,-73.981683);
+dynamicGrabFoursquare(40.740084,-73.990115);
+dynamicGrabFoursquare(40.76538,-73.979727);
+dynamicGrabFoursquare(40.72, -73.85);
 
 // CALL MAIN INITIALIZE FUNCTION
 init();
@@ -376,12 +383,15 @@ function render() {
       var rand = Math.floor(Math.random() * 10);
       centralParkMesh.material.emissive.setRGB( array[k]/100, array[k]/200, array[k]/500 );
       if( rand % 3 === 0 ){
+        allObjects[i].scale.y = ( scale < 1 ? 1 : scale );
         allBuildingMesh.scale.y = ( scale < 1 ?  1 : scale );
       }
       else if ( rand % 2 === 0 ) {
+        allObjects[i].scale.z = ( scale < 1 ? 1 : scale );
         allBuildingMesh.scale.y = ( scale < 1 ?  1 : scale );
       }
       else {
+        allObjects[i].scale.x = ( scale < 1 ? 1 : scale );
         allBuildingMesh.scale.y = ( scale < 1 ?  1 : scale );
 
         // movingObjects[i].geometry.vertices[3].y = array[k];
@@ -391,9 +401,15 @@ function render() {
     }
 
     var j = 0;
-    for( var i = 0; i < dancingGrass.length; i++ ){
-      j += ( j < array.length? 1 : 0 );
+    if( timeElapsed > 180 ) {
+      for( var i = 0; i < dancingGrass.length; i++ ){
+        var scale = ( array[j] / 100 );
+        centralParkMesh.scale.y = ( scale < 0.6 ? 0.6 : scale );
+        j += ( j < array.length? 1 : 0 );
+        centralParkMesh.scale.z = ( scale < 0.2 ? 0.2 : scale );
+      }
     }
+
 
   // time event to begin particles
   if( timeElapsed > 35 ) {
@@ -417,6 +433,17 @@ function render() {
       console.log(" user content ");
     }
   }
+
+  if( timeElapsed > 182 && !endingLight ) {
+    generateEndingLight();
+  }
+  if( timeElapsed > 182 && endingLight && ( Math.round( timeElapsed ) % 10 === 0 ) ) {
+    flashEndingLight();
+  }
+
+
+
+
 
   takeMirrorSnapshot();
 
@@ -446,7 +473,7 @@ function detectCollision() {
     rotationMatrix = new THREE.Matrix4();
     rotationMatrix.makeRotationY((360-90) * Math.PI / 180);
   }
-  else return;
+  // else return;
 
   if (rotationMatrix !== undefined){
     cameraDirection.applyMatrix4(rotationMatrix);
@@ -456,7 +483,7 @@ function detectCollision() {
 
   if ((intersects.length > 0 && intersects[0].distance < 25)) {
     lockDirection();
-    // console.log("intersect");
+    console.log("intersect");
   }
   if ( intersects.length > 0 && intersects[0].distance < 300 ) {
     if( intersects[0].object == wall ) {
@@ -567,6 +594,32 @@ function onWindowResize() {
 }
 
 // GRAB FOURSQUARE GEODATA
+
+function dynamicGrabFoursquare(lat, lng) {
+  //example: var lat = 40.7; var lng = -74
+  places = $.ajax({
+    type: "GET",
+    url: "https://api.foursquare.com/v2/venues/explore?ll=" + lat + "," + lng + "&section=topPicks&limit=50&oauth_token=K4UCTP1LAKJNTMLHCF4ZGITHNAV1344HNO3BATADR0LFLVGI",
+    async: false
+  });
+// debugger;
+var parsedResponse = JSON.parse(places.responseText)
+var locations = parsedResponse.response.groups[0].items;
+for( var i = 0; i < locations.length; i++ ) {
+  var place = [];
+  var lng = locations[i].venue.location.lng;
+  var lat = locations[i].venue.location.lat;
+  var name = locations[i].venue.name;
+  place.push( lat, lng, name );
+  placesArray.push( place );
+}
+console.log( placesArray );
+    // optimizedDynamicBuildings( placesArray );
+  // });
+}
+
+
+
 function grabFoursquare() {
  places = $.ajax({
   type: "GET",
@@ -644,6 +697,11 @@ function loadAudioBuffer() {
 }
 
 // UPDATE FUNCTIONS
+
+function flashEndingLight() {
+  endingLightAmbient.material.emissive.setHex( Math.random() * 0xffffff );
+
+}
 
 function fallingWords() {
   var timeElapsed = clock.getElapsedTime();
@@ -828,6 +886,46 @@ function updateWall() {
 
 
 // GEOMETRY FUNCTIONS
+
+function generateEndingLight() {
+  var geometry =   new THREE.CylinderGeometry( 20, 20, 1000 );
+  var cylinderMesh = new THREE.Mesh( geometry );
+  var material = new THREE.MeshPhongMaterial({
+    opacity: 0.25,
+    transparent: true,
+    shininess: 0,
+    ambient: 0xffffff,
+    emissive: 0xffffff
+  });
+  var endingLightGeom = new THREE.Geometry();
+
+  for( var i = 0; i < 2000; i++ ) {
+    var xCoord, zCoord;
+    if ( i % 2 === 0 ) {
+      var xCoord = ( Math.random() * 1000 );
+      var zCoord = ( Math.random() * 1000 );
+    }
+    else if ( i % 3 === 0 ) {
+      var xCoord = ( -Math.random() * 1000 );
+      var zCoord = ( Math.random() * 1000 );
+    }
+    else if ( i % 5 === 0 ) {
+      var xCoord = ( Math.random() * 1000 );
+      var zCoord = ( -Math.random() * 1000 );
+    }
+    else {
+      var xCoord = ( -Math.random() * 1000 );
+      var zCoord = ( -Math.random() * 1000 );
+    }
+
+    cylinderMesh.position.x = xCoord;
+    cylinderMesh.position.z = zCoord;
+    THREE.GeometryUtils.merge( endingLightGeom, cylinderMesh );
+  }
+  endingLightAmbient = new THREE.Mesh( endingLightGeom, material );
+  scene.add( endingLightAmbient );
+  endingLight = true;
+}
 
 function centralPark() {
   var xCoord = -1000;
@@ -1059,13 +1157,25 @@ function optimizedDynamicBuildings( locationPoints ) {
     // var zCoord = ( ( lng + 70 ) * 1000 );
 
     //  RANDOMIZED LOCATIONS
-    var xCoord = ( ( lat - 40 ) * 10 ) + Math.floor( Math.random() * 1000 ) ;
-    var zCoord = ( ( lng + 70 ) / Math.round( Math.random() * 10 ) ) + Math.floor( Math.random() * 1000 );
+    if ( i % 2 === 0 ) {
+      var xCoord = ( ( lat - 40 ) * 10 ) + Math.floor( Math.random() * 1000 ) ;
+      var zCoord = ( ( lng + 70 ) / Math.round( Math.random() * 10 ) + ( Math.random() * 1000));
+    }
+    else if (i % 3 === 0) {
+      var xCoord = ( ( lat - 40 ) * 10 );
+      var zCoord = ( ( lng + 70 ) * 10 ) - Math.random() * 500;
+    }
+    else {
+      var xCoord = ( ( lat - 40 ) * 10 ) + Math.floor( Math.random() * 1000 ) ;
+      var zCoord = ( ( lng + 70 ) * 10 ) - Math.random() * 500;
+
+    }
+
 
     cube.position.x = xCoord;
     cube.position.y = 0;
     cube.position.z = zCoord;
-    allObjects.push( cube );
+    // allObjects.push( cube );
     // movingObjects.push( cube );
     // debugger;
     // for ( var i = 0; i < geometry.faces.length; i ++ ) {
@@ -1087,7 +1197,8 @@ function optimizedDynamicBuildings( locationPoints ) {
   });
   allBuildingMesh = new THREE.Mesh( buildingGeometry, basicMaterial );
   scene.add( allBuildingMesh );
-  // allObjects.push( allBuildingMesh );
+  allObjects.push( allBuildingMesh );
+  // allBuildingMesh.geometry.computeBoundingBox();
   // allObjects.push( buildingGeometry );
   // movingObjects.push( buildingMesh );
 }
