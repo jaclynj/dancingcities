@@ -981,8 +981,14 @@ function optimizedDynamicBuildings( locationPoints ) {
   for( var i = 0; i < locationPoints.length; i++ ) {
     var lat = locationPoints[i][0];
     var lng = locationPoints[i][1];
+
+    // var xCoord = ( ( lat - 40 ) * 1000 ) -;
+    // var zCoord = ( ( lng + 70 ) * 1000 );
+
+    //  RANDOMIZED LOCATIONS
     var xCoord = ( ( lat - 40 ) * 10 ) + Math.floor( Math.random() * 1000 ) ;
     var zCoord = ( ( lng + 70 ) / Math.round( Math.random() * 10 ) ) + Math.floor( Math.random() * 1000 );
+
     cube.position.x = xCoord;
     cube.position.y = 0;
     cube.position.z = zCoord;
