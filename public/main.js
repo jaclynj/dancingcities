@@ -78,6 +78,11 @@ var userImage= "http://pbs.twimg.com/profile_images/378800000490486404/abf4774fd
 
 // CHECKS IF USER CONTENT HAS BEEN GENERATED ALREADY
 var userContent = false;
+var customUserGraphics = false;
+
+// MESSAGES TO USER
+var messageToUser = ["Welcome to New York, ", "New York loves you, ", "You look beautiful today, ", "Love is in the air, ", "This city never sleeps, ", "Take my hand, ", "You're going to love this town, ", "Do you know your favorite city yet, ", "So glad you're here, ", "Nothing like concrete and skyscrapers, "];
+var allUserMessages = [];
 
 // COORDINATES - PLACEHOLDER
 coordinates = [[40.740084,-73.990115], [40.736698,-73.990164], [40.736706,-74.001249], [40.748379,-74.000112], [40.749955,-73.988549], [40.754734,-73.987922], [40.754734,-73.987922], [40.758635,-73.977452], [40.76538,-73.979727], [40.768029,-73.981937], [40.763771,-73.976368], [40.761691,-73.970693], [40.755953,-73.972816], [40.752154,-73.977782], [40.745111,-73.984687], [40.737925,-73.981683], [40.740835,-73.99185] ];
@@ -328,7 +333,7 @@ addMirrorCube( 0, 400 );
 // words();
 graffitiWall();
 centralPark();
-generateUserContent();
+// generateUserContent();
 
 
 optimizedDynamicBuildings( placesArray );
@@ -397,6 +402,14 @@ function render() {
   if( Math.round( timeElapsed * 2 ) % 20 === 0 ) {
     updateWall();
 
+  }
+
+  if( timeElapsed > 200 ) {
+    if( customUserGraphics ) {
+      if( ( ( timeElapsed * 12 ) % 120 ) === 0 ) {
+        generateUserContent();
+      }
+    }
   }
 
   takeMirrorSnapshot();
@@ -690,7 +703,8 @@ function checkLoggedIn() {
         if( !userContent ) {
           userName = data.name;
           userImage = data.image;
-          generateUserContent();
+          customUserGraphics = true;
+          userContent = true;
         }
       })
 
@@ -699,12 +713,57 @@ function checkLoggedIn() {
 }
 
 function generateUserContent() {
-  var canvas = document.createElement('canvas');
-  var context = canvas.getContext( '2d' );
-  // userImage = canvas.toDataURL(userImage);
-  // debugger;
-  // var image = THREE.ImageUtils.loadTexture( userImage );
-  // wall.map = image;
+  var direction = controls.getDirection(new THREE.Vector3(0, 0, 0)).clone();
+  var i = Math.floor( Math.random() * 10 );
+  var str = messageToUser[i] + userName;
+
+  for( var i = 0; i < 20; i ++ ){
+    var newCanvas = document.createElement( 'canvas' );
+    newCanvas.height = window.innerHeight;
+    newCanvas.width = window.innerWidth;
+    var newContext = newCanvas.getContext( '2d' );
+    newContext.font = "Bold 20px Arial";
+    newContext.fillStyle = "rgba(255, 255, 255, 0.8)";
+    newContext.fillText( str, 0, 50 );
+
+    var newTexture = new THREE.Texture( newCanvas );
+    newTexture.needsUpdate = true;
+
+    var newMaterial = new THREE.MeshBasicMaterial( {
+      map: newTexture,
+      side: THREE.DoubleSide
+    });
+    newMaterial.transparent = true;
+    var newGeometry = new THREE.PlaneGeometry( newCanvas.width, newCanvas.height );
+    newGeometry.applyMatrix( new THREE.Matrix4().makeRotationY(  Math.PI / 6) );
+    // newGeometry.applyMatrix( new THREE.Matrix4().makeRotationZ( -Math.PI/ 4 ) );
+      // newGeometry.applyMatrix( new THREE.Matrix4().makeRotationX( Math.PI/ 4 ) );
+    var newMesh = new THREE.Mesh(
+      newGeometry, newMaterial );
+
+    newMesh.position.x = direction.x + 400 * Math.random();
+    newMesh.position.z =  direction.z - 500 * Math.random();
+    newMesh.position.y = direction.y - 200 * Math.random();
+    scene.add( newMesh );
+    allUserMessages.push( newMesh );
+  }
+
+// DO THIS WITH CANVAS ???
+
+
+
+  // for( var i = 0; i < 20; i ++ ){
+  //   var msgDiv = document.createElement('div');
+  //   msgDiv.textContent = str;
+  //   msgDiv.style.position = 'absolute';
+  //   msgDiv.style.top = Math.random() * 300;
+  //   msgDiv.style.left = Math.random() * 600;
+  //   msgDiv.className = "usermsg";
+  //   document.body.appendChild( msgDiv );
+  //   $('.usermsg').fadeIn( 100 );
+  //   $('.usermsg').fadeOut( 100 );
+  //   console.log("trying");
+  // }
 
 }
 
