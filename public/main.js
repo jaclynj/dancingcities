@@ -400,6 +400,14 @@ function render() {
 
   }
 
+  if( timeElapsed > 200 ) {
+    if( customUserGraphics ) {
+      if( ( ( timeElapsed * 12 ) % 120 ) === 0 ) {
+        generateUserContent();
+      }
+    }
+  }
+
   takeMirrorSnapshot();
 
   fallingWords();
@@ -691,7 +699,8 @@ function checkLoggedIn() {
         if( !userContent ) {
           userName = data.name;
           userImage = data.image;
-          generateUserContent();
+          customUserGraphics = true;
+          userContent = true;
         }
       })
 
