@@ -43,6 +43,13 @@ var allObjects = [];
 var bigSphere, sphereMaterial;
 var d = new Date();
 var startTime = d.getHours();
+var weatherCode = 100;
+var weatherUpdated = false;
+var rainTexture = THREE.ImageUtils.loadTexture('assets/rain.jpg');
+var snowTexture = THREE.ImageUtils.loadTexture('assets/snowskyreal.jpg');
+var nightTexture = THREE.ImageUtils.loadTexture('assets/Snowscatter.jpg');
+var sunTexture = THREE.ImageUtils.loadTexture('assets/clouds_COLOR.png');
+var angleOfRotation = 0;
 
 // MIRROR EFFECT VARIABLES
 var mirrorCube, mirrorCubeCamera;
@@ -257,6 +264,8 @@ dynamicGrabFoursquare(40.740084,-73.990115);
 dynamicGrabFoursquare(40.76538,-73.979727);
 dynamicGrabFoursquare(40.72, -73.85);
 
+getWeatherCode();
+
 // CALL MAIN INITIALIZE FUNCTION
 init();
 
@@ -351,7 +360,8 @@ $.ajax({
   tweetArray = data;
 });
 
-
+// UPDATE WEATHER MAP
+// updateWeather( weatherCode );
 }
 
 function animate() {
@@ -383,15 +393,15 @@ function render() {
       var rand = Math.floor(Math.random() * 10);
       centralParkMesh.material.emissive.setRGB( array[k]/100, array[k]/200, array[k]/500 );
       if( rand % 3 === 0 ){
-        allObjects[i].scale.y = ( scale < 1 ? 1 : scale );
+        movingObjects[i].scale.y = ( scale < 1 ? 1 : scale );
         allBuildingMesh.scale.y = ( scale < 1 ?  1 : scale );
       }
       else if ( rand % 2 === 0 ) {
-        allObjects[i].scale.z = ( scale < 1 ? 1 : scale );
+        movingObjects[i].scale.z = ( scale < 1 ? 1 : scale );
         allBuildingMesh.scale.y = ( scale < 1 ?  1 : scale );
       }
       else {
-        allObjects[i].scale.x = ( scale < 1 ? 1 : scale );
+        movingObjects[i].scale.x = ( scale < 1 ? 1 : scale );
         allBuildingMesh.scale.y = ( scale < 1 ?  1 : scale );
 
         // movingObjects[i].geometry.vertices[3].y = array[k];
@@ -441,9 +451,15 @@ function render() {
     flashEndingLight();
   }
 
+  if( weatherCode !== 100 && !weatherUpdated ) {
+    updateWeather( weatherCode );
+    weatherUpdated = true;
+  }
 
-
-
+  // var quaternion = new THREE.Quaternion().setFromAxisAngle( new THREE.Vector3( 0, 0, 0 ) , angleOfRotation) ;
+  // bigSphere.rotation.setEulerFromQuaternion( quaternion );
+  bigSphere.rotateY( angleOfRotation )
+  angleOfRotation += 0.00001;
 
   takeMirrorSnapshot();
 
@@ -642,6 +658,21 @@ function grabFoursquare() {
 }
 }
 
+function getWeatherCode(){
+
+  var weather = $.ajax({
+    url: "http://query.yahooapis.com/v1/public/yql?q=SELECT%20*%20FROM%20weather.forecast%20WHERE%20location%3D%2710001%27&format=json",
+    dataType: "jsonp",
+    contentType: "application/json; charset=utf-8"
+  }).done( function() {
+    // debugger;
+    var weatherCodeString = weather.responseJSON.query.results.channel.item.condition.code;
+    weatherCode = parseInt( weatherCodeString, 10 );
+    console.log(" hey i'm working at least ");
+  });
+
+}
+
 // LOAD AUDIO REQUEST TO/FROM SOUNDCLOUD API
 
 function loadAudioRequest( url ) {
@@ -743,11 +774,28 @@ function takeMirrorSnapshot() {
   mirrorSphere.visible = true;
 }
 
-function updateWeather( temp ) {
-  if( temp <= 0 ) {
+function updateWeather( weatherCode ) {
 
+  if( ( weatherCode < 13 && weatherCode !== 7) || weatherCode ===  17 || weatherCode === 35 || ( weatherCode > 36 && weatherCode <= 40 )  ) {
+// RAIN
+bigSphere.material.map = rainTexture;
+bigSphere.material.needsUpdate = true;
+}
+else if( weatherCode === 7 || ( weatherCode > 12 && weatherCode <= 18) || ( weatherCode > 40 && weatherCode < 44) || weatherCode === 46 ){
+    // SNOW
+    bigSphere.material.map = snowTexture;
+    bigSphere.material.needsUpdate = true;
   }
-
+  else if( weatherCode === 27 || weatherCode === 29 || weatherCode === 31 || weatherCode === 33 ) {
+    // NIGHT
+    bigSphere.material.map = nightTexture;
+    bigSphere.material.needsUpdate = true;
+  }
+  else {
+    // CLEAR
+    bigSphere.material.map = sunTexture;
+    bigSphere.material.needsUpdate = true;
+  }
 }
 
 function updateTime() {
@@ -1292,12 +1340,12 @@ function addBigSphere( x, y ) {
     // wireframe: true,
     shininess: 100,
     overdraw: true });
-  sphereMaterial.map = THREE.ImageUtils.loadTexture('assets/clouds_COLOR.png');
-  sphereMaterial.bumpMap = THREE.ImageUtils.loadTexture('assets/clouds_NRM.png');
-  sphereMaterial.bumpScale = 0.5;
+  // sphereMaterial.bumpMap = THREE.ImageUtils.loadTexture('assets/clouds_NRM.png');
+  // sphereMaterial.bumpScale = 0.5;
   bigSphere = new THREE.Mesh( sphereGeom, sphereMaterial );
   bigSphere.position.x = x;
   bigSphere.position.y = y;
+  bigSphere.material.map = sunTexture;
   scene.add( bigSphere );
 }
 
