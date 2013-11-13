@@ -1166,6 +1166,9 @@ function addBigSphere( x, y ) {
     // wireframe: true,
     shininess: 100,
     overdraw: true });
+  sphereMaterial.map = THREE.ImageUtils.loadTexture('assets/clouds_COLOR.png');
+  sphereMaterial.bumpMap = THREE.ImageUtils.loadTexture('assets/clouds_NRM.png');
+  sphereMaterial.bumpScale = 0.5;
   bigSphere = new THREE.Mesh( sphereGeom, sphereMaterial );
   bigSphere.position.x = x;
   bigSphere.position.y = y;
