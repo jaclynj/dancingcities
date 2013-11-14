@@ -587,7 +587,6 @@ function detectCollision() {
 
   if ((intersects.length > 0 && intersects[0].distance < 25)) {
     lockDirection();
-    console.log("intersect");
   }
   if ( intersects.length > 0 && intersects[0].distance < 300 ) {
     spinnyThing.material.wireframe = true;
@@ -691,7 +690,9 @@ function controlCheck() {
     var distance = intersections[0].distance;
 
     if( distance > 0 && distance < 10 ) {
-
+      // debugger;
+      // intersections[0].object.material.color.setHex( 0x64f544 );
+      // intersections[0].object.material.needsUpdate = true;
       controls.isOnObject( true );
 
     }
@@ -1282,6 +1283,11 @@ function initParticles() {
   scene.add( particleGroup.mesh );
 
 }
+
+// function optimizedWords( wordArray, locationPoints ) {
+//   var wordPosAtStart = wordPos;
+//   var textGeometry
+// }
 
 function words( wordArray, locationPoints ) {
   // debugger;
