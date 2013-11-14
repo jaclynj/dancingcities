@@ -1318,6 +1318,7 @@ function graffitiWall() {
     specular: 0x222222,
     color: 0x000000,
     emissive: new THREE.Color().setHSL( Math.random() * 0.2 + 0.8, 0.3, Math.random() * 0.25 + 0.2 ),
+    map: newYorkImages[1],
     overdraw: true
   } );
   wall = new THREE.Mesh( geometry, material );
