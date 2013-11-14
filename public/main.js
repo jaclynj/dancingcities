@@ -101,6 +101,9 @@ coordinates = [[40.740084,-73.990115], [40.736698,-73.990164], [40.736706,-74.00
 // COORDINATES - FOURSQUARE
 var placesArray = [];
 
+// SPINNY THING
+var spinnyThing;
+
 var testWords = ["new york city", "#i love this town", "beautiful", "lol"];
 
 // RAYCASTERS - NOT OPTIMIZED
@@ -286,7 +289,7 @@ startButton.addEventListener( 'click', function ( event ) {
 }
 
 
-// PREVENT BACKSPACE FROM GOING BACK
+// // PREVENT BACKSPACE FROM GOING BACK
 $(document).on("keydown", function (e) {
   if (e.which === 8) {
     e.preventDefault();
@@ -301,7 +304,7 @@ loadAudioRequest( url );
 dynamicGrabFoursquare(40.737925,-73.981683);
 dynamicGrabFoursquare(40.740084,-73.990115);
 dynamicGrabFoursquare(40.76538,-73.979727);
-dynamicGrabFoursquare(40.72, -73.85);
+// dynamicGrabFoursquare(40.72, -73.85);
 
 getWeatherCode();
 
@@ -383,11 +386,13 @@ addBigSphere( 0, 0 );
 
 addMirrorSphere( 500, 400 );
 addMirrorCube( 0, 400 );
+generateSpinnyThing();
 
 // words();
 graffitiWall();
 centralPark();
 // generateUserContent();
+
 
 
 optimizedDynamicBuildings( placesArray );
@@ -502,9 +507,14 @@ function render() {
     weatherUpdated = true;
   }
 
+  if( timeElapsed > 90 && Math.floor( timeElapsed % 5 ) === 0 ) {
+    allBuildingMesh.material.emissive.setHex( array[j] * 0x772252 );
+  }
+
   // var quaternion = new THREE.Quaternion().setFromAxisAngle( new THREE.Vector3( 0, 0, 0 ) , angleOfRotation) ;
   // bigSphere.rotation.setEulerFromQuaternion( quaternion );
-  bigSphere.rotateY( angleOfRotation )
+  bigSphere.rotateY( angleOfRotation );
+  spinnyThing.rotateZ( angleOfRotation );
   angleOfRotation += 0.00001;
 
 
@@ -549,14 +559,20 @@ function detectCollision() {
     console.log("intersect");
   }
   if ( intersects.length > 0 && intersects[0].distance < 300 ) {
+    spinnyThing.material.wireframe = true;
     if( intersects[0].object == wall ) {
       if( !messageLeft ) {
-      // FORM POPS UP, WHEN THEY PRESS ENTER ADDS MESSAGE
-      $( '#graffiti-form' ).css( "display", "block" );
-      $( document.body ).on( "keypress", leaveAMessage );
+        // FORM POPS UP, WHEN THEY PRESS ENTER ADDS MESSAGE
+        $( '#graffiti-form' ).css( "display", "block" );
+        $( document.body ).on( "keypress", leaveAMessage );
+      }
     }
   }
-}
+  if( intersects.length > 0 && intersects[0].distance < 100 ){
+    if( intersects[0].object == spinnyThing ) {
+      spinnyThing.material.wireframe = false;
+    }
+  }
 }
 
 function lockDirection() {
@@ -588,6 +604,7 @@ function leaveAMessage(e) {
   thisPress = Date.now();
   e.preventDefault();
   var keycode = (e.keyCode ? e.keyCode : e.which );
+  console.log( keycode );
   if( keycode == '13' ) {
     messageLeft = true;
     // $( '#graffiti-form' ).css( "display", "none" );
@@ -603,9 +620,16 @@ function leaveAMessage(e) {
       controls.blockJump( false );
     }
   }
+  else if( keycode == '8' ) {
+    console.log("i'm getting here");
+    var c = userMessage[userMessage.length - 1];
+    userMessage = userMessage.substring( 0, userMessage.length - 1 );
+    $( "#user-input:last-child" ).remove().fadeOut(200);
+    lastPress = thisPress;
+  }
   else {
     c = String.fromCharCode( e.which );
-    if( (thisPress - lastPress) > 50 ) {
+    if( (thisPress - lastPress) > 20 ) {
       userMessage += c;
       $( '#user-input').append(c).fadeIn(200);
       console.log(userMessage);
@@ -1426,6 +1450,27 @@ function addMirrorCube( x, y ) {
 
 }
 
+function generateSpinnyThing() {
+  var geometry = new THREE.TorusKnotGeometry();
+  var material = new THREE.MeshLambertMaterial({
+    emissive: 0x773366,
+    wireframe: true
+  })
+  spinnyThing = new THREE.Mesh( geometry, material );
+  spinnyThing.position.z = -600;
+  spinnyThing.position.x = -20;
+  scene.add( spinnyThing );
+  movingObjects.push( spinnyThing );
+  allObjects.push( spinnyThing );
+}
+
+function statueOfLiberty() {
+
+  var texture = THREE.ImageUtils.loadTexture('assets/statueofliberty.jpg');
+  texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set( 2, 2 );
+
+}
 
 
 function generateSpheres() {
