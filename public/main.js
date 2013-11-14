@@ -491,7 +491,7 @@ function render() {
       for( var j = 0; j < userMesh1.geometry.vertices.length; j ++ ) {
     // if( j % 3 === 0 ){
 
-      userMesh1.geometry.vertices[j].y -= 0.5 ;
+      userMesh1.geometry.vertices[j].y -= 0.2 ;
     // }
     // else {
     //   allNewYork.geometry.vertices[j].y -=5 ;
@@ -1029,8 +1029,6 @@ function getUserPicture( URL ) {
     canvas.width = window.innerWidth;
     var context = canvas.getContext('2d');
     var imgSrc = "data:image/png;base64, " + data;
-    var imgTag = $('<img>').attr('src', imgSrc );
-    $( document.body ).append( imgTag );
     var threeImage = document.createElement('img');
     threeImage.src = imgSrc;
     userTexture = new THREE.Texture( threeImage );

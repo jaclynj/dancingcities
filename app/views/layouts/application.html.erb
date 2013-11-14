@@ -6,6 +6,13 @@
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
   <script src="http://connect.soundcloud.com/sdk.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/three.js/r61/three.min.js"></script>
+
+
+  <%= csrf_meta_tags %>
+</head>
+<body>
+
+  <%= yield %>
   <script src="helper_libraries/detector.js"></script>
   <script src="helper_libraries/fullscreen.js"></script>
   <script src="helper_libraries/helvetiker_regular.typeface.js"></script>
@@ -15,13 +22,6 @@
   <script src="helper_libraries/shaderparticles.min.js"></script>
   <script src="helper_libraries/stats.min.js"></script>
   <script src="helper_libraries/windowresize.js"></script>
-
-
-  <%= csrf_meta_tags %>
-</head>
-<body>
-
-  <%= yield %>
   <script src="main.js"></script>
 
 </body>
