@@ -9,7 +9,8 @@ body {
 
 a {
   text-decoration: none;
-  color: #786866;
+  color: #3B4A66;
+  font-weight: bold;
 }
 
 li {
@@ -26,11 +27,15 @@ h2,h3 {
   width: 700px;
   margin-left: 350px;
   margin-top: 50px;
-  background-color: rgba(255, 255, 255, 0.8);
   padding: 50px;
-  border-radius: 20px;
+  border-radius: 5px;
+  border: 1.5px solid #919393;
   font-size: 1.2em;
+  background-image: url('http://static.freepik.com/free-photo/free-sun-on-blue-sky-vector-background_48-10085.jpg');
+  background-color: rgba(255, 255, 255, 0.85);
   text-decoration: none;
+  opacity:0.85;
+  filter:alpha(opacity=85); /* For IE8 and earlier */
 }
 
 .splash-button {
@@ -43,7 +48,8 @@ h2,h3 {
   padding: 5px;
   cursor: pointer;
   text-decoration: none;
-  color: #786866;
+  color: #3B4A66;
+  font-weight: bold;
 }
 
 #instructions {
@@ -52,9 +58,15 @@ h2,h3 {
   margin-left: 500px;
   margin-top: 300px;
   background-color: rgba(255, 255, 255, 0.8);
-  padding: 50px;
-  border-radius: 20px;
+  padding: 30px;
+  border-radius: 5px;
+  border: 1.5px solid #919393;
   font-size: 1.2em;
+  background-image: url('http://static.freepik.com/free-photo/free-sun-on-blue-sky-vector-background_48-10085.jpg');
+  background-color: rgba(255, 255, 255, 0.7);
+  text-decoration: none;
+  opacity:0.80;
+  filter:alpha(opacity=80); /* For IE8 and earlier */
 }
 
 #graffiti-form {
@@ -112,5 +124,6 @@ h2,h3 {
   width: 380px;
   margin: 8px auto 20px;
   border: 1px solid #8f8f8f;
+  border-radius: 2px;
   line-height: 1.5em;
 }

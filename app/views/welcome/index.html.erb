@@ -20,7 +20,7 @@
     <h1> Thanks for playing! We hope you enjoyed the experience.</h1>
     <% twitter_message = URI.parse('http://twitter.com/home') %>
     <% twitter_message.query = URI.encode_www_form('status' => "I just played #DancingCities at dancingcities.heroku.com")%>
-    <%= link_to "Tweet this", twitter_message.to_s %>
+    <div class = "splash-button"><%= link_to "Tweet this", twitter_message.to_s %></div>
     <div class = "splash-button", id = "start-button"><%= link_to "Play again", root_path%></div>
     <% if current_user %>
     <%= link_to "Sign Out of Twitter", signout_path %>
@@ -35,6 +35,9 @@
       Move MOUSE to look around<br>
       Press UP, DOWN, RIGHT, LEFT to move<br>
       Press SPACEBAR to jump<br>
+      <% twitter_message = URI.parse('http://twitter.com/home') %>
+    <% twitter_message.query = URI.encode_www_form('status' => "I'm playing #DancingCities at dancingcities.heroku.com")%><br>
+    <h3 style="color: #FFE4E9"><%= link_to "Tweet about dancing cities to appear in the game!", twitter_message.to_s %></h3>
     </div>
 
   </div>
