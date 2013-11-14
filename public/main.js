@@ -644,6 +644,7 @@ function leaveAMessage(e) {
     // $( '#graffiti-form' ).css( "display", "none" );
     $( '#graffiti-form' ).fadeOut(400);
     $( document.body ).off( "keypress", leaveAMessage );
+      controls.blockJump( false );
     if ( sendAjax ) {
       $.ajax({
         type: "POST",
@@ -651,7 +652,6 @@ function leaveAMessage(e) {
         url: '/messages.json'
       });
       sendAjax = false;
-      controls.blockJump( false );
     }
   }
   else if( keycode == '8' ) {
