@@ -450,7 +450,7 @@ function render() {
     for( var i = 0; i < movingObjects.length; i++ ) {
       var scale = ( array[k] ) / 80;
       var rand = Math.floor(Math.random() * 10);
-      centralParkMesh.material.emissive.setRGB( array[k]/400, array[k]/200, array[k]/500 );
+      centralParkMesh.material.emissive.setRGB( array[k]/100, array[k]/100, array[k]/500 );
       if( rand % 3 === 0 ){
         movingObjects[i].scale.y = ( scale < 1 ? 1 : scale );
         allBuildingMesh.scale.y = ( scale < 1 ?  1 : scale );
@@ -487,19 +487,20 @@ function render() {
     }
 
     if( timeElapsed > 20 && userMesh1 !== undefined ) {
-      userMesh1.rotateX( angleOfRotation );
       for( var j = 0; j < userMesh1.geometry.vertices.length; j ++ ) {
-    // if( j % 3 === 0 ){
+        if( userMesh1.geometry.vertices[j].y > 0 ){
 
-      userMesh1.geometry.vertices[j].y -= 0.2 ;
-    // }
-    // else {
+          userMesh1.geometry.vertices[j].y -= 5 ;
+        }
+        else {
     //   allNewYork.geometry.vertices[j].y -=5 ;
     // }
+    userMesh1.geometry.vertices[j].y += 5 ;
         // fallingTexts[i].position.y -= 2;
       }
       userMesh1.geometry.verticesNeedUpdate = true;
     }
+  }
 
       // if( timeElapsed > 130 && userMesh2 !== undefined ){
 
@@ -549,9 +550,9 @@ function render() {
     allBuildingMesh.material.emissive.setHex( array[j] * 0x772252 );
   }
 
-  if( timeElapsed > 105 ) {
+  if( timeElapsed > 105 && timeElapsed < 115) {
     allNewYork.rotateZ( angleOfRotation );
-   for( var j = 0; j < allNewYork.geometry.vertices.length; j ++ ) {
+    for( var j = 0; j < allNewYork.geometry.vertices.length; j ++ ) {
     // if( j % 3 === 0 ){
 
       allNewYork.geometry.vertices[j].y += 0.1 ;
@@ -564,6 +565,10 @@ function render() {
       allNewYork.geometry.verticesNeedUpdate = true;
     }
 
+    if( timeElapsed > 115 ) {
+      scene.remove( allNewYork );
+    }
+
   // var quaternion = new THREE.Quaternion().setFromAxisAngle( new THREE.Vector3( 0, 0, 0 ) , angleOfRotation) ;
   // bigSphere.rotation.setEulerFromQuaternion( quaternion );
   bigSphere.rotateY( angleOfRotation );
@@ -573,7 +578,9 @@ function render() {
 
   takeMirrorSnapshot();
 
-  fallingWords();
+  if( timeElapsed < 175 ){
+    fallingWords();
+  }
 
   renderer.render( scene, camera );
 }
@@ -1054,28 +1061,19 @@ function userImageSpheres() {
     side: THREE.DoubleSide
   });
   var bigGeometry1 = new THREE.Geometry();
-  var bigGeometry2 = new THREE.Geometry();
   var circle = new THREE.Mesh( geometry );
   // material.transparent = true;
   for( var i = 0; i < 50; i ++ ) {
 
-    circle.position.z = i * 40;
-    circle.position.x = -i * 40;
-    circle.position.y = 1000;
+    circle.position.z = Math.random() * -500;
+    circle.position.x = Math.random() * 500;
+    circle.position.y = 2000;
     THREE.GeometryUtils.merge(bigGeometry1, circle);
-  }
-  for( var i = 0; i < 50; i ++ ) {
-    circle.position.z = i * 40 + 20;
-    circle.position.x = i * 40 + 20;
-    circle.position.y = 1000;
-    THREE.GeometryUtils.merge(bigGeometry2, circle);
   }
 
   userMesh1 = new THREE.Mesh( bigGeometry1, material );
-  userMesh2 = new THREE.Mesh( bigGeometry2, material );
 
   scene.add( userMesh1 );
-  scene.add( userMesh2 );
   console.log("sphere");
 }
 
@@ -1149,7 +1147,7 @@ function generateUserContent() {
         var newMesh = new THREE.Mesh(
           newGeometry, newMaterial );
 
-        newMesh.position.x = 1100 - ( Math.random() * 500 );
+        newMesh.position.x = 1100 - ( Math.random() * 400 );
         newMesh.position.z = 690;
         newMesh.position.y = ( Math.random() * 50 ) + ( Math.random() * 100 );
         scene.add( newMesh );
@@ -1217,7 +1215,7 @@ function centralPark() {
   var material = new THREE.MeshPhongMaterial( {
     specular: 0x222222,
     color: 0x111111,
-    emissive: new THREE.Color().setHSL( Math.random() * 0.2 + 0.2, 0.9, Math.random() * 0.25 + 0.7 ),
+    emissive: new THREE.Color().setHSL( Math.random() * 0.2 + 0.6, 0.9, Math.random() * 0.25 + 0.7 ),
     shininess: 100,
     overdraw: true
   });
