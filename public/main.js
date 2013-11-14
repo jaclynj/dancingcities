@@ -110,7 +110,7 @@ THREE.ImageUtils.loadTexture('assets/newyorker.jpg'),
 THREE.ImageUtils.loadTexture('assets/drawing.jpg'),
 THREE.ImageUtils.loadTexture('assets/drawing.jpg'),
 THREE.ImageUtils.loadTexture('assets/drawing.jpg'),
-THREE.ImageUtils.loadTexture('assets/drawing.jpg')
+userTexture
 ];
 var allNewYork;
 // COORDINATES - FOURSQUARE
@@ -486,13 +486,24 @@ function render() {
       }
     }
 
-    if( userMesh1 !== undefined ) {
+    if( timeElapsed > 20 && userMesh1 !== undefined ) {
+      userMesh1.rotateX( angleOfRotation );
+      for( var j = 0; j < userMesh1.geometry.vertices.length; j ++ ) {
+    // if( j % 3 === 0 ){
 
-     userMesh1.rotateY( angleOfRotation );
-   }
-   if( timeElapsed > 130 && userMesh2 !== undefined ){
-    userMesh2.rotateZ( angleOfRotation );
-  }
+      userMesh1.geometry.vertices[j].y -= 0.5 ;
+    // }
+    // else {
+    //   allNewYork.geometry.vertices[j].y -=5 ;
+    // }
+        // fallingTexts[i].position.y -= 2;
+      }
+      userMesh1.geometry.verticesNeedUpdate = true;
+    }
+
+      // if( timeElapsed > 130 && userMesh2 !== undefined ){
+
+      // }
 
 
   // time event to begin particles
@@ -542,7 +553,7 @@ function render() {
    for( var j = 0; j < allNewYork.geometry.vertices.length; j ++ ) {
     // if( j % 3 === 0 ){
 
-      allNewYork.geometry.vertices[j].y +=5 ;
+      allNewYork.geometry.vertices[j].y += 0.1 ;
     // }
     // else {
     //   allNewYork.geometry.vertices[j].y -=5 ;
@@ -1037,7 +1048,7 @@ function getUserPicture( URL ) {
 
 function userImageSpheres() {
   var geometry =  new THREE.CircleGeometry( 10 );
-  geometry.applyMatrix( new THREE.Matrix4().makeRotationY(  Math.PI / 2) );
+  geometry.applyMatrix( new THREE.Matrix4().makeRotationX(  Math.PI / 2) );
   var material = new THREE.MeshLambertMaterial({
     map: userTexture,
     overdraw: true,
@@ -1050,14 +1061,14 @@ function userImageSpheres() {
   for( var i = 0; i < 50; i ++ ) {
 
     circle.position.z = i * 40;
-    circle.position.x = i * 40;
-    circle.position.y = 5000;
+    circle.position.x = -i * 40;
+    circle.position.y = 1000;
     THREE.GeometryUtils.merge(bigGeometry1, circle);
   }
   for( var i = 0; i < 50; i ++ ) {
     circle.position.z = i * 40 + 20;
     circle.position.x = i * 40 + 20;
-    circle.position.y = 5000;
+    circle.position.y = 1000;
     THREE.GeometryUtils.merge(bigGeometry2, circle);
   }
 
