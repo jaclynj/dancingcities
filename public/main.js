@@ -993,89 +993,75 @@ function generateUserContent() {
   var direction = controls.getDirection(new THREE.Vector3(0, 0, 0)).clone();
   var i = Math.floor( Math.random() * 10 );
   var str = messageToUser[i] + userName;
+  var userMessageGeometry = new THREE.Geometry();
+  var newCanvas = document.createElement( 'canvas' );
+  newCanvas.height = window.innerHeight;
+  newCanvas.width = window.innerWidth;
+  var newContext = newCanvas.getContext( '2d' );
+  newContext.font = "Bold 20px Arial";
+  newContext.fillStyle = "rgba(180, 0, 180, 0.5)";
+  newContext.fillText( str, 0, 50 );
 
+  var newTexture = new THREE.Texture( newCanvas );
+  newTexture.needsUpdate = true;
+
+  var newMaterial = new THREE.MeshBasicMaterial( {
+    map: newTexture,
+    side: THREE.DoubleSide
+  });
+  newMaterial.transparent = true;
+  var newGeometry = new THREE.PlaneGeometry( newCanvas.width, newCanvas.height );
+  newGeometry.applyMatrix( new THREE.Matrix4().makeRotationY(  Math.PI / 6) );
+  var newMesh = new THREE.Mesh(
+    newGeometry );
   for( var i = 0; i < 20; i ++ ){
-    var newCanvas = document.createElement( 'canvas' );
-    newCanvas.height = window.innerHeight;
-    newCanvas.width = window.innerWidth;
-    var newContext = newCanvas.getContext( '2d' );
-    newContext.font = "Bold 20px Arial";
-    newContext.fillStyle = "rgba(180, 0, 180, 0.5)";
-    newContext.fillText( str, 0, 50 );
-
-    var newTexture = new THREE.Texture( newCanvas );
-    newTexture.needsUpdate = true;
-
-    var newMaterial = new THREE.MeshBasicMaterial( {
-      map: newTexture,
-      side: THREE.DoubleSide
-    });
-    newMaterial.transparent = true;
-    var newGeometry = new THREE.PlaneGeometry( newCanvas.width, newCanvas.height );
-    newGeometry.applyMatrix( new THREE.Matrix4().makeRotationY(  Math.PI / 6) );
     // newGeometry.applyMatrix( new THREE.Matrix4().makeRotationZ( -Math.PI/ 4 ) );
       // newGeometry.applyMatrix( new THREE.Matrix4().makeRotationX( Math.PI/ 4 ) );
-      var newMesh = new THREE.Mesh(
-        newGeometry, newMaterial );
 
       newMesh.position.x = direction.x + 400 * Math.random();
       newMesh.position.z =  direction.z - 500 * Math.random();
       newMesh.position.y = direction.y - 200 * Math.random();
-      scene.add( newMesh );
-      allUserMessages.push( newMesh );
+      THREE.GeometryUtils.merge( userMessageGeometry, newMesh );
+
     }
+    var userMessageMesh = new THREE.Mesh( userMessageGeometry, newMaterial );
+    scene.add( userMessageMesh );
+    allUserMessages.push( userMessageMesh );
 
-// DO THIS WITH CANVAS ???
+  }
 
+  function updateWall() {
+   $.ajax({
+    type: "GET",
+    url: '/messages.json'
+  }).done(function(data) {
+    for( var i = 0; i < data.length; i ++ ) {
+      if( textContents.indexOf( data[i].message ) == -1 ) {
+        var newCanvas = document.createElement( 'canvas' );
+        var newContext = newCanvas.getContext( '2d' );
+        newContext.font = "Bold 20px Arial";
+        newContext.fillStyle = "rgba(255, 255, 255, 0.8)";
+        var message = data[i].message;
+        textContents.push( message );
+        newContext.fillText( message, 0, 50 );
 
+        var newTexture = new THREE.Texture( newCanvas );
+        newTexture.needsUpdate = true;
 
-  // for( var i = 0; i < 20; i ++ ){
-  //   var msgDiv = document.createElement('div');
-  //   msgDiv.textContent = str;
-  //   msgDiv.style.position = 'absolute';
-  //   msgDiv.style.top = Math.random() * 300;
-  //   msgDiv.style.left = Math.random() * 600;
-  //   msgDiv.className = "usermsg";
-  //   document.body.appendChild( msgDiv );
-  //   $('.usermsg').fadeIn( 100 );
-  //   $('.usermsg').fadeOut( 100 );
-  //   console.log("trying");
-  // }
+        var newMaterial = new THREE.MeshBasicMaterial( {
+          map: newTexture,
+          side: THREE.DoubleSide
+        });
+        newMaterial.transparent = true;
+        var newGeometry = new THREE.PlaneGeometry( newCanvas.width, newCanvas.height );
+        newGeometry.applyMatrix( new THREE.Matrix4().makeRotationY( - Math.PI) );
+        var newMesh = new THREE.Mesh(
+          newGeometry, newMaterial );
 
-}
-
-function updateWall() {
- $.ajax({
-  type: "GET",
-  url: '/messages.json'
-}).done(function(data) {
-  for( var i = 0; i < data.length; i ++ ) {
-    if( textContents.indexOf( data[i].message ) == -1 ) {
-      var newCanvas = document.createElement( 'canvas' );
-      var newContext = newCanvas.getContext( '2d' );
-      newContext.font = "Bold 20px Arial";
-      newContext.fillStyle = "rgba(255, 255, 255, 0.8)";
-      var message = data[i].message;
-      textContents.push( message );
-      newContext.fillText( message, 0, 50 );
-
-      var newTexture = new THREE.Texture( newCanvas );
-      newTexture.needsUpdate = true;
-
-      var newMaterial = new THREE.MeshBasicMaterial( {
-        map: newTexture,
-        side: THREE.DoubleSide
-      });
-      newMaterial.transparent = true;
-      var newGeometry = new THREE.PlaneGeometry( newCanvas.width, newCanvas.height );
-      newGeometry.applyMatrix( new THREE.Matrix4().makeRotationY( - Math.PI) );
-      var newMesh = new THREE.Mesh(
-        newGeometry, newMaterial );
-
-      newMesh.position.x = 1100 - ( Math.random() * 500 );
-      newMesh.position.z = 690;
-      newMesh.position.y = ( Math.random() * 50 ) + ( Math.random() * 100 );
-      scene.add( newMesh );
+        newMesh.position.x = 1100 - ( Math.random() * 500 );
+        newMesh.position.z = 690;
+        newMesh.position.y = ( Math.random() * 50 ) + ( Math.random() * 100 );
+        scene.add( newMesh );
     // textCount += 1;
     // console.log(textCount);
     // console.log(message);
