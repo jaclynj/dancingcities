@@ -682,10 +682,7 @@ function unlockAllDirection(){
 
 
 function leaveAMessage(e) {
-  controls.lockMoveRight( true );
-  controls.lockMoveLeft( true );
-  controls.lockMoveBackward( true );
-  controls.lockMoveForward( true );
+
   leavingMessage = true;
   controls.blockJump( true );
   thisPress = Date.now();
@@ -719,6 +716,10 @@ function leaveAMessage(e) {
     lastPress = thisPress;
   }
   else {
+    controls.lockMoveRight( true );
+    controls.lockMoveLeft( true );
+    controls.lockMoveBackward( true );
+    controls.lockMoveForward( true );
     var c = String.fromCharCode( e.which );
     if( (thisPress - lastPress) > 20 ) {
       userMessage += c;
