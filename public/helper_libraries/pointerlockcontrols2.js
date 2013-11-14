@@ -219,5 +219,8 @@
   };
   this.blockJump = function(boolean) {
     blockJump = boolean;
+    if( boolean === false ){
+      canJump = true;
+    }
   };
 };

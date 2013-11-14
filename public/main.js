@@ -1,7 +1,6 @@
 // Load Web Audio Context for Web Audio API
 var context;
 var container;
-
 try {
     if(typeof webkitAudioContext === 'function') { // webkit-based
       context = new webkitAudioContext();
@@ -96,10 +95,26 @@ var messageToUser = ["Welcome to New York, ", "New York loves you, ", "You look 
 var allUserMessages = [];
 
 // COORDINATES - PLACEHOLDER
-coordinates = [[40.740084,-73.990115], [40.736698,-73.990164], [40.736706,-74.001249], [40.748379,-74.000112], [40.749955,-73.988549], [40.754734,-73.987922], [40.754734,-73.987922], [40.758635,-73.977452], [40.76538,-73.979727], [40.768029,-73.981937], [40.763771,-73.976368], [40.761691,-73.970693], [40.755953,-73.972816], [40.752154,-73.977782], [40.745111,-73.984687], [40.737925,-73.981683], [40.740835,-73.99185] ];
+var coordinates = [[40.740084,-73.990115], [40.736698,-73.990164], [40.736706,-74.001249], [40.748379,-74.000112], [40.749955,-73.988549], [40.754734,-73.987922], [40.754734,-73.987922], [40.758635,-73.977452], [40.76538,-73.979727], [40.768029,-73.981937], [40.763771,-73.976368], [40.761691,-73.970693], [40.755953,-73.972816], [40.752154,-73.977782], [40.745111,-73.984687], [40.737925,-73.981683], [40.740835,-73.99185] ];
 
+var newYorkImages = [
+THREE.ImageUtils.loadTexture('assets/statueofliberty.jpg'),
+THREE.ImageUtils.loadTexture('assets/taxis.jpg'),
+THREE.ImageUtils.loadTexture('assets/Certainty.jpg'),
+THREE.ImageUtils.loadTexture('assets/drawing.jpg'),
+THREE.ImageUtils.loadTexture('assets/linedrawing.jpg'),
+THREE.ImageUtils.loadTexture('assets/newyorker.jpg'),
+THREE.ImageUtils.loadTexture('assets/drawing.jpg'),
+THREE.ImageUtils.loadTexture('assets/drawing.jpg'),
+THREE.ImageUtils.loadTexture('assets/drawing.jpg'),
+THREE.ImageUtils.loadTexture('assets/drawing.jpg')
+];
+var allNewYork;
 // COORDINATES - FOURSQUARE
 var placesArray = [];
+
+// SPINNY THING
+var spinnyThing;
 
 var testWords = ["new york city", "#i love this town", "beautiful", "lol"];
 
@@ -286,7 +301,7 @@ startButton.addEventListener( 'click', function ( event ) {
 }
 
 
-// PREVENT BACKSPACE FROM GOING BACK
+// // PREVENT BACKSPACE FROM GOING BACK
 $(document).on("keydown", function (e) {
   if (e.which === 8) {
     e.preventDefault();
@@ -301,7 +316,7 @@ loadAudioRequest( url );
 dynamicGrabFoursquare(40.737925,-73.981683);
 dynamicGrabFoursquare(40.740084,-73.990115);
 dynamicGrabFoursquare(40.76538,-73.979727);
-dynamicGrabFoursquare(40.72, -73.85);
+// dynamicGrabFoursquare(40.72, -73.85);
 
 getWeatherCode();
 
@@ -383,11 +398,14 @@ addBigSphere( 0, 0 );
 
 addMirrorSphere( 500, 400 );
 addMirrorCube( 0, 400 );
+generateSpinnyThing();
 
 // words();
 graffitiWall();
 centralPark();
 // generateUserContent();
+generateNewYorkShapes();
+
 
 
 optimizedDynamicBuildings( placesArray );
@@ -502,9 +520,28 @@ function render() {
     weatherUpdated = true;
   }
 
+  if( timeElapsed > 90 && Math.floor( timeElapsed % 5 ) === 0 ) {
+    allBuildingMesh.material.emissive.setHex( array[j] * 0x772252 );
+  }
+
+  if( timeElapsed > 120 ) {
+   for( var j = 0; j < allNewYork.geometry.vertices.length; j ++ ) {
+    if( j % 3 === 0 ){
+
+      allNewYork.geometry.vertices[j].y +=5 ;
+    }
+    else {
+      allNewYork.geometry.vertices[j].y -=5 ;
+    }
+        // fallingTexts[i].position.y -= 2;
+        allNewYork.geometry.verticesNeedUpdate = true;
+      }
+  }
+
   // var quaternion = new THREE.Quaternion().setFromAxisAngle( new THREE.Vector3( 0, 0, 0 ) , angleOfRotation) ;
   // bigSphere.rotation.setEulerFromQuaternion( quaternion );
-  bigSphere.rotateY( angleOfRotation )
+  bigSphere.rotateY( angleOfRotation );
+  spinnyThing.rotateZ( angleOfRotation );
   angleOfRotation += 0.00001;
 
 
@@ -549,14 +586,23 @@ function detectCollision() {
     console.log("intersect");
   }
   if ( intersects.length > 0 && intersects[0].distance < 300 ) {
+    spinnyThing.material.wireframe = true;
     if( intersects[0].object == wall ) {
       if( !messageLeft ) {
-      // FORM POPS UP, WHEN THEY PRESS ENTER ADDS MESSAGE
-      $( '#graffiti-form' ).css( "display", "block" );
-      $( document.body ).on( "keypress", leaveAMessage );
+        // FORM POPS UP, WHEN THEY PRESS ENTER ADDS MESSAGE
+        $( '#graffiti-form' ).css( "display", "block" );
+        $( document.body ).on( "keypress", leaveAMessage );
+      }
+    }
+    else if( intersects[0].object == allNewYork ) {
+      allNewYork.material.map = newYorkImages[ Math.floor( Math.random() * 10 ) ];
     }
   }
-}
+  if( intersects.length > 0 && intersects[0].distance < 100 ){
+    if( intersects[0].object == spinnyThing ) {
+      spinnyThing.material.wireframe = false;
+    }
+  }
 }
 
 function lockDirection() {
@@ -588,6 +634,7 @@ function leaveAMessage(e) {
   thisPress = Date.now();
   e.preventDefault();
   var keycode = (e.keyCode ? e.keyCode : e.which );
+  console.log( keycode );
   if( keycode == '13' ) {
     messageLeft = true;
     // $( '#graffiti-form' ).css( "display", "none" );
@@ -603,9 +650,16 @@ function leaveAMessage(e) {
       controls.blockJump( false );
     }
   }
+  else if( keycode == '8' ) {
+    console.log("i'm getting here");
+    var c = userMessage[userMessage.length - 1];
+    userMessage = userMessage.substring( 0, userMessage.length - 1 );
+    $( "#user-input:last-child" ).remove().fadeOut(200);
+    lastPress = thisPress;
+  }
   else {
     c = String.fromCharCode( e.which );
-    if( (thisPress - lastPress) > 50 ) {
+    if( (thisPress - lastPress) > 20 ) {
       userMessage += c;
       $( '#user-input').append(c).fadeIn(200);
       console.log(userMessage);
@@ -774,6 +828,34 @@ function loadAudioBuffer() {
           );
 }
 
+function generateNewYorkShapes() {
+  var allGeometry = new THREE.Geometry();
+  for( var i = 0; i < 200; i++ ) {
+    var geometry = new THREE.SphereGeometry( 10 );
+    var material = new THREE.MeshPhongMaterial( {
+      map: newYorkImages[i % 10]
+    });
+    var smallMesh = new THREE.Mesh( geometry, material );
+    if( i % 2 === 0 ) {
+      smallMesh.position.z = Math.random() * 1000;
+      smallMesh.position.x = Math.random() * 1000;
+      smallMesh.position.y = Math.random() * 200;
+    }
+    else {
+      smallMesh.position.x = -Math.random() * 1000;
+      smallMesh.position.z = Math.random() * 1000;
+      smallMesh.position.y = Math.random() * 200;
+    }
+    THREE.GeometryUtils.merge( allGeometry, smallMesh );
+  }
+  allNewYork = new THREE.Mesh( allGeometry,
+    new THREE.MeshLambertMaterial({
+      map: newYorkImages[4]
+    }));
+  scene.add( allNewYork );
+  allObjects.push( allNewYork );
+}
+
 // UPDATE FUNCTIONS
 
 function flashEndingLight() {
@@ -874,13 +956,28 @@ function getUserData() {
   }).done( function( data ) {
     if ( data !== null ){
       userName = data.name;
-      userImage = data.image;
+      userImageURL = data.image;
       customUserGraphics = true;
       userContent = false;
+      getUserPicture( userImageURL );
     }
   })
 }
 
+function utf8_to_b64( str ) {
+  return window.btoa(encodeURIComponent( str ));
+}
+
+function getUserPicture( URL ) {
+  $.ajax({
+    type: "GET",
+    url: "/convert?image_url=" + URL
+  }).done( function( data ) {
+    // var imgSrc = utf8_to_b64( data );
+    userImage = THREE.ImageUtils.loadTexture( data );
+    userImageSpheres();
+  })
+}
 
 function generateUserContent() {
   var direction = controls.getDirection(new THREE.Vector3(0, 0, 0)).clone();
@@ -1425,6 +1522,42 @@ function addMirrorCube( x, y ) {
   movingObjects.push( mirrorCube );
 
 }
+
+function generateSpinnyThing() {
+  var geometry = new THREE.TorusKnotGeometry();
+  var material = new THREE.MeshLambertMaterial({
+    emissive: 0x773366,
+    wireframe: true
+  })
+  spinnyThing = new THREE.Mesh( geometry, material );
+  spinnyThing.position.z = -600;
+  spinnyThing.position.x = -20;
+  scene.add( spinnyThing );
+  movingObjects.push( spinnyThing );
+  allObjects.push( spinnyThing );
+}
+
+function statueOfLiberty() {
+
+  var texture = THREE.ImageUtils.loadTexture('assets/statueofliberty.jpg');
+  texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set( 2, 2 );
+
+}
+
+function userImageSpheres() {
+  var geometry =  new THREE.SphereGeometry( 50 );
+  var material = new THREE.MeshLambertMaterial({
+    map: userImage,
+    overdraw: true
+  });
+  var sphere = new THREE.Mesh( geometry, material );
+  sphere.position.z = -600;
+  sphere.position.x = -20;
+  scene.add( sphere );
+  console.log("sphere");
+}
+
 
 
 
