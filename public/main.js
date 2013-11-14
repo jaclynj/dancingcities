@@ -741,14 +741,14 @@ function dynamicGrabFoursquare(lat, lng) {
     async: false
   });
 // debugger;
-var parsedResponse = JSON.parse(places.responseText)
+var parsedResponse = JSON.parse(places.responseText);
 var locations = parsedResponse.response.groups[0].items;
 for( var i = 0; i < locations.length; i++ ) {
   var place = [];
-  var lng = locations[i].venue.location.lng;
-  var lat = locations[i].venue.location.lat;
+  var longitude = locations[i].venue.location.lng;
+  var latitude = locations[i].venue.location.lat;
   var name = locations[i].venue.name;
-  place.push( lat, lng, name );
+  place.push( latitude, longitude, name );
   placesArray.push( place );
 }
 console.log( placesArray );
@@ -1227,7 +1227,7 @@ function centralPark() {
   var sphere = new THREE.Mesh( geometry );
   sphere.dynamic = true;
   for( var i = 0; i < 8; i ++ ) {
-    for( j = 0; j < 8; j ++) {
+    for( var j = 0; j < 8; j ++) {
       sphere.position.y = 1;
       sphere.position.x = xCoord;
       sphere.position.z = zCoord;
