@@ -20,6 +20,7 @@ li {
 
 h2,h3 {
   margin-top: 0;
+  margin-bottom: 8px;
 }
 
 .menu {
@@ -72,10 +73,17 @@ h2,h3 {
 #graffiti-form {
   display: none;
   position: absolute;
-  margin-top: 50px;
-  color: rgba(0, 0, 0, 0.8);
-  font-size: 50px;
+  margin: 50px 260px;
+  color: RGBA(137.00, 137.00, 137.00, 0.6);
+  font-size: 40px;
+  background-color: RGBA(107, 160, 239, 0.5);
+  height: 200px;
+  width: 1000px;
+}
 
+#user-input {
+  color: #A9F1E6;
+  font-size: 40px;
 }
 
 .flash {
@@ -119,11 +127,9 @@ h2,h3 {
 }
 
 .menu-box {
-  padding: 15px;
-  background-color: RGBA(107, 160, 239, 0.2);
+  padding: 10px;
+  color: #346F9E;
   width: 380px;
-  margin: 8px auto 20px;
-  border: 1px solid #8f8f8f;
-  border-radius: 2px;
+  margin: 7px auto 20px;
   line-height: 1.5em;
 }
