@@ -478,7 +478,7 @@ function render() {
     }
 
     var j = 0;
-    if( timeElapsed > 145 ) {
+    if( timeElapsed > 115 ) {
       for( var i = 0; i < dancingGrass.length; i++ ){
         var scale = ( array[j] / 100 );
         centralParkMesh.scale.y = ( scale < 0.6 ? 0.6 : scale );
@@ -521,6 +521,8 @@ function render() {
 
   if( timeElapsed > 173 && !endingLight ) {
     generateEndingLight();
+    bigSphere.material.map = nightTexture;
+    bigSphere.material.needsUpdate = true;
   }
   if( timeElapsed > 173 && endingLight && ( array[k] % 2 === 0 ) ) {
     flashEndingLight();
@@ -1379,25 +1381,28 @@ function words( wordArray, locationPoints ) {
     overdraw: true
   });
   for( var i = wordPos; i < wordPosAtStart + 2; i++ ) {
-    var text = new THREE.TextGeometry( wordArray[i], {
-      size: 50,
-      height: 10,
-      curveSegments: 2,
-      font: "helvetiker",
-      weight: "normal",
-      style: 'normal'
 
-    });
-    var textMesh = new THREE.Mesh( text );
-    text.applyMatrix( new THREE.Matrix4().makeRotationY( - Math.PI / 2) );
-    text.applyMatrix( new THREE.Matrix4().makeRotationX( Math.random() * Math.PI / 2) );
-    var lat = locationPoints[i][0];
-    var lng = locationPoints[i][1];
-    var xCoord = ( ( lat - 40 ) * 10 ) + Math.floor( Math.random() * 1000 ) ;
-    var zCoord = ( ( lng - 70 ) / Math.round( Math.random() * 10 ) ) + Math.floor( Math.random() * 1000 );
-    textMesh.position.x = xCoord;
-    textMesh.position.y = 400 + ( Math.random() * 200 );
-    textMesh.position.z = zCoord;
+    if( locationPoints[i] !== undefined && wordArray[i] !== undefined ) {
+
+      var text = new THREE.TextGeometry( wordArray[i], {
+        size: 50,
+        height: 10,
+        curveSegments: 2,
+        font: "helvetiker",
+        weight: "normal",
+        style: 'normal'
+
+      });
+      var textMesh = new THREE.Mesh( text );
+      text.applyMatrix( new THREE.Matrix4().makeRotationY( - Math.PI / 2) );
+      text.applyMatrix( new THREE.Matrix4().makeRotationX( Math.random() * Math.PI / 2) );
+      var lat = locationPoints[i][0];
+      var lng = locationPoints[i][1];
+      var xCoord = ( ( lat - 40 ) * 10 ) + Math.floor( Math.random() * 1000 ) ;
+      var zCoord = ( ( lng - 70 ) / Math.round( Math.random() * 10 ) ) + Math.floor( Math.random() * 1000 );
+      textMesh.position.x = xCoord;
+      textMesh.position.y = 400 + ( Math.random() * 200 );
+      textMesh.position.z = zCoord;
     // scene.add( textObj );
     // fallingTexts.push( textMesh );
     allObjects.push( textMesh );
@@ -1405,9 +1410,11 @@ function words( wordArray, locationPoints ) {
     wordPos += 1;
   }
 
-  var allTextMesh = new THREE.Mesh( textGeometry, textMaterial );
-  scene.add( allTextMesh );
-  fallingTexts.push( allTextMesh );
+}
+
+var allTextMesh = new THREE.Mesh( textGeometry, textMaterial );
+scene.add( allTextMesh );
+fallingTexts.push( allTextMesh );
   // var text = new THREE.TextGeometry( "hi", {font: 'helvetiker', weight: 'normal', style: 'normal'});
   // var material = new THREE.MeshPhongMaterial({ color: 0xdddddd });
   // var textMesh = new THREE.Mesh( text, material );
