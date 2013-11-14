@@ -443,9 +443,6 @@ function render() {
     if( userContent ){
       getUserData();
     }
-    else {
-      generateSpinnyThing();
-    }
   }
 
     // animate all shapes in "movingObjects" array based on song
@@ -984,7 +981,12 @@ function checkLoggedIn() {
     type: "GET", 
     url: '/checker.json' 
   }).done( function( data ) {
-    userContent = true;
+    if( data.session === true ) {
+      userContent = true;
+    }
+    else {
+      generateSpinnyThing();
+    }
   })
 }
 
@@ -1015,17 +1017,15 @@ function getUserPicture( URL ) {
   }).done( function( data ) {
     // userImage = THREE.ImageUtils.loadTexture( data );
     // userImageSpheres();
-    // var canvas = document.createElement('canvas');
-    // canvas.height = window.innerHeight;
-    // canvas.width = window.innerWidth;
-    // var context = canvas.getContext('2d');
+    var canvas = document.createElement('canvas');
+    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
+    var context = canvas.getContext('2d');
     var imgSrc = "data:image/png;base64, " + data;
     var threeImage = document.createElement('img');
     threeImage.src = imgSrc;
     // threeImage.width = 128;
     userTexture = new THREE.Texture( threeImage );
-    userTexture.wrapS = userTexture.wrapT = THREE.RepeatWrapping;
-    userTexture.repeat.set( 10, 10 );
 
     threeImage.onload = function() {
       // var pattern = context.createPattern( this, "repeat" );
@@ -1039,13 +1039,16 @@ function getUserPicture( URL ) {
 }
 
 function userImageSpinny() {
-  var geometry = new THREE.CircleGeometry( 50 );
+  var geometry = new THREE.CircleGeometry( 50, 100 );
   var material = new THREE.MeshLambertMaterial({
     map: userTexture,
     overdraw: true,
     side: THREE.DoubleSide
   });
   spinnyThing = new THREE.Mesh( geometry, material );
+  spinnyThing.position.y = 200;
+  spinnyThing.position.z = -600
+  spinnyThing.position.x = -20;
   scene.add( spinnyThing );
 }
 
@@ -1218,8 +1221,8 @@ function centralPark() {
   });
   var sphere = new THREE.Mesh( geometry );
   sphere.dynamic = true;
-  for( var i = 0; i < 5; i ++ ) {
-    for( j = 0; j < 5; j ++) {
+  for( var i = 0; i < 8; i ++ ) {
+    for( j = 0; j < 8; j ++) {
       sphere.position.y = 1;
       sphere.position.x = xCoord;
       sphere.position.z = zCoord;
