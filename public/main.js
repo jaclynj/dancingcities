@@ -124,8 +124,8 @@ var xray;
 var zray;
 
 // PHYSIJS SETUP
-Physijs.scripts.worker = 'helper_libraries/physijs_worker.js';
-Physijs.scripts.ammo = 'ammo.js';
+// Physijs.scripts.worker = 'helper_libraries/physijs_worker.js';
+// Physijs.scripts.ammo = 'ammo.js';
 
 var blocker = document.getElementById( 'blocker' );
 var instructions = document.getElementById( 'instructions' );
@@ -1037,6 +1037,7 @@ function generateUserContent() {
     type: "GET",
     url: '/messages.json'
   }).done(function(data) {
+    var i = data.length;
     for( var i = 0; i < data.length; i ++ ) {
       if( textContents.indexOf( data[i].message ) == -1 ) {
         var newCanvas = document.createElement( 'canvas' );
@@ -1209,7 +1210,7 @@ function generateFloor() {
   });
 
 // MESH FOR BASIC PLANE
-var mesh = new Physijs.PlaneMesh( geometry, material );
+var mesh = new THREE.Mesh( geometry, material );
 scene.add( mesh );
 
 var wireframeGeometry = new THREE.PlaneGeometry( 2000, 2000, 200, 200 );
@@ -1451,7 +1452,7 @@ function addCube( x, y, z ) {
 
   material = new THREE.MeshBasicMaterial( { vertexColors: THREE.VertexColors } );
 
-  var cube = new Physijs.BoxMesh( geometry, material );
+  var cube = new THREE.Mesh( geometry, material );
   cube.position.x = x;
   // cube.position.y = y;
   cube.position.z = z;
