@@ -508,8 +508,7 @@ function render() {
   }
 
   if( timeElapsed > 90 && Math.floor( timeElapsed % 5 ) === 0 ) {
-    allBuildingMesh.material.emissive = Math.random() * 0x404040;
-    // allBuildingMesh.material.needsUpdate;
+    allBuildingMesh.material.emissive.setHex( array[j] * 0x772252 );
   }
 
   // var quaternion = new THREE.Quaternion().setFromAxisAngle( new THREE.Vector3( 0, 0, 0 ) , angleOfRotation) ;
@@ -560,6 +559,7 @@ function detectCollision() {
     console.log("intersect");
   }
   if ( intersects.length > 0 && intersects[0].distance < 300 ) {
+    spinnyThing.material.wireframe = true;
     if( intersects[0].object == wall ) {
       if( !messageLeft ) {
         // FORM POPS UP, WHEN THEY PRESS ENTER ADDS MESSAGE
@@ -570,7 +570,7 @@ function detectCollision() {
   }
   if( intersects.length > 0 && intersects[0].distance < 100 ){
     if( intersects[0].object == spinnyThing ) {
-      statueOfLiberty();
+      spinnyThing.material.wireframe = false;
     }
   }
 }
@@ -1453,7 +1453,7 @@ function addMirrorCube( x, y ) {
 function generateSpinnyThing() {
   var geometry = new THREE.TorusKnotGeometry();
   var material = new THREE.MeshLambertMaterial({
-    // side: THREE.DoubleSide
+    emissive: 0x773366,
     wireframe: true
   })
   spinnyThing = new THREE.Mesh( geometry, material );
