@@ -1,5 +1,5 @@
-<% #TODO Create first admin, then uncomment this code %>
-<!--  if current_admin  -->
+
+<%if current_admin %>
 <div class = "admins">
   <h1>Add Admin</h1>
   <div class = "messages">
@@ -22,9 +22,6 @@
       <%=f.submit :class => "submit splash-button" %>
       <%end%>
 </div>
-<% #TODO Create first admin, then uncomment this code %>
-<!--
-This makes it so that only Admins can add admins
-else
-      You must log in as an administrator.  link_to "Login As Admin", "/admin_login"
-end -->
+<% else %>
+<div class = "messages">You must log in as an administrator.  <%=link_to "Login As Admin", "/admin_login"%></div>
+<%end%>
