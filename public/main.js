@@ -386,11 +386,13 @@ addBigSphere( 0, 0 );
 
 addMirrorSphere( 500, 400 );
 addMirrorCube( 0, 400 );
+generateSpinnyThing();
 
 // words();
 graffitiWall();
 centralPark();
 // generateUserContent();
+
 
 
 optimizedDynamicBuildings( placesArray );
@@ -1445,9 +1447,9 @@ function generateSpinnyThing() {
   })
   spinnyThing = new THREE.Mesh( geometry, material );
   spinnyThing.position.z = -600;
-  spinnyThing.postion.x = -20;
+  spinnyThing.position.x = -20;
   scene.add( spinnyThing );
-  movingObjects.add( spinnyThing );
+  movingObjects.push( spinnyThing );
 }
 
 
