@@ -499,7 +499,7 @@ function render() {
     console.log( "words");
   }
 
-  if( Math.round( timeElapsed * 2 ) % 20 === 0 ) {
+  if( Math.round( timeElapsed * 30 ) % 300 === 0 ) {
     updateWall();
 
   }
@@ -649,6 +649,8 @@ function leaveAMessage(e) {
         type: "POST",
         data: {message: {message: userMessage}},
         url: '/messages.json'
+      }).done( function() {
+        updateWall();
       });
       sendAjax = false;
     }
