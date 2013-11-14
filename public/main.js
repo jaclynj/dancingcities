@@ -486,9 +486,13 @@ function render() {
 
 
   // time event to begin particles
-  if( timeElapsed > 35 ) {
+  if( timeElapsed > 35 && timeElapsed < 120 ) {
     particleGroup.tick( array[k] / 1000);
     // console.log("should be working");
+  }
+  if( timeElapsed > 105 ) {
+    particleGroup.tick( array[k] / 500 );
+    particleGroup.colorize = 1;
   }
   if ( ( timeElapsed > 60 ) && ((( Math.round( timeElapsed * 10 ) % 100 === 0 )))) {
     words( tweetArray, coordinates );
@@ -508,10 +512,10 @@ function render() {
     }
   }
 
-  if( timeElapsed > 181 && !endingLight ) {
+  if( timeElapsed > 167 && !endingLight ) {
     generateEndingLight();
   }
-  if( timeElapsed > 181 && endingLight && ( Math.round( timeElapsed ) % 3 === 0 ) ) {
+  if( timeElapsed > 167 && endingLight && ( array[k] % 2 === 0 ) ) {
     flashEndingLight();
   }
 
@@ -536,7 +540,7 @@ function render() {
         // fallingTexts[i].position.y -= 2;
         allNewYork.geometry.verticesNeedUpdate = true;
       }
-  }
+    }
 
   // var quaternion = new THREE.Quaternion().setFromAxisAngle( new THREE.Vector3( 0, 0, 0 ) , angleOfRotation) ;
   // bigSphere.rotation.setEulerFromQuaternion( quaternion );
@@ -583,7 +587,6 @@ function detectCollision() {
 
   if ((intersects.length > 0 && intersects[0].distance < 25)) {
     lockDirection();
-    console.log("intersect");
   }
   if ( intersects.length > 0 && intersects[0].distance < 300 ) {
     spinnyThing.material.wireframe = true;
@@ -640,6 +643,7 @@ function leaveAMessage(e) {
     // $( '#graffiti-form' ).css( "display", "none" );
     $( '#graffiti-form' ).fadeOut(400);
     $( document.body ).off( "keypress", leaveAMessage );
+    controls.blockJump( false );
     if ( sendAjax ) {
       $.ajax({
         type: "POST",
@@ -647,7 +651,6 @@ function leaveAMessage(e) {
         url: '/messages.json'
       });
       sendAjax = false;
-      controls.blockJump( false );
     }
   }
   else if( keycode == '8' ) {
@@ -687,7 +690,9 @@ function controlCheck() {
     var distance = intersections[0].distance;
 
     if( distance > 0 && distance < 10 ) {
-
+      // debugger;
+      // intersections[0].object.material.color.setHex( 0x64f544 );
+      // intersections[0].object.material.needsUpdate = true;
       controls.isOnObject( true );
 
     }
@@ -837,14 +842,19 @@ function generateNewYorkShapes() {
     });
     var smallMesh = new THREE.Mesh( geometry, material );
     if( i % 2 === 0 ) {
-      smallMesh.position.z = Math.random() * 1000;
+      smallMesh.position.z = Math.random() * 650;
       smallMesh.position.x = Math.random() * 1000;
-      smallMesh.position.y = Math.random() * 200;
+      smallMesh.position.y = Math.random() * 200 + 20;
+    }
+    else if( i % 3 === 0 ) {
+      smallMesh.position.x = -Math.random() * 1000;
+      smallMesh.position.z = -Math.random() * 1000;
+      smallMesh.position.y = Math.random() * 200 + 50;
     }
     else {
       smallMesh.position.x = -Math.random() * 1000;
       smallMesh.position.z = Math.random() * 1000;
-      smallMesh.position.y = Math.random() * 200;
+      smallMesh.position.y = Math.random() * 200 + 50;
     }
     THREE.GeometryUtils.merge( allGeometry, smallMesh );
   }
@@ -1062,8 +1072,8 @@ function updateWall() {
       var newMesh = new THREE.Mesh(
         newGeometry, newMaterial );
 
-      newMesh.position.x = 500 +  ( Math.random() * 500 );
-      newMesh.position.z = 650;
+      newMesh.position.x = 1100 - ( Math.random() * 500 );
+      newMesh.position.z = 690;
       newMesh.position.y = ( Math.random() * 50 ) + ( Math.random() * 100 );
       scene.add( newMesh );
     // textCount += 1;
@@ -1260,7 +1270,7 @@ function initParticles() {
     acceleration: new THREE.Vector3( 0, 0, 10 ),
     velocity: new THREE.Vector3( 0, 0, 10 ),
     colorStart: new THREE.Color( 'pink' ),
-    colorEnd: new THREE.Color( 'white' ),
+    colorEnd: new THREE.Color( 'pink' ),
     size: 50,
     sizeEnd: 2,
     opacityStart: 0,
@@ -1273,6 +1283,11 @@ function initParticles() {
   scene.add( particleGroup.mesh );
 
 }
+
+// function optimizedWords( wordArray, locationPoints ) {
+//   var wordPosAtStart = wordPos;
+//   var textGeometry
+// }
 
 function words( wordArray, locationPoints ) {
   // debugger;
@@ -1352,8 +1367,8 @@ function optimizedDynamicBuildings( locationPoints ) {
 
     //  RANDOMIZED LOCATIONS
     if ( i % 2 === 0 ) {
-      var xCoord = ( ( lat - 40 ) * 10 ) + Math.floor( Math.random() * 1000 ) ;
-      var zCoord = ( ( lng + 70 ) / Math.round( Math.random() * 10 ) + ( Math.random() * 1000));
+      var xCoord = ( ( lat - 40 ) * 10 ) + Math.floor( Math.random() * 850 ) ;
+      var zCoord = ( ( lng + 70 ) / Math.round( Math.random() * 10 ) + ( Math.random() * 600));
     }
     else if (i % 3 === 0) {
       var xCoord = ( ( lat - 40 ) * 10 );
@@ -1526,7 +1541,7 @@ function addMirrorCube( x, y ) {
 function generateSpinnyThing() {
   var geometry = new THREE.TorusKnotGeometry();
   var material = new THREE.MeshLambertMaterial({
-    emissive: 0x773366,
+    emissive: 0x113377,
     wireframe: true
   })
   spinnyThing = new THREE.Mesh( geometry, material );
