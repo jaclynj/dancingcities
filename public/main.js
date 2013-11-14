@@ -85,6 +85,7 @@ var centralParkMesh;
 // USER VARIABLES IF LOGGED IN
 var userName;
 var userImage= "http://pbs.twimg.com/profile_images/378800000490486404/abf4774fdb37f08ee36f5918c7bf2e1c_normal.jpeg";
+var userTexture;
 
 // CHECKS IF USER CONTENT HAS BEEN GENERATED ALREADY
 var userContent = false;
@@ -405,8 +406,6 @@ graffitiWall();
 centralPark();
 // generateUserContent();
 generateNewYorkShapes();
-
-
 
 optimizedDynamicBuildings( placesArray );
 
@@ -789,14 +788,19 @@ function loadAudioRequest( url ) {
   var loadingAnimation = document.createElement('div');
   loadingAnimation.id = "loading-animation";
   loadingAnimation.textContent = "Loading your city...";
-  if( instructions.style.display  == 'none'){
-    document.body.appendChild( loadingAnimation );
-  }
+  document.body.appendChild( loadingAnimation );
+
+
 
   request = new XMLHttpRequest();
   request.open("GET", url, true);
   request.responseType = "arraybuffer";
   request.send();
+
+  // do {
+  //   $('#loading-animation').fadeIn(100);
+  //   $('#loading-animation').fadeOut(100);
+  // } while( request.readyState !== 4 );
 
   request.onload = loadAudioBuffer;
 }
@@ -981,6 +985,7 @@ function getUserData() {
       userImageURL = data.image;
       customUserGraphics = true;
       userContent = false;
+      // debugger;
       getUserPicture( userImageURL );
     }
   })
@@ -995,11 +1000,42 @@ function getUserPicture( URL ) {
     type: "GET",
     url: "/convert?image_url=" + URL
   }).done( function( data ) {
-    // var imgSrc = utf8_to_b64( data );
-    var imgSrc = "data:image/png;base64," + data
-    userImage = THREE.ImageUtils.loadTexture( imgSrc );
+    // userImage = THREE.ImageUtils.loadTexture( data );
+    // userImageSpheres();
+    var canvas = document.createElement('canvas');
+    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
+    var context = canvas.getContext('2d');
+    var imgSrc = "data:image/png;base64, " + data;
+    var imgTag = $('<img>').attr('src', imgSrc );
+    $( document.body ).append( imgTag );
+    var threeImage = new Image();
+    threeImage.src = imgSrc;
+    threeImage.onload = function() {
+      var pattern = context.createPattern( this, "repeat" );
+      context.fillStyle = pattern;
+      context.rect(0, 0, 100, 100);
+      context.fill();
+    }
+    userTexture = new THREE.Texture( canvas );
+    userTexture.needsUpdate = true;
     userImageSpheres();
-  })
+  });
+}
+
+function userImageSpheres() {
+  var geometry =  new THREE.SphereGeometry( 50 );
+  var material = new THREE.MeshLambertMaterial({
+    map: userTexture,
+    overdraw: true,
+    side: THREE.DoubleSide
+  });
+  // material.transparent = true;
+  var sphere = new THREE.Mesh( geometry, material );
+  sphere.position.z = -600;
+  sphere.position.x = -20;
+  scene.add( sphere );
+  console.log("sphere");
 }
 
 function generateUserContent() {
@@ -1560,18 +1596,6 @@ function statueOfLiberty() {
 
 }
 
-function userImageSpheres() {
-  var geometry =  new THREE.SphereGeometry( 50 );
-  var material = new THREE.MeshLambertMaterial({
-    map: userImage,
-    overdraw: true
-  });
-  var sphere = new THREE.Mesh( geometry, material );
-  sphere.position.z = -600;
-  sphere.position.x = -20;
-  scene.add( sphere );
-  console.log("sphere");
-}
 
 
 
