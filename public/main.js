@@ -87,6 +87,7 @@ var centralParkMesh;
 var userName;
 var userImage= "http://pbs.twimg.com/profile_images/378800000490486404/abf4774fdb37f08ee36f5918c7bf2e1c_normal.jpeg";
 var userTexture;
+var userMesh1, userMesh2;
 
 // CHECKS IF USER CONTENT HAS BEEN GENERATED ALREADY
 var userContent = false;
@@ -485,6 +486,14 @@ function render() {
       }
     }
 
+    if( userMesh1 !== undefined ) {
+
+     userMesh1.rotateY( angleOfRotation );
+   }
+   if( timeElapsed > 130 && userMesh2 !== undefined ){
+    userMesh2.rotateZ( angleOfRotation );
+  }
+
 
   // time event to begin particles
   if( timeElapsed > 35 && timeElapsed < 120 ) {
@@ -531,16 +540,16 @@ function render() {
 
   if( timeElapsed > 105 ) {
    for( var j = 0; j < allNewYork.geometry.vertices.length; j ++ ) {
-    if( j % 3 === 0 ){
+    // if( j % 3 === 0 ){
 
       allNewYork.geometry.vertices[j].y +=5 ;
-    }
-    else {
-      allNewYork.geometry.vertices[j].y -=5 ;
-    }
+    // }
+    // else {
+    //   allNewYork.geometry.vertices[j].y -=5 ;
+    // }
         // fallingTexts[i].position.y -= 2;
-        allNewYork.geometry.verticesNeedUpdate = true;
       }
+      allNewYork.geometry.verticesNeedUpdate = true;
     }
 
   // var quaternion = new THREE.Quaternion().setFromAxisAngle( new THREE.Vector3( 0, 0, 0 ) , angleOfRotation) ;
@@ -881,6 +890,7 @@ function generateNewYorkShapes() {
     }));
   scene.add( allNewYork );
   allObjects.push( allNewYork );
+  // movingObjects.push( allNewYork );
 }
 
 // UPDATE FUNCTIONS
@@ -1013,29 +1023,49 @@ function getUserPicture( URL ) {
     var threeImage = document.createElement('img');
     threeImage.src = imgSrc;
     userTexture = new THREE.Texture( threeImage );
+
     threeImage.onload = function() {
       // var pattern = context.createPattern( this, "repeat" );
       // context.fillStyle = pattern;
       // context.rect(0, 0, 100, 100);
       // context.fill();
-    userTexture.needsUpdate = true;
+      userTexture.needsUpdate = true;
     }
     userImageSpheres();
   });
 }
 
 function userImageSpheres() {
-  var geometry =  new THREE.SphereGeometry( 50 );
+  var geometry =  new THREE.CircleGeometry( 10 );
+  geometry.applyMatrix( new THREE.Matrix4().makeRotationY(  Math.PI / 2) );
   var material = new THREE.MeshLambertMaterial({
     map: userTexture,
     overdraw: true,
     side: THREE.DoubleSide
   });
+  var bigGeometry1 = new THREE.Geometry();
+  var bigGeometry2 = new THREE.Geometry();
+  var circle = new THREE.Mesh( geometry );
   // material.transparent = true;
-  var sphere = new THREE.Mesh( geometry, material );
-  sphere.position.z = -600;
-  sphere.position.x = -20;
-  scene.add( sphere );
+  for( var i = 0; i < 50; i ++ ) {
+
+    circle.position.z = i * 40;
+    circle.position.x = i * 40;
+    circle.position.y = 5000;
+    THREE.GeometryUtils.merge(bigGeometry1, circle);
+  }
+  for( var i = 0; i < 50; i ++ ) {
+    circle.position.z = i * 40 + 20;
+    circle.position.x = i * 40 + 20;
+    circle.position.y = 5000;
+    THREE.GeometryUtils.merge(bigGeometry2, circle);
+  }
+
+  userMesh1 = new THREE.Mesh( bigGeometry1, material );
+  userMesh2 = new THREE.Mesh( bigGeometry2, material );
+
+  scene.add( userMesh1 );
+  scene.add( userMesh2 );
   console.log("sphere");
 }
 
