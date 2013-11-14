@@ -108,9 +108,10 @@ THREE.ImageUtils.loadTexture('assets/Certainty.jpg'),
 THREE.ImageUtils.loadTexture('assets/drawing.jpg'),
 THREE.ImageUtils.loadTexture('assets/linedrawing.jpg'),
 THREE.ImageUtils.loadTexture('assets/newyorker.jpg'),
-THREE.ImageUtils.loadTexture('assets/drawing.jpg'),
-THREE.ImageUtils.loadTexture('assets/drawing.jpg'),
-THREE.ImageUtils.loadTexture('assets/drawing.jpg'),
+THREE.ImageUtils.loadTexture('assets/0698-cartoon-city.jpg'),
+THREE.ImageUtils.loadTexture('assets/0720-new-york-cartoon-background.jpg'),
+THREE.ImageUtils.loadTexture('assets/cartoon-map-new-york.jpg'),
+THREE.ImageUtils.loadTexture('assets/new-york-cartoon-map.jpg'),
 userTexture
 ];
 var allNewYork;
