@@ -491,7 +491,7 @@ function render() {
     // console.log("should be working");
   }
   if( timeElapsed > 105 ) {
-    particleGroup.tick( array[k] / 200 );
+    particleGroup.tick( array[k] / 500 );
     particleGroup.colorize = 1;
   }
   if ( ( timeElapsed > 60 ) && ((( Math.round( timeElapsed * 10 ) % 100 === 0 )))) {
@@ -1530,7 +1530,7 @@ function addMirrorCube( x, y ) {
 function generateSpinnyThing() {
   var geometry = new THREE.TorusKnotGeometry();
   var material = new THREE.MeshLambertMaterial({
-    emissive: 0x773366,
+    emissive: 0x113377,
     wireframe: true
   })
   spinnyThing = new THREE.Mesh( geometry, material );
