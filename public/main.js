@@ -88,7 +88,6 @@ var centralParkMesh;
 var userName;
 var userImage= "http://pbs.twimg.com/profile_images/378800000490486404/abf4774fdb37f08ee36f5918c7bf2e1c_normal.jpeg";
 var userTexture;
-var userMesh1, userMesh2;
 
 // CHECKS IF USER CONTENT HAS BEEN GENERATED ALREADY
 var userContent = false;
@@ -347,7 +346,7 @@ loadAudioRequest( url );
 // GET GEODATA
 dynamicGrabFoursquare(40.737925,-73.981683);
 dynamicGrabFoursquare(40.740084,-73.990115);
-dynamicGrabFoursquare(40.76538,-73.979727);
+// dynamicGrabFoursquare(40.76538,-73.979727);
 // dynamicGrabFoursquare(40.72, -73.85);
 
 getWeatherCode();
@@ -430,7 +429,7 @@ addBigSphere( 0, 0 );
 
 addMirrorSphere( 500, 400 );
 addMirrorCube( 0, 400 );
-generateSpinnyThing();
+
 
 // words();
 graffitiWall();
@@ -469,9 +468,10 @@ function render() {
 
   if( timeElapsed < 30 && !customUserGraphics ){
     checkLoggedIn();
-  }
-  if( userContent ){
-    getUserData();
+
+    if( userContent ){
+      getUserData();
+    }
   }
 
     // animate all shapes in "movingObjects" array based on song
@@ -479,7 +479,7 @@ function render() {
     for( var i = 0; i < movingObjects.length; i++ ) {
       var scale = ( array[k] ) / 80;
       var rand = Math.floor(Math.random() * 10);
-      centralParkMesh.material.emissive.setRGB( array[k]/400, array[k]/200, array[k]/500 );
+      centralParkMesh.material.emissive.setRGB( array[k]/100, array[k]/100, array[k]/500 );
       if( rand % 3 === 0 ){
         movingObjects[i].scale.y = ( scale < 1 ? 1 : scale );
         allBuildingMesh.scale.y = ( scale < 1 ?  1 : scale );
@@ -507,7 +507,7 @@ function render() {
     }
 
     var j = 0;
-    if( timeElapsed > 181 ) {
+    if( timeElapsed > 115 ) {
       for( var i = 0; i < dancingGrass.length; i++ ){
         var scale = ( array[j] / 100 );
         centralParkMesh.scale.y = ( scale < 0.6 ? 0.6 : scale );
@@ -515,20 +515,6 @@ function render() {
       }
     }
 
-    if( timeElapsed > 20 && userMesh1 !== undefined ) {
-      userMesh1.rotateX( angleOfRotation );
-      for( var j = 0; j < userMesh1.geometry.vertices.length; j ++ ) {
-    // if( j % 3 === 0 ){
-
-      userMesh1.geometry.vertices[j].y -= 0.2 ;
-    // }
-    // else {
-    //   allNewYork.geometry.vertices[j].y -=5 ;
-    // }
-        // fallingTexts[i].position.y -= 2;
-      }
-      userMesh1.geometry.verticesNeedUpdate = true;
-    }
 
       // if( timeElapsed > 130 && userMesh2 !== undefined ){
 
@@ -564,6 +550,8 @@ function render() {
 
   if( timeElapsed > 173 && !endingLight ) {
     generateEndingLight();
+    bigSphere.material.map = nightTexture;
+    bigSphere.material.needsUpdate = true;
   }
   if( timeElapsed > 173 && endingLight && ( array[k] % 2 === 0 ) ) {
     flashEndingLight();
@@ -578,9 +566,9 @@ function render() {
     allBuildingMesh.material.emissive.setHex( array[j] * 0x772252 );
   }
 
-  if( timeElapsed > 105 ) {
+  if( timeElapsed > 105 && timeElapsed < 115) {
     allNewYork.rotateZ( angleOfRotation );
-   for( var j = 0; j < allNewYork.geometry.vertices.length; j ++ ) {
+    for( var j = 0; j < allNewYork.geometry.vertices.length; j ++ ) {
     // if( j % 3 === 0 ){
 
       allNewYork.geometry.vertices[j].y += 0.1 ;
@@ -593,16 +581,26 @@ function render() {
       allNewYork.geometry.verticesNeedUpdate = true;
     }
 
+    if( timeElapsed > 115 ) {
+      scene.remove( allNewYork );
+    }
+
   // var quaternion = new THREE.Quaternion().setFromAxisAngle( new THREE.Vector3( 0, 0, 0 ) , angleOfRotation) ;
   // bigSphere.rotation.setEulerFromQuaternion( quaternion );
   bigSphere.rotateY( angleOfRotation );
-  spinnyThing.rotateZ( angleOfRotation );
+
+  if( spinnyThing !== undefined ) {
+
+    spinnyThing.rotateY( angleOfRotation );
+  }
   angleOfRotation += 0.00001;
 
 
   takeMirrorSnapshot();
 
-  fallingWords();
+  if( timeElapsed < 175 ){
+    fallingWords();
+  }
 
   renderer.render( scene, camera );
 }
@@ -640,7 +638,6 @@ function detectCollision() {
     lockDirection();
   }
   if ( intersects.length > 0 && intersects[0].distance < 300 ) {
-    spinnyThing.material.wireframe = true;
     if( intersects[0].object == wall ) {
       if( !messageLeft ) {
         // FORM POPS UP, WHEN THEY PRESS ENTER ADDS MESSAGE
@@ -650,11 +647,6 @@ function detectCollision() {
     }
     else if( intersects[0].object == allNewYork ) {
       allNewYork.material.map = newYorkImages[ Math.floor( Math.random() * 10 ) ];
-    }
-  }
-  if( intersects.length > 0 && intersects[0].distance < 100 ){
-    if( intersects[0].object == spinnyThing ) {
-      spinnyThing.material.wireframe = false;
     }
   }
 }
@@ -1026,7 +1018,12 @@ function checkLoggedIn() {
     type: "GET", 
     url: '/checker.json' 
   }).done( function( data ) {
-    userContent = true;
+    if( data.session == "true" ) {
+      userContent = true;
+    }
+    else {
+      generateSpinnyThing();
+    }
   })
 }
 
@@ -1064,6 +1061,7 @@ function getUserPicture( URL ) {
     var imgSrc = "data:image/png;base64, " + data;
     var threeImage = document.createElement('img');
     threeImage.src = imgSrc;
+    // threeImage.width = 128;
     userTexture = new THREE.Texture( threeImage );
 
     threeImage.onload = function() {
@@ -1073,43 +1071,48 @@ function getUserPicture( URL ) {
       // context.fill();
       userTexture.needsUpdate = true;
     }
-    userImageSpheres();
+    userImageSpinny();
   });
 }
 
-function userImageSpheres() {
-  var geometry =  new THREE.CircleGeometry( 10 );
-  geometry.applyMatrix( new THREE.Matrix4().makeRotationX(  Math.PI / 2) );
+function userImageSpinny() {
+  var geometry = new THREE.CircleGeometry( 50, 100 );
   var material = new THREE.MeshLambertMaterial({
     map: userTexture,
     overdraw: true,
     side: THREE.DoubleSide
   });
-  var bigGeometry1 = new THREE.Geometry();
-  var bigGeometry2 = new THREE.Geometry();
-  var circle = new THREE.Mesh( geometry );
-  // material.transparent = true;
-  for( var i = 0; i < 50; i ++ ) {
-
-    circle.position.z = i * 40;
-    circle.position.x = -i * 40;
-    circle.position.y = 1000;
-    THREE.GeometryUtils.merge(bigGeometry1, circle);
-  }
-  for( var i = 0; i < 50; i ++ ) {
-    circle.position.z = i * 40 + 20;
-    circle.position.x = i * 40 + 20;
-    circle.position.y = 1000;
-    THREE.GeometryUtils.merge(bigGeometry2, circle);
-  }
-
-  userMesh1 = new THREE.Mesh( bigGeometry1, material );
-  userMesh2 = new THREE.Mesh( bigGeometry2, material );
-
-  scene.add( userMesh1 );
-  scene.add( userMesh2 );
-  console.log("sphere");
+  spinnyThing = new THREE.Mesh( geometry, material );
+  spinnyThing.position.y = 200;
+  spinnyThing.position.z = -600
+  spinnyThing.position.x = -20;
+  scene.add( spinnyThing );
 }
+
+// function userImageSpheres() {
+//   var geometry =  new THREE.CircleGeometry( 10 );
+//   geometry.applyMatrix( new THREE.Matrix4().makeRotationX(  Math.PI / 2) );
+//   var material = new THREE.MeshLambertMaterial({
+//     map: userTexture,
+//     overdraw: true,
+//     side: THREE.DoubleSide
+//   });
+//   var bigGeometry1 = new THREE.Geometry();
+//   var circle = new THREE.Mesh( geometry );
+//   // material.transparent = true;
+//   for( var i = 0; i < 50; i ++ ) {
+
+//     circle.position.z = Math.random() * -500;
+//     circle.position.x = Math.random() * 500;
+//     circle.position.y = 2000;
+//     THREE.GeometryUtils.merge(bigGeometry1, circle);
+//   }
+
+//   userMesh1 = new THREE.Mesh( bigGeometry1, material );
+
+//   scene.add( userMesh1 );
+//   console.log("sphere");
+// }
 
 function generateUserContent() {
   var direction = controls.getDirection(new THREE.Vector3(0, 0, 0)).clone();
@@ -1181,7 +1184,7 @@ function generateUserContent() {
         var newMesh = new THREE.Mesh(
           newGeometry, newMaterial );
 
-        newMesh.position.x = 1100 - ( Math.random() * 500 );
+        newMesh.position.x = 1100 - ( Math.random() * 400 );
         newMesh.position.z = 690;
         newMesh.position.y = ( Math.random() * 50 ) + ( Math.random() * 100 );
         scene.add( newMesh );
@@ -1249,14 +1252,14 @@ function centralPark() {
   var material = new THREE.MeshPhongMaterial( {
     specular: 0x222222,
     color: 0x111111,
-    emissive: new THREE.Color().setHSL( Math.random() * 0.2 + 0.2, 0.9, Math.random() * 0.25 + 0.7 ),
+    emissive: new THREE.Color().setHSL( Math.random() * 0.2 + 0.6, 0.9, Math.random() * 0.25 + 0.7 ),
     shininess: 100,
     overdraw: true
   });
   var sphere = new THREE.Mesh( geometry );
   sphere.dynamic = true;
-  for( var i = 0; i < 10; i ++ ) {
-    for( j = 0; j < 10; j ++) {
+  for( var i = 0; i < 8; i ++ ) {
+    for( j = 0; j < 8; j ++) {
       sphere.position.y = 1;
       sphere.position.x = xCoord;
       sphere.position.z = zCoord;
@@ -1410,25 +1413,28 @@ function words( wordArray, locationPoints ) {
     overdraw: true
   });
   for( var i = wordPos; i < wordPosAtStart + 2; i++ ) {
-    var text = new THREE.TextGeometry( wordArray[i], {
-      size: 50,
-      height: 10,
-      curveSegments: 2,
-      font: "helvetiker",
-      weight: "normal",
-      style: 'normal'
 
-    });
-    var textMesh = new THREE.Mesh( text );
-    text.applyMatrix( new THREE.Matrix4().makeRotationY( - Math.PI / 2) );
-    text.applyMatrix( new THREE.Matrix4().makeRotationX( Math.random() * Math.PI / 2) );
-    var lat = locationPoints[i][0];
-    var lng = locationPoints[i][1];
-    var xCoord = ( ( lat - 40 ) * 10 ) + Math.floor( Math.random() * 1000 ) ;
-    var zCoord = ( ( lng - 70 ) / Math.round( Math.random() * 10 ) ) + Math.floor( Math.random() * 1000 );
-    textMesh.position.x = xCoord;
-    textMesh.position.y = 400 + ( Math.random() * 200 );
-    textMesh.position.z = zCoord;
+    if( locationPoints[i] !== undefined && wordArray[i] !== undefined ) {
+
+      var text = new THREE.TextGeometry( wordArray[i], {
+        size: 50,
+        height: 10,
+        curveSegments: 2,
+        font: "helvetiker",
+        weight: "normal",
+        style: 'normal'
+
+      });
+      var textMesh = new THREE.Mesh( text );
+      text.applyMatrix( new THREE.Matrix4().makeRotationY( - Math.PI / 2) );
+      text.applyMatrix( new THREE.Matrix4().makeRotationX( Math.random() * Math.PI / 2) );
+      var lat = locationPoints[i][0];
+      var lng = locationPoints[i][1];
+      var xCoord = ( ( lat - 40 ) * 10 ) + Math.floor( Math.random() * 1000 ) ;
+      var zCoord = ( ( lng - 70 ) / Math.round( Math.random() * 10 ) ) + Math.floor( Math.random() * 1000 );
+      textMesh.position.x = xCoord;
+      textMesh.position.y = 400 + ( Math.random() * 200 );
+      textMesh.position.z = zCoord;
     // scene.add( textObj );
     // fallingTexts.push( textMesh );
     allObjects.push( textMesh );
@@ -1436,9 +1442,11 @@ function words( wordArray, locationPoints ) {
     wordPos += 1;
   }
 
-  var allTextMesh = new THREE.Mesh( textGeometry, textMaterial );
-  scene.add( allTextMesh );
-  fallingTexts.push( allTextMesh );
+}
+
+var allTextMesh = new THREE.Mesh( textGeometry, textMaterial );
+scene.add( allTextMesh );
+fallingTexts.push( allTextMesh );
   // var text = new THREE.TextGeometry( "hi", {font: 'helvetiker', weight: 'normal', style: 'normal'});
   // var material = new THREE.MeshPhongMaterial({ color: 0xdddddd });
   // var textMesh = new THREE.Mesh( text, material );
@@ -1468,6 +1476,16 @@ function optimizedDynamicBuildings( locationPoints ) {
   cube.dynamic = true;
 
   for( var i = 0; i < locationPoints.length; i++ ) {
+    var textGeom = new THREE.TextGeometry( locationPoints[i][2],
+    {
+      size: 10,
+      height: 2,
+      curveSegments: 2,
+      font: "helvetiker",
+      weight: "normal",
+      style: "normal"
+    });
+    var textMesh = new THREE.Mesh( textGeom );
     var lat = locationPoints[i][0];
     var lng = locationPoints[i][1];
 
@@ -1489,7 +1507,9 @@ function optimizedDynamicBuildings( locationPoints ) {
 
     }
 
-
+    textMesh.position.x = xCoord - 20;
+    textMesh.position.z = zCoord - 20;
+    textMesh.position.y = 90;
     cube.position.x = xCoord;
     cube.position.y = 0;
     cube.position.z = zCoord;
@@ -1504,6 +1524,7 @@ function optimizedDynamicBuildings( locationPoints ) {
     //   face.vertexColors[ 2 ] = new THREE.Color().setHSL( Math.random() * 0.9 + 0.5, 0.9, Math.random() * 0.25 + 0.9 );
 
     // }
+    THREE.GeometryUtils.merge( buildingGeometry, textMesh );
     THREE.GeometryUtils.merge( buildingGeometry, cube );
   }
   // // debugger;
@@ -1651,25 +1672,15 @@ function generateSpinnyThing() {
   var geometry = new THREE.TorusKnotGeometry();
   var material = new THREE.MeshLambertMaterial({
     emissive: 0x113377,
-    wireframe: true
+    wireframe: true,
   })
-  spinnyThing = new THREE.Mesh( geometry, material );
-  spinnyThing.position.z = -600;
-  spinnyThing.position.x = -20;
-  scene.add( spinnyThing );
-  movingObjects.push( spinnyThing );
-  allObjects.push( spinnyThing );
+  spinnyThing2 = new THREE.Mesh( geometry, material );
+  spinnyThing2.position.z = -600;
+  spinnyThing2.position.x = -20;
+  scene.add( spinnyThing2 );
+  // movingObjects.push( spinnyThing );
+  allObjects.push( spinnyThing2 );
 }
-
-function statueOfLiberty() {
-
-  var texture = THREE.ImageUtils.loadTexture('assets/statueofliberty.jpg');
-  texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-  texture.repeat.set( 2, 2 );
-
-}
-
-
 
 
 
