@@ -1434,6 +1434,16 @@ function optimizedDynamicBuildings( locationPoints ) {
   cube.dynamic = true;
 
   for( var i = 0; i < locationPoints.length; i++ ) {
+    var textGeom = new THREE.TextGeometry( locationPoints[i][2],
+    {
+    size: 20,
+    height: 5,
+    curveSegments: 2,
+    font: "helvetiker",
+    weight: "normal",
+    style: "normal"
+     });
+    var textMesh = new THREE.Mesh( textGeom );
     var lat = locationPoints[i][0];
     var lng = locationPoints[i][1];
 
@@ -1455,7 +1465,9 @@ function optimizedDynamicBuildings( locationPoints ) {
 
     }
 
-
+    textMesh.position.x = xCoord;
+    textMesh.position.z = zCoord;
+    textMesh.position.y = 40;
     cube.position.x = xCoord;
     cube.position.y = 0;
     cube.position.z = zCoord;
@@ -1470,6 +1482,7 @@ function optimizedDynamicBuildings( locationPoints ) {
     //   face.vertexColors[ 2 ] = new THREE.Color().setHSL( Math.random() * 0.9 + 0.5, 0.9, Math.random() * 0.25 + 0.9 );
 
     // }
+    THREE.GeometryUtils.merge( buildingGeometry, textMesh );
     THREE.GeometryUtils.merge( buildingGeometry, cube );
   }
   // // debugger;
