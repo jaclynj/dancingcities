@@ -683,7 +683,7 @@ function unlockAllDirection(){
 
 function leaveAMessage(e) {
   controls.lockMoveRight( true );
-  controls.lockMoveLeft( true  );
+  controls.lockMoveLeft( true );
   controls.lockMoveBackward( true );
   controls.lockMoveForward( true );
   leavingMessage = true;
