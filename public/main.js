@@ -410,6 +410,7 @@ generateNewYorkShapes();
 
 optimizedDynamicBuildings( placesArray );
 
+
 $.ajax({
   type: "GET",
   url: '/tweets.json'
