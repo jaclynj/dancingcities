@@ -136,8 +136,8 @@ h2,h3 {
   line-height: 1.5em;
 }
 
-#loading-animation {
-  color: rgba(255, 255, 255, 0.8);
+.loading-animation {
+  color: #8f8f8f;
   position: absolute;
   font-size: 100px;
   top: 10px;

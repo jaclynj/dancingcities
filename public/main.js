@@ -838,10 +838,10 @@ function getWeatherCode(){
 
 function loadAudioRequest( url ) {
   // GENERATE LOADING SCREEN
-  var loadingAnimation = document.createElement('div');
-  loadingAnimation.id = "loading-animation";
-  loadingAnimation.textContent = "Loading your city...";
-  document.body.appendChild( loadingAnimation );
+  // var loadingAnimation = document.createElement('div');
+  // loadingAnimation.id = "loading-animation";
+  // loadingAnimation.textContent = "Loading your city...";
+  // document.body.appendChild( loadingAnimation );
 
 
 
@@ -862,6 +862,7 @@ function loadAudioRequest( url ) {
 
 function loadAudioBuffer() {
   $('#loading-animation').fadeOut(200);
+  debugger
   context.decodeAudioData(
     request.response,
     function(buffer) {
