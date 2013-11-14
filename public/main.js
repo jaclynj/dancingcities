@@ -101,6 +101,9 @@ coordinates = [[40.740084,-73.990115], [40.736698,-73.990164], [40.736706,-74.00
 // COORDINATES - FOURSQUARE
 var placesArray = [];
 
+// SPINNY THING
+var spinnyThing;
+
 var testWords = ["new york city", "#i love this town", "beautiful", "lol"];
 
 // RAYCASTERS - NOT OPTIMIZED
@@ -287,11 +290,11 @@ startButton.addEventListener( 'click', function ( event ) {
 
 
 // // PREVENT BACKSPACE FROM GOING BACK
-// $(document).on("keydown", function (e) {
-//   if (e.which === 8) {
-//     e.preventDefault();
-//   }
-// });
+$(document).on("keydown", function (e) {
+  if (e.which === 8) {
+    e.preventDefault();
+  }
+});
 
 
 // LOAD AUDIO
@@ -301,7 +304,7 @@ loadAudioRequest( url );
 dynamicGrabFoursquare(40.737925,-73.981683);
 dynamicGrabFoursquare(40.740084,-73.990115);
 dynamicGrabFoursquare(40.76538,-73.979727);
-dynamicGrabFoursquare(40.72, -73.85);
+// dynamicGrabFoursquare(40.72, -73.85);
 
 getWeatherCode();
 
@@ -504,7 +507,8 @@ function render() {
 
   // var quaternion = new THREE.Quaternion().setFromAxisAngle( new THREE.Vector3( 0, 0, 0 ) , angleOfRotation) ;
   // bigSphere.rotation.setEulerFromQuaternion( quaternion );
-  bigSphere.rotateY( angleOfRotation )
+  bigSphere.rotateY( angleOfRotation );
+  spinnyThing.rotateZ( angleOfRotation );
   angleOfRotation += 0.00001;
 
 
@@ -588,6 +592,7 @@ function leaveAMessage(e) {
   thisPress = Date.now();
   e.preventDefault();
   var keycode = (e.keyCode ? e.keyCode : e.which );
+  console.log( keycode );
   if( keycode == '13' ) {
     messageLeft = true;
     // $( '#graffiti-form' ).css( "display", "none" );
@@ -1433,6 +1438,17 @@ function addMirrorCube( x, y ) {
 
 }
 
+function generateSpinnyThing() {
+  var geometry = new THREE.TorusKnotGeometry();
+  var material = new THREE.MeshBasicMaterial({
+    wireframe: true
+  })
+  spinnyThing = new THREE.Mesh( geometry, material );
+  spinnyThing.position.z = -600;
+  spinnyThing.postion.x = -20;
+  scene.add( spinnyThing );
+  movingObjects.add( spinnyThing );
+}
 
 
 function generateSpheres() {
