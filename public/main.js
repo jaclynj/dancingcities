@@ -410,7 +410,7 @@ generateNewYorkShapes();
 
 optimizedDynamicBuildings( placesArray );
 
-
+// GET TWEETS BASED ON HASHTAG AND LOCATION
 $.ajax({
   type: "GET",
   url: '/tweets.json'
@@ -785,6 +785,14 @@ function getWeatherCode(){
 // LOAD AUDIO REQUEST TO/FROM SOUNDCLOUD API
 
 function loadAudioRequest( url ) {
+  // GENERATE LOADING SCREEN
+  var loadingAnimation = document.createElement('div');
+  loadingAnimation.id = "loading-animation";
+  loadingAnimation.textContent = "Loading your city...";
+  if( instructions.style.display  == 'none'){
+    document.body.appendChild( loadingAnimation );
+  }
+
   request = new XMLHttpRequest();
   request.open("GET", url, true);
   request.responseType = "arraybuffer";
@@ -796,6 +804,7 @@ function loadAudioRequest( url ) {
 //  LOAD AUDIO BUFFER IN WEB AUDIO API
 
 function loadAudioBuffer() {
+  $('#loading-animation').fadeOut(200);
   context.decodeAudioData(
     request.response,
     function(buffer) {
