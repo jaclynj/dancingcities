@@ -540,7 +540,7 @@ function render() {
         // fallingTexts[i].position.y -= 2;
         allNewYork.geometry.verticesNeedUpdate = true;
       }
-  }
+    }
 
   // var quaternion = new THREE.Quaternion().setFromAxisAngle( new THREE.Vector3( 0, 0, 0 ) , angleOfRotation) ;
   // bigSphere.rotation.setEulerFromQuaternion( quaternion );
@@ -644,7 +644,7 @@ function leaveAMessage(e) {
     // $( '#graffiti-form' ).css( "display", "none" );
     $( '#graffiti-form' ).fadeOut(400);
     $( document.body ).off( "keypress", leaveAMessage );
-      controls.blockJump( false );
+    controls.blockJump( false );
     if ( sendAjax ) {
       $.ajax({
         type: "POST",
@@ -841,14 +841,19 @@ function generateNewYorkShapes() {
     });
     var smallMesh = new THREE.Mesh( geometry, material );
     if( i % 2 === 0 ) {
-      smallMesh.position.z = Math.random() * 1000;
+      smallMesh.position.z = Math.random() * 650;
       smallMesh.position.x = Math.random() * 1000;
-      smallMesh.position.y = Math.random() * 200;
+      smallMesh.position.y = Math.random() * 200 + 20;
+    }
+    else if( i % 3 === 0 ) {
+      smallMesh.position.x = -Math.random() * 1000;
+      smallMesh.position.z = -Math.random() * 1000;
+      smallMesh.position.y = Math.random() * 200 + 50;
     }
     else {
       smallMesh.position.x = -Math.random() * 1000;
       smallMesh.position.z = Math.random() * 1000;
-      smallMesh.position.y = Math.random() * 200;
+      smallMesh.position.y = Math.random() * 200 + 50;
     }
     THREE.GeometryUtils.merge( allGeometry, smallMesh );
   }
