@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>DancingCityApp</title>
+
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
   <script src="http://connect.soundcloud.com/sdk.js"></script>
@@ -13,6 +14,7 @@
 <body>
 
   <%= yield %>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" ></script>
   <script src="helper_libraries/detector.js"></script>
   <script src="helper_libraries/fullscreen.js"></script>
   <script src="helper_libraries/helvetiker_regular.typeface.js"></script>
@@ -22,7 +24,14 @@
   <script src="helper_libraries/shaderparticles.min.js"></script>
   <script src="helper_libraries/stats.min.js"></script>
   <script src="helper_libraries/windowresize.js"></script>
-  <script src="main.js"></script>
 
+  <%= csrf_meta_tags %>
+
+    <% flash.each do |k, v| %>
+      <div class = flash id="<%= k %>"><%= v %></div>
+  <% end %>
+
+  <script src="main.js"></script>
+  <%= javascript_include_tag "application" %>
 </body>
 </html>

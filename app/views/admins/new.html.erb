@@ -1,27 +1,27 @@
 <% #TODO Create first admin, then uncomment this code %>
 <!--  if current_admin  -->
+<div class = "admins">
   <h1>Add Admin</h1>
+  <div class = "messages">
 
   <%= form_for @admin do |f| %>
     <% if @admin.errors.any? %>
-    <div class = "error_messages">
-      <h2>Invalid info</h2>
-      <ul>
-        <% for message in @user.errors.full_messages %>
-        <li><%= message %></li>
+    <div class = "flash">
+      <h3>Invalid info</h3>
+        <% for message in @admin.errors.full_messages %>
+        <%= message %><br>
         <% end %>
-      </ul>
     </div>
     <% end %>
       <%=f.label :admin_name %>
-      <%=f.text_field :admin_name %></br>
+      <div class = "form"><%=f.text_field :admin_name %></div></br><br>
       <%=f.label :password %>
-      <%=f.password_field :password %></br>
+      <div class = "form"><%=f.password_field :password %></div></br><br>
       <%=f.label :password_confirmation %>
-      <%=f.password_field :password_confirmation %><br>
-      <%=f.submit%>
+      <div class = "form"> <%=f.password_field :password_confirmation %></div><br><br><br>
+      <%=f.submit :class => "submit splash-button" %>
       <%end%>
-
+</div>
 <% #TODO Create first admin, then uncomment this code %>
 <!--
 This makes it so that only Admins can add admins

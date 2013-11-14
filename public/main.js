@@ -69,6 +69,7 @@ var objectsTouched = 0;
 // GRAFFITI WALL VARIABLES
 var wall;
 var messageLeft = false;
+var leavingMessage = false;
 var userMessage = "";
 var lastPress = Date.now();
 var textCount = 0;
@@ -106,9 +107,10 @@ THREE.ImageUtils.loadTexture('assets/Certainty.jpg'),
 THREE.ImageUtils.loadTexture('assets/drawing.jpg'),
 THREE.ImageUtils.loadTexture('assets/linedrawing.jpg'),
 THREE.ImageUtils.loadTexture('assets/newyorker.jpg'),
-THREE.ImageUtils.loadTexture('assets/drawing.jpg'),
-THREE.ImageUtils.loadTexture('assets/drawing.jpg'),
-THREE.ImageUtils.loadTexture('assets/drawing.jpg'),
+THREE.ImageUtils.loadTexture('assets/0698-cartoon-city.jpg'),
+THREE.ImageUtils.loadTexture('assets/0720-new-york-cartoon-background.jpg'),
+THREE.ImageUtils.loadTexture('assets/cartoon-map-new-york.jpg'),
+THREE.ImageUtils.loadTexture('assets/new-york-cartoon-map.jpg'),
 userTexture
 ];
 var allNewYork;
@@ -306,9 +308,36 @@ startButton.addEventListener( 'click', function ( event ) {
 // // PREVENT BACKSPACE FROM GOING BACK
 $(document).on("keydown", function (e) {
   if (e.which === 8) {
-    e.preventDefault();
+    if (leavingMessage === true) {
+      e.preventDefault();
+      console.log("i'm getting here");
+      var c = userMessage[userMessage.length - 1];
+      userMessage = userMessage.substring( 0, userMessage.length - 1 );
+      $( "#user-input").replaceWith("<div id = 'user-input'>" + $( "#user-input:last-child").text().slice(0, -1) + "</div>");
+      lastPress = thisPress;
+    } else {
+      e.preventDefault();
+    }
   }
 });
+
+// // Prevent the backspace key from navigating back.
+// $(document).unbind('keydown').bind('keydown', function (event) {
+//     var doPrevent = false;
+//     if (event.keyCode === 8) {
+//         var d = event.srcElement || event.target;
+//         if (d.className === 'user-input') {
+//             ('#user-input').lastChild
+//         }
+//         else {
+//             doPrevent = true;
+//         }
+//     }
+
+//     if (doPrevent) {
+//         event.preventDefault();
+//     }
+// });
 
 
 // LOAD AUDIO
@@ -473,7 +502,7 @@ function render() {
       var endMenu = document.getElementById('end-menu');
       var instructions = document.getElementById('instructions');
       endMenu.style.display = "";
-      blocker.display = 'none';
+      blocker.style.display = 'none';
 
     }
 
@@ -647,6 +676,7 @@ function unlockAllDirection(){
 
 
 function leaveAMessage(e) {
+  leavingMessage = true
   controls.blockJump( true );
   thisPress = Date.now();
   e.preventDefault();
@@ -654,6 +684,7 @@ function leaveAMessage(e) {
   console.log( keycode );
   if( keycode == '13' ) {
     messageLeft = true;
+    leavingMessage = false
     // $( '#graffiti-form' ).css( "display", "none" );
     $( '#graffiti-form' ).fadeOut(400);
     $( document.body ).off( "keypress", leaveAMessage );
@@ -673,7 +704,7 @@ function leaveAMessage(e) {
     console.log("i'm getting here");
     var c = userMessage[userMessage.length - 1];
     userMessage = userMessage.substring( 0, userMessage.length - 1 );
-    $( "#user-input:last-child" ).remove().fadeOut(200);
+    $( "#user-input").replaceWith("<div id = 'user-input'>" + $( "#user-input:last-child").text().slice(0, -1) + "</div>");
     lastPress = thisPress;
   }
   else {
@@ -799,10 +830,10 @@ function getWeatherCode(){
 
 function loadAudioRequest( url ) {
   // GENERATE LOADING SCREEN
-  var loadingAnimation = document.createElement('div');
-  loadingAnimation.id = "loading-animation";
-  loadingAnimation.textContent = "Loading your city...";
-  document.body.appendChild( loadingAnimation );
+  // var loadingAnimation = document.createElement('div');
+  // loadingAnimation.id = "loading-animation";
+  // loadingAnimation.textContent = "Loading your city...";
+  // document.body.appendChild( loadingAnimation );
 
 
 
