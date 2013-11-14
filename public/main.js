@@ -854,7 +854,6 @@ function loadAudioRequest( url ) {
 
 function loadAudioBuffer() {
   $('#loading-animation').fadeOut(200);
-  debugger
   context.decodeAudioData(
     request.response,
     function(buffer) {
