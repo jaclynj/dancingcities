@@ -486,9 +486,13 @@ function render() {
 
 
   // time event to begin particles
-  if( timeElapsed > 35 ) {
+  if( timeElapsed > 35 && timeElapsed < 120 ) {
     particleGroup.tick( array[k] / 1000);
     // console.log("should be working");
+  }
+  if( timeElapsed > 105 ) {
+    particleGroup.tick( array[k] / 200 );
+    particleGroup.colorize = 1;
   }
   if ( ( timeElapsed > 60 ) && ((( Math.round( timeElapsed * 10 ) % 100 === 0 )))) {
     words( tweetArray, coordinates );
@@ -508,10 +512,10 @@ function render() {
     }
   }
 
-  if( timeElapsed > 181 && !endingLight ) {
+  if( timeElapsed > 167 && !endingLight ) {
     generateEndingLight();
   }
-  if( timeElapsed > 181 && endingLight && ( Math.round( timeElapsed ) % 3 === 0 ) ) {
+  if( timeElapsed > 167 && endingLight && ( array[k] % 2 === 0 ) ) {
     flashEndingLight();
   }
 
@@ -1260,7 +1264,7 @@ function initParticles() {
     acceleration: new THREE.Vector3( 0, 0, 10 ),
     velocity: new THREE.Vector3( 0, 0, 10 ),
     colorStart: new THREE.Color( 'pink' ),
-    colorEnd: new THREE.Color( 'white' ),
+    colorEnd: new THREE.Color( 'pink' ),
     size: 50,
     sizeEnd: 2,
     opacityStart: 0,
