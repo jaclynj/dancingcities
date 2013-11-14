@@ -507,6 +507,11 @@ function render() {
     weatherUpdated = true;
   }
 
+  if( timeElapsed > 90 && Math.floor( timeElapsed % 5 ) === 0 ) {
+    allBuildingMesh.material.emissive = Math.random() * 0x404040;
+    // allBuildingMesh.material.needsUpdate;
+  }
+
   // var quaternion = new THREE.Quaternion().setFromAxisAngle( new THREE.Vector3( 0, 0, 0 ) , angleOfRotation) ;
   // bigSphere.rotation.setEulerFromQuaternion( quaternion );
   bigSphere.rotateY( angleOfRotation );
@@ -557,12 +562,17 @@ function detectCollision() {
   if ( intersects.length > 0 && intersects[0].distance < 300 ) {
     if( intersects[0].object == wall ) {
       if( !messageLeft ) {
-      // FORM POPS UP, WHEN THEY PRESS ENTER ADDS MESSAGE
-      $( '#graffiti-form' ).css( "display", "block" );
-      $( document.body ).on( "keypress", leaveAMessage );
+        // FORM POPS UP, WHEN THEY PRESS ENTER ADDS MESSAGE
+        $( '#graffiti-form' ).css( "display", "block" );
+        $( document.body ).on( "keypress", leaveAMessage );
+      }
     }
   }
-}
+  if( intersects.length > 0 && intersects[0].distance < 100 ){
+    if( intersects[0].object == spinnyThing ) {
+      statueOfLiberty();
+    }
+  }
 }
 
 function lockDirection() {
@@ -1442,7 +1452,8 @@ function addMirrorCube( x, y ) {
 
 function generateSpinnyThing() {
   var geometry = new THREE.TorusKnotGeometry();
-  var material = new THREE.MeshBasicMaterial({
+  var material = new THREE.MeshLambertMaterial({
+    // side: THREE.DoubleSide
     wireframe: true
   })
   spinnyThing = new THREE.Mesh( geometry, material );
@@ -1450,6 +1461,15 @@ function generateSpinnyThing() {
   spinnyThing.position.x = -20;
   scene.add( spinnyThing );
   movingObjects.push( spinnyThing );
+  allObjects.push( spinnyThing );
+}
+
+function statueOfLiberty() {
+
+  var texture = THREE.ImageUtils.loadTexture('assets/statueofliberty.jpg');
+  texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set( 2, 2 );
+
 }
 
 
