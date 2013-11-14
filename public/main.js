@@ -448,7 +448,7 @@ function render() {
     for( var i = 0; i < movingObjects.length; i++ ) {
       var scale = ( array[k] ) / 80;
       var rand = Math.floor(Math.random() * 10);
-      centralParkMesh.material.emissive.setRGB( array[k]/100, array[k]/200, array[k]/500 );
+      centralParkMesh.material.emissive.setRGB( array[k]/400, array[k]/200, array[k]/500 );
       if( rand % 3 === 0 ){
         movingObjects[i].scale.y = ( scale < 1 ? 1 : scale );
         allBuildingMesh.scale.y = ( scale < 1 ?  1 : scale );
@@ -512,10 +512,10 @@ function render() {
     }
   }
 
-  if( timeElapsed > 167 && !endingLight ) {
+  if( timeElapsed > 175 && !endingLight ) {
     generateEndingLight();
   }
-  if( timeElapsed > 167 && endingLight && ( array[k] % 2 === 0 ) ) {
+  if( timeElapsed > 175 && endingLight && ( array[k] % 2 === 0 ) ) {
     flashEndingLight();
   }
 
@@ -528,7 +528,7 @@ function render() {
     allBuildingMesh.material.emissive.setHex( array[j] * 0x772252 );
   }
 
-  if( timeElapsed > 120 ) {
+  if( timeElapsed > 110 ) {
    for( var j = 0; j < allNewYork.geometry.vertices.length; j ++ ) {
     if( j % 3 === 0 ){
 
@@ -851,12 +851,12 @@ function generateNewYorkShapes() {
     else if( i % 3 === 0 ) {
       smallMesh.position.x = -Math.random() * 1000;
       smallMesh.position.z = -Math.random() * 1000;
-      smallMesh.position.y = Math.random() * 200 + 50;
+      smallMesh.position.y = Math.random() * 200;
     }
     else {
       smallMesh.position.x = -Math.random() * 1000;
       smallMesh.position.z = Math.random() * 1000;
-      smallMesh.position.y = Math.random() * 200 + 50;
+      smallMesh.position.y = Math.random() * 200;
     }
     THREE.GeometryUtils.merge( allGeometry, smallMesh );
   }
