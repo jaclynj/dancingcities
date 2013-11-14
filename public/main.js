@@ -316,7 +316,7 @@ loadAudioRequest( url );
 
 // GET GEODATA
 dynamicGrabFoursquare(40.737925,-73.981683);
-// dynamicGrabFoursquare(40.740084,-73.990115);
+dynamicGrabFoursquare(40.740084,-73.990115);
 // dynamicGrabFoursquare(40.76538,-73.979727);
 // dynamicGrabFoursquare(40.72, -73.85);
 
@@ -478,7 +478,7 @@ function render() {
     }
 
     var j = 0;
-    if( timeElapsed > 181 ) {
+    if( timeElapsed > 145 ) {
       for( var i = 0; i < dancingGrass.length; i++ ){
         var scale = ( array[j] / 100 );
         centralParkMesh.scale.y = ( scale < 0.6 ? 0.6 : scale );
@@ -558,10 +558,10 @@ function render() {
   // bigSphere.rotation.setEulerFromQuaternion( quaternion );
   bigSphere.rotateY( angleOfRotation );
 
-if( spinnyThing !== undefined ) {
+  if( spinnyThing !== undefined ) {
 
-  spinnyThing.rotateY( angleOfRotation );
-}
+    spinnyThing.rotateY( angleOfRotation );
+  }
   angleOfRotation += 0.00001;
 
 
@@ -984,7 +984,7 @@ function checkLoggedIn() {
     type: "GET", 
     url: '/checker.json' 
   }).done( function( data ) {
-    if( data.session === true ) {
+    if( data.session == "true" ) {
       userContent = true;
     }
     else {
@@ -1635,12 +1635,12 @@ function generateSpinnyThing() {
     emissive: 0x113377,
     wireframe: true,
   })
-  spinnyThing = new THREE.Mesh( geometry, material );
-  spinnyThing.position.z = -600;
-  spinnyThing.position.x = -20;
-  scene.add( spinnyThing );
+  spinnyThing2 = new THREE.Mesh( geometry, material );
+  spinnyThing2.position.z = -600;
+  spinnyThing2.position.x = -20;
+  scene.add( spinnyThing2 );
   // movingObjects.push( spinnyThing );
-  allObjects.push( spinnyThing );
+  allObjects.push( spinnyThing2 );
 }
 
 
