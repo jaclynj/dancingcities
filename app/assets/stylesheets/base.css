@@ -27,8 +27,8 @@ h2,h3 {
   position: absolute;
   width: 700px;
   margin-left: 350px;
-  margin-top: 50px;
-  padding: 50px;
+  margin-top: 120px;
+  padding: 30px;
   border-radius: 5px;
   border: 1.5px solid #919393;
   font-size: 1.2em;
@@ -74,15 +74,17 @@ h2,h3 {
   display: none;
   position: absolute;
   margin: 50px 260px;
-  color: RGBA(137.00, 137.00, 137.00, 0.6);
+  color: RGBA(137.00, 137.00, 137.00, 0.5);
   font-size: 40px;
-  background-color: RGBA(107, 160, 239, 0.5);
-  height: 200px;
-  width: 1000px;
+  background-image: url('http://static.freepik.com/free-photo/free-sun-on-blue-sky-vector-background_48-10085.jpg');
+  height: 250px;
+  width: 600px;
+  opacity:0.80;
+  filter:alpha(opacity=80); /* For IE8 and earlier */
 }
 
 #user-input {
-  color: #A9F1E6;
+  color: #234484;
   font-size: 40px;
 }
 
