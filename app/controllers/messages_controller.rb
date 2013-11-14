@@ -57,6 +57,7 @@ class MessagesController < ApplicationController
     @message = Message.find_by_id(params[:id])
     respond_to do |format|
       format.json {render json: @message}
+      format.html
     end
   end
 

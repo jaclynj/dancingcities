@@ -1,10 +1,24 @@
 body {
   font-family: "Helvetica", sans-serif;
   font-size: 16px;
+  background-color: #F9F9F9;
+  color: #38302F;
+  margin: 0 auto;
+  text-align: center;
 }
 
 a {
   text-decoration: none;
+  color: #786866;
+}
+
+li {
+  list-style-type: none;
+  padding: 5px;
+}
+
+h2 {
+  margin-top: 0;
 }
 
 .menu {
@@ -49,4 +63,44 @@ a {
   color: rgba(0, 0, 0, 0.8);
   font-size: 50px;
 
+}
+
+.flash {
+  color: #E5383F;
+  border: 2px solid #8f8f8f;
+  background-color: 2px solid #f8f8f8;
+  margin: 5px auto;
+  padding: 5px;
+  text-align: center;
+  width: 360px;
+  font-weight: bold;
+  font-size: 1.4 em;
+}
+
+.admins {
+  font-size: 1.2em;
+}
+
+.messages {
+  font-size: 1.2em;
+  text-align: left;
+  margin: 30px auto;
+  width: 500px;
+  background-color: #FFE4E9;
+  border: 3px solid #8f8f8f;
+  padding: 20px;
+}
+
+.delete, .form {
+  display: inline-block;
+  float: right;
+}
+
+.admin-small-box {
+  width: 300px;
+}
+
+.submit {
+  width: 100px;
+  margin : 0 auto;
 }

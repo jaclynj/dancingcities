@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>DancingCityApp</title>
+
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
   <script src="http://connect.soundcloud.com/sdk.js"></script>
@@ -20,10 +21,14 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
+    <% flash.each do |k, v| %>
+      <div class = flash id="<%= k %>"><%= v %></div>
+  <% end %>
 
   <%= yield %>
 
   <script src="main.js"></script>
-
+  <%= javascript_include_tag :defaults %>
+  <%= javascript_include_tag "application" %>
 </body>
 </html>
