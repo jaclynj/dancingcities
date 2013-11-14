@@ -22,7 +22,8 @@ try {
   var songPlaying;
   var request;
   var currentSource;
-  var url = 'https://api.soundcloud.com/tracks/118852333/stream?client_id=9907b9176ff3ca255b472d3d22a880bb';
+  // var url = 'https://api.soundcloud.com/tracks/118852333/stream?client_id=9907b9176ff3ca255b472d3d22a880bb';
+  var url = 'https://api.soundcloud.com/tracks/120134607/stream?client_id=9907b9176ff3ca255b472d3d22a880bb';
 
 
 // STANDARD THREE VARIABLES
@@ -512,10 +513,10 @@ function render() {
     }
   }
 
-  if( timeElapsed > 175 && !endingLight ) {
+  if( timeElapsed > 173 && !endingLight ) {
     generateEndingLight();
   }
-  if( timeElapsed > 175 && endingLight && ( array[k] % 2 === 0 ) ) {
+  if( timeElapsed > 173 && endingLight && ( array[k] % 2 === 0 ) ) {
     flashEndingLight();
   }
 
@@ -524,11 +525,11 @@ function render() {
     weatherUpdated = true;
   }
 
-  if( timeElapsed > 90 && Math.floor( timeElapsed % 5 ) === 0 ) {
+  if( timeElapsed > 87 && Math.floor( timeElapsed % 5 ) === 0 ) {
     allBuildingMesh.material.emissive.setHex( array[j] * 0x772252 );
   }
 
-  if( timeElapsed > 110 ) {
+  if( timeElapsed > 105 ) {
    for( var j = 0; j < allNewYork.geometry.vertices.length; j ++ ) {
     if( j % 3 === 0 ){
 
