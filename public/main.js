@@ -1010,16 +1010,16 @@ function getUserPicture( URL ) {
     var imgSrc = "data:image/png;base64, " + data;
     var imgTag = $('<img>').attr('src', imgSrc );
     $( document.body ).append( imgTag );
-    var threeImage = new Image();
+    var threeImage = document.createElement('img');
     threeImage.src = imgSrc;
+    userTexture = new THREE.Texture( threeImage );
     threeImage.onload = function() {
-      var pattern = context.createPattern( this, "repeat" );
-      context.fillStyle = pattern;
-      context.rect(0, 0, 100, 100);
-      context.fill();
-    }
-    userTexture = new THREE.Texture( canvas );
+      // var pattern = context.createPattern( this, "repeat" );
+      // context.fillStyle = pattern;
+      // context.rect(0, 0, 100, 100);
+      // context.fill();
     userTexture.needsUpdate = true;
+    }
     userImageSpheres();
   });
 }
