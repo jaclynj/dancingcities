@@ -14,7 +14,8 @@ try {
   }
 
   // web audio api variables
-  var source, sourceJs;
+  var source;
+  var sourceJs;
   var analyser;
   var buffer;
   var array = [];
@@ -676,7 +677,11 @@ function unlockAllDirection(){
 
 
 function leaveAMessage(e) {
-  leavingMessage = true
+  controls.lockMoveRight( true );
+  controls.lockMoveLeft( true  );
+  controls.lockMoveBackward( true );
+  controls.lockMoveForward( true );
+  leavingMessage = true;
   controls.blockJump( true );
   thisPress = Date.now();
   e.preventDefault();
@@ -684,11 +689,12 @@ function leaveAMessage(e) {
   console.log( keycode );
   if( keycode == '13' ) {
     messageLeft = true;
-    leavingMessage = false
+    leavingMessage = false;
     // $( '#graffiti-form' ).css( "display", "none" );
     $( '#graffiti-form' ).fadeOut(400);
     $( document.body ).off( "keypress", leaveAMessage );
     controls.blockJump( false );
+    unlockAllDirection();
     if ( sendAjax ) {
       $.ajax({
         type: "POST",
@@ -717,6 +723,10 @@ function leaveAMessage(e) {
     }
 // record each keystroke as part of a variable, message
 }
+}
+
+function getUserLocation() {
+
 }
 
 
