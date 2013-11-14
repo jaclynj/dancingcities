@@ -90,6 +90,10 @@ var userName;
 var userImage= "http://pbs.twimg.com/profile_images/378800000490486404/abf4774fdb37f08ee36f5918c7bf2e1c_normal.jpeg";
 var userTexture;
 
+// USER COORDINATES
+var userLat = 40.737925;
+var userLng = -73.981683;
+
 // CHECKS IF USER CONTENT HAS BEEN GENERATED ALREADY
 var userContent = false;
 var customUserGraphics = false;
@@ -340,12 +344,13 @@ $(document).on("keydown", function (e) {
 //     }
 // });
 
+getUserLocation();
 
 // LOAD AUDIO
 loadAudioRequest( url );
 
 // GET GEODATA
-dynamicGrabFoursquare(40.737925,-73.981683);
+dynamicGrabFoursquare( userLat, userLng );
 dynamicGrabFoursquare(40.740084,-73.990115);
 // dynamicGrabFoursquare(40.76538,-73.979727);
 // dynamicGrabFoursquare(40.72, -73.85);
@@ -714,7 +719,7 @@ function leaveAMessage(e) {
     lastPress = thisPress;
   }
   else {
-    c = String.fromCharCode( e.which );
+    var c = String.fromCharCode( e.which );
     if( (thisPress - lastPress) > 20 ) {
       userMessage += c;
       $( '#user-input').append(c).fadeIn(200);
@@ -726,6 +731,23 @@ function leaveAMessage(e) {
 }
 
 function getUserLocation() {
+  if( navigator.geolocation ) {
+    navigator.geolocation.getCurrentPosition( function( position ){
+      var lat = position.coords.latitude;
+      var lng = position.coords.longitude;
+      if( lat < 41 && lat > 40 && lng < -70 && lng > -74 ) {
+        userLat = lat;
+        userLng = lng;
+        alert("Looks like you're in NYC. Lucky you. Generating a city based on your precise coordinates.");
+      }
+      else {
+        alert("Looks like you're not in NYC. What a shame. Generating a city based on NYC coordinates.");
+      }
+    });
+  }
+  else {
+    alert("Looks like we can't get your geolocation. What a shame. Generating a city based on NYC coordinates.");
+  }
 
 }
 
