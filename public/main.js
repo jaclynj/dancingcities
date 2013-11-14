@@ -558,7 +558,10 @@ function render() {
   // bigSphere.rotation.setEulerFromQuaternion( quaternion );
   bigSphere.rotateY( angleOfRotation );
 
+if( spinnyThing !== undefined ) {
+
   spinnyThing.rotateY( angleOfRotation );
+}
   angleOfRotation += 0.00001;
 
 
