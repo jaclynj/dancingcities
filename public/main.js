@@ -1066,8 +1066,8 @@ function updateWall() {
       var newMesh = new THREE.Mesh(
         newGeometry, newMaterial );
 
-      newMesh.position.x = 500 +  ( Math.random() * 500 );
-      newMesh.position.z = 650;
+      newMesh.position.x = 1100 - ( Math.random() * 500 );
+      newMesh.position.z = 690;
       newMesh.position.y = ( Math.random() * 50 ) + ( Math.random() * 100 );
       scene.add( newMesh );
     // textCount += 1;
