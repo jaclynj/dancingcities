@@ -986,7 +986,8 @@ function getUserPicture( URL ) {
     url: "/convert?image_url=" + URL
   }).done( function( data ) {
     // var imgSrc = utf8_to_b64( data );
-    userImage = THREE.ImageUtils.loadTexture( data );
+    var imgSrc = "data:image/png;base64," + data
+    userImage = THREE.ImageUtils.loadTexture( imgSrc );
     userImageSpheres();
   })
 }

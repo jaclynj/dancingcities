@@ -6,6 +6,6 @@ class ImageController < ApplicationController
     image_url = params[:image_url]
     image_file= open(image_url, "rb").read
     image = Base64.encode64(image_file)
-    send_data image, :type => 'image/png', :disposition => 'inline'
+    send_data image, :type => 'image/png;base64', :disposition => 'inline'
   end
 end
