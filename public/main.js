@@ -87,7 +87,6 @@ var centralParkMesh;
 var userName;
 var userImage= "http://pbs.twimg.com/profile_images/378800000490486404/abf4774fdb37f08ee36f5918c7bf2e1c_normal.jpeg";
 var userTexture;
-var userMesh1, userMesh2;
 
 // CHECKS IF USER CONTENT HAS BEEN GENERATED ALREADY
 var userContent = false;
@@ -317,8 +316,8 @@ loadAudioRequest( url );
 
 // GET GEODATA
 dynamicGrabFoursquare(40.737925,-73.981683);
-dynamicGrabFoursquare(40.740084,-73.990115);
-dynamicGrabFoursquare(40.76538,-73.979727);
+// dynamicGrabFoursquare(40.740084,-73.990115);
+// dynamicGrabFoursquare(40.76538,-73.979727);
 // dynamicGrabFoursquare(40.72, -73.85);
 
 getWeatherCode();
@@ -401,7 +400,7 @@ addBigSphere( 0, 0 );
 
 addMirrorSphere( 500, 400 );
 addMirrorCube( 0, 400 );
-generateSpinnyThing();
+
 
 // words();
 graffitiWall();
@@ -440,9 +439,13 @@ function render() {
 
   if( timeElapsed < 30 && !customUserGraphics ){
     checkLoggedIn();
-  }
-  if( userContent ){
-    getUserData();
+
+    if( userContent ){
+      getUserData();
+    }
+    else {
+      generateSpinnyThing();
+    }
   }
 
     // animate all shapes in "movingObjects" array based on song
@@ -486,21 +489,6 @@ function render() {
       }
     }
 
-    if( timeElapsed > 20 && userMesh1 !== undefined ) {
-      for( var j = 0; j < userMesh1.geometry.vertices.length; j ++ ) {
-        if( userMesh1.geometry.vertices[j].y > 0 ){
-
-          userMesh1.geometry.vertices[j].y -= 5 ;
-        }
-        else {
-    //   allNewYork.geometry.vertices[j].y -=5 ;
-    // }
-    userMesh1.geometry.vertices[j].y += 5 ;
-        // fallingTexts[i].position.y -= 2;
-      }
-      userMesh1.geometry.verticesNeedUpdate = true;
-    }
-  }
 
       // if( timeElapsed > 130 && userMesh2 !== undefined ){
 
@@ -572,7 +560,8 @@ function render() {
   // var quaternion = new THREE.Quaternion().setFromAxisAngle( new THREE.Vector3( 0, 0, 0 ) , angleOfRotation) ;
   // bigSphere.rotation.setEulerFromQuaternion( quaternion );
   bigSphere.rotateY( angleOfRotation );
-  spinnyThing.rotateZ( angleOfRotation );
+
+  spinnyThing.rotateY( angleOfRotation );
   angleOfRotation += 0.00001;
 
 
@@ -618,7 +607,6 @@ function detectCollision() {
     lockDirection();
   }
   if ( intersects.length > 0 && intersects[0].distance < 300 ) {
-    spinnyThing.material.wireframe = true;
     if( intersects[0].object == wall ) {
       if( !messageLeft ) {
         // FORM POPS UP, WHEN THEY PRESS ENTER ADDS MESSAGE
@@ -628,11 +616,6 @@ function detectCollision() {
     }
     else if( intersects[0].object == allNewYork ) {
       allNewYork.material.map = newYorkImages[ Math.floor( Math.random() * 10 ) ];
-    }
-  }
-  if( intersects.length > 0 && intersects[0].distance < 100 ){
-    if( intersects[0].object == spinnyThing ) {
-      spinnyThing.material.wireframe = false;
     }
   }
 }
@@ -1032,14 +1015,17 @@ function getUserPicture( URL ) {
   }).done( function( data ) {
     // userImage = THREE.ImageUtils.loadTexture( data );
     // userImageSpheres();
-    var canvas = document.createElement('canvas');
-    canvas.height = window.innerHeight;
-    canvas.width = window.innerWidth;
-    var context = canvas.getContext('2d');
+    // var canvas = document.createElement('canvas');
+    // canvas.height = window.innerHeight;
+    // canvas.width = window.innerWidth;
+    // var context = canvas.getContext('2d');
     var imgSrc = "data:image/png;base64, " + data;
     var threeImage = document.createElement('img');
     threeImage.src = imgSrc;
+    // threeImage.width = 128;
     userTexture = new THREE.Texture( threeImage );
+    userTexture.wrapS = userTexture.wrapT = THREE.RepeatWrapping;
+    userTexture.repeat.set( 10, 10 );
 
     threeImage.onload = function() {
       // var pattern = context.createPattern( this, "repeat" );
@@ -1048,34 +1034,45 @@ function getUserPicture( URL ) {
       // context.fill();
       userTexture.needsUpdate = true;
     }
-    userImageSpheres();
+    userImageSpinny();
   });
 }
 
-function userImageSpheres() {
-  var geometry =  new THREE.CircleGeometry( 10 );
-  geometry.applyMatrix( new THREE.Matrix4().makeRotationX(  Math.PI / 2) );
+function userImageSpinny() {
+  var geometry = new THREE.CircleGeometry( 50 );
   var material = new THREE.MeshLambertMaterial({
     map: userTexture,
     overdraw: true,
     side: THREE.DoubleSide
   });
-  var bigGeometry1 = new THREE.Geometry();
-  var circle = new THREE.Mesh( geometry );
-  // material.transparent = true;
-  for( var i = 0; i < 50; i ++ ) {
-
-    circle.position.z = Math.random() * -500;
-    circle.position.x = Math.random() * 500;
-    circle.position.y = 2000;
-    THREE.GeometryUtils.merge(bigGeometry1, circle);
-  }
-
-  userMesh1 = new THREE.Mesh( bigGeometry1, material );
-
-  scene.add( userMesh1 );
-  console.log("sphere");
+  spinnyThing = new THREE.Mesh( geometry, material );
+  scene.add( spinnyThing );
 }
+
+// function userImageSpheres() {
+//   var geometry =  new THREE.CircleGeometry( 10 );
+//   geometry.applyMatrix( new THREE.Matrix4().makeRotationX(  Math.PI / 2) );
+//   var material = new THREE.MeshLambertMaterial({
+//     map: userTexture,
+//     overdraw: true,
+//     side: THREE.DoubleSide
+//   });
+//   var bigGeometry1 = new THREE.Geometry();
+//   var circle = new THREE.Mesh( geometry );
+//   // material.transparent = true;
+//   for( var i = 0; i < 50; i ++ ) {
+
+//     circle.position.z = Math.random() * -500;
+//     circle.position.x = Math.random() * 500;
+//     circle.position.y = 2000;
+//     THREE.GeometryUtils.merge(bigGeometry1, circle);
+//   }
+
+//   userMesh1 = new THREE.Mesh( bigGeometry1, material );
+
+//   scene.add( userMesh1 );
+//   console.log("sphere");
+// }
 
 function generateUserContent() {
   var direction = controls.getDirection(new THREE.Vector3(0, 0, 0)).clone();
@@ -1221,8 +1218,8 @@ function centralPark() {
   });
   var sphere = new THREE.Mesh( geometry );
   sphere.dynamic = true;
-  for( var i = 0; i < 10; i ++ ) {
-    for( j = 0; j < 10; j ++) {
+  for( var i = 0; i < 5; i ++ ) {
+    for( j = 0; j < 5; j ++) {
       sphere.position.y = 1;
       sphere.position.x = xCoord;
       sphere.position.z = zCoord;
@@ -1436,13 +1433,13 @@ function optimizedDynamicBuildings( locationPoints ) {
   for( var i = 0; i < locationPoints.length; i++ ) {
     var textGeom = new THREE.TextGeometry( locationPoints[i][2],
     {
-    size: 20,
-    height: 5,
-    curveSegments: 2,
-    font: "helvetiker",
-    weight: "normal",
-    style: "normal"
-     });
+      size: 10,
+      height: 2,
+      curveSegments: 2,
+      font: "helvetiker",
+      weight: "normal",
+      style: "normal"
+    });
     var textMesh = new THREE.Mesh( textGeom );
     var lat = locationPoints[i][0];
     var lng = locationPoints[i][1];
@@ -1465,9 +1462,9 @@ function optimizedDynamicBuildings( locationPoints ) {
 
     }
 
-    textMesh.position.x = xCoord;
-    textMesh.position.z = zCoord;
-    textMesh.position.y = 40;
+    textMesh.position.x = xCoord - 20;
+    textMesh.position.z = zCoord - 20;
+    textMesh.position.y = 90;
     cube.position.x = xCoord;
     cube.position.y = 0;
     cube.position.z = zCoord;
@@ -1630,25 +1627,15 @@ function generateSpinnyThing() {
   var geometry = new THREE.TorusKnotGeometry();
   var material = new THREE.MeshLambertMaterial({
     emissive: 0x113377,
-    wireframe: true
+    wireframe: true,
   })
   spinnyThing = new THREE.Mesh( geometry, material );
   spinnyThing.position.z = -600;
   spinnyThing.position.x = -20;
   scene.add( spinnyThing );
-  movingObjects.push( spinnyThing );
+  // movingObjects.push( spinnyThing );
   allObjects.push( spinnyThing );
 }
-
-function statueOfLiberty() {
-
-  var texture = THREE.ImageUtils.loadTexture('assets/statueofliberty.jpg');
-  texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-  texture.repeat.set( 2, 2 );
-
-}
-
-
 
 
 
