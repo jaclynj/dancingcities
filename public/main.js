@@ -1356,8 +1356,8 @@ function optimizedDynamicBuildings( locationPoints ) {
 
     //  RANDOMIZED LOCATIONS
     if ( i % 2 === 0 ) {
-      var xCoord = ( ( lat - 40 ) * 10 ) + Math.floor( Math.random() * 1000 ) ;
-      var zCoord = ( ( lng + 70 ) / Math.round( Math.random() * 10 ) + ( Math.random() * 1000));
+      var xCoord = ( ( lat - 40 ) * 10 ) + Math.floor( Math.random() * 850 ) ;
+      var zCoord = ( ( lng + 70 ) / Math.round( Math.random() * 10 ) + ( Math.random() * 600));
     }
     else if (i % 3 === 0) {
       var xCoord = ( ( lat - 40 ) * 10 );
