@@ -550,6 +550,7 @@ function render() {
   }
 
   if( timeElapsed > 105 ) {
+    allNewYork.rotateZ( angleOfRotation );
    for( var j = 0; j < allNewYork.geometry.vertices.length; j ++ ) {
     // if( j % 3 === 0 ){
 
