@@ -23,7 +23,7 @@
     <div class = "splash-button"><%= link_to "Tweet this", twitter_message.to_s %></div>
     <div class = "splash-button", id = "start-button"><%= link_to "Play again", root_path%></div>
     <% if current_user %>
-    <%= link_to "Sign Out of Twitter", signout_path %>
+    <div class = "splash-button"><%= link_to "Sign Out of Twitter", signout_path %></div>
     <% end %>
   </div>
 

@@ -471,7 +471,7 @@ function render() {
       var endMenu = document.getElementById('end-menu');
       var instructions = document.getElementById('instructions');
       endMenu.style.display = "";
-      blocker.display = 'none';
+      blocker.style.display = 'none';
 
     }
 
