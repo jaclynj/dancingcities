@@ -354,12 +354,6 @@ loadAudioRequest( url );
 dynamicGrabFoursquare( userLat, userLng );
 dynamicGrabFoursquare(40.740084,-73.990115);
 
-if( placesArray.length < 20 ) {
-
-  dynamicGrabFoursquare(40.76538,-73.979727);
-}
-// dynamicGrabFoursquare(40.72, -73.85);
-
 getWeatherCode();
 
 // CALL MAIN INITIALIZE FUNCTION
@@ -603,6 +597,10 @@ function render() {
   if( spinnyThing !== undefined ) {
 
     spinnyThing.rotateY( angleOfRotation );
+  }
+
+  if( spinnyThing2 !== undefined ){
+    spinnyThing2.rotateY( angleOfRotation );
   }
   angleOfRotation += 0.00001;
 
@@ -1507,6 +1505,10 @@ function dynamicBuildings( locationPoints ) {
 
 function optimizedDynamicBuildings( locationPoints ) {
   // debugger;
+  if( placesArray.length < 40 ) {
+    dynamicGrabFoursquare(40.72, -73.85);
+    dynamicGrabFoursquare(40.76538,-73.979727);
+  }
   var geometry = new THREE.CubeGeometry( 50, 100, 50, 1, 1 );
   geometry.dynamic = true;
   var buildingGeometry = new THREE.Geometry();
