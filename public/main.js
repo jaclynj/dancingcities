@@ -452,7 +452,8 @@ optimizedDynamicBuildings( placesArray );
 // GET TWEETS BASED ON HASHTAG AND LOCATION
 $.ajax({
   type: "GET",
-  url: '/tweets.json'
+  url: '/tweets.json',
+  async: false
 }).done( function( data ) {
   tweetArray = data;
   words( tweetArray, coordinates );
@@ -1463,7 +1464,7 @@ function words( wordArray, locationPoints ) {
     emissive: new THREE.Color().setHSL( Math.random() * 0.2 + 0.2, 0.9, Math.random() * 0.25 + 0.7 ),
     overdraw: true
   });
-  for( var i = 0; i < wordArray ; i++ ) {
+  for( var i = 0; i < wordArray.length ; i++ ) {
 
     if( locationPoints[i] !== undefined && wordArray[i] !== undefined ) {
 
@@ -1484,7 +1485,7 @@ function words( wordArray, locationPoints ) {
       var xCoord = ( ( lat - 40 ) * 10 ) + Math.floor( Math.random() * 1000 ) ;
       var zCoord = ( ( lng - 70 ) / Math.round( Math.random() * 10 ) ) + Math.floor( Math.random() * 1000 );
       textMesh.position.x = xCoord;
-      textMesh.position.y = 1000 + ( (i % 2) * (i  * 500) ) ;
+      textMesh.position.y = 1000 + ( ( i % 2 ) * i * 100);
       textMesh.position.z = zCoord;
     // scene.add( textObj );
     // fallingTexts.push( textMesh );
@@ -1496,7 +1497,8 @@ function words( wordArray, locationPoints ) {
 
 allTextMesh = new THREE.Mesh( textGeometry, textMaterial );
 scene.add( allTextMesh );
-fallingTexts.push( allTextMesh );
+console.log("words");
+// fallingTexts.push( allTextMesh );
   // var text = new THREE.TextGeometry( "hi", {font: 'helvetiker', weight: 'normal', style: 'normal'});
   // var material = new THREE.MeshPhongMaterial({ color: 0xdddddd });
   // var textMesh = new THREE.Mesh( text, material );
