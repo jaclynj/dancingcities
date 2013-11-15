@@ -32,6 +32,7 @@ try {
 var camera, scene, renderer;
 var geometry, material, mesh;
 var controls,time = Date.now();
+// var clock;
 var clock = new THREE.Clock( true );
 
 // ALL OBJECTS THAT MOVE TO THE MUSIC
@@ -64,6 +65,8 @@ var emitter, particleGroup;
 var fallingTexts = [];
 var tweetArray = [];
 var wordPos = 0;
+var tweetsGenerated;
+var allTextMesh;
 
 // COUNTING OBJECTS TOUCHED
 var objectsTouched = 0;
@@ -125,6 +128,7 @@ var placesArray = [];
 
 // SPINNY THING
 var spinnyThing;
+var spinnyThing2;
 
 var testWords = ["new york city", "#i love this town", "beautiful", "lol"];
 
@@ -375,6 +379,8 @@ document.body.appendChild( container );
 // INITIALIZE RENDERER
 renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
+renderer.sortObjects = false;
+renderer.sortElements = false;
 // renderer.setClearColor( 0x000000 );
 container.appendChild( renderer.domElement );
 
@@ -406,9 +412,9 @@ var light = new THREE.DirectionalLight( 0x888888, 1.5 );
 light.position.set( 1, 1, 1 );
 scene.add( light );
 
-var light2 = new THREE.DirectionalLight( 0x888888, 0.75 );
-light2.position.set( -1, - 0.5, -1 );
-scene.add( light2 );
+// var light2 = new THREE.DirectionalLight( 0x888888, 0.75 );
+// light2.position.set( -1, - 0.5, -1 );
+// scene.add( light2 );
 
 // var ambientLight = new THREE.AmbientLight( 0xff5577 );
 var ambientLight = new THREE.AmbientLight(  0x404040 );
@@ -433,7 +439,7 @@ generateFloor();
 addBigSphere( 0, 0 );
 
 addMirrorSphere( 500, 400 );
-addMirrorCube( 0, 400 );
+// addMirrorCube( 0, 400 );
 
 
 // words();
@@ -447,9 +453,11 @@ optimizedDynamicBuildings( placesArray );
 // GET TWEETS BASED ON HASHTAG AND LOCATION
 $.ajax({
   type: "GET",
-  url: '/tweets.json'
+  url: '/tweets.json',
+  async: false
 }).done( function( data ) {
   tweetArray = data;
+  words( tweetArray, coordinates );
 });
 
 // UPDATE WEATHER MAP
@@ -471,7 +479,7 @@ function render() {
 
   var timeElapsed = clock.getElapsedTime();
 
-  if( timeElapsed < 30 && !customUserGraphics ){
+  if( timeElapsed < 10 && !customUserGraphics ){
     checkLoggedIn();
 
     if( userContent ){
@@ -533,12 +541,14 @@ function render() {
   }
   if( timeElapsed > 105 ) {
     particleGroup.tick( array[k] / 500 );
-    particleGroup.colorize = 1;
   }
-  if ( ( timeElapsed > 60 ) && ((( Math.round( timeElapsed * 10 ) % 100 === 0 )))) {
-    words( tweetArray, coordinates );
-    console.log( "words");
-  }
+  // if ( ( timeElapsed > 60 ) && ((( Math.round( timeElapsed * 10 ) % 100 === 0 )))) {
+  //   words( tweetArray, coordinates );
+  // }
+
+  // if( (timeElapsed > 60 ) && !tweetsGenerated ){
+  //   words( tweetArray, coordinates );
+  // }
 
   if( Math.round( timeElapsed * 30 ) % 300 === 0 ) {
     updateWall();
@@ -549,16 +559,15 @@ function render() {
     if( Math.floor( timeElapsed * 10 ) % 100 === 0 ) {
       generateUserContent();
       animateUserContent();
-      console.log(" user content ");
     }
   }
 
-  if( timeElapsed > 173 && !endingLight ) {
+  if( timeElapsed > 169 && !endingLight ) {
     generateEndingLight();
     bigSphere.material.map = nightTexture;
     bigSphere.material.needsUpdate = true;
   }
-  if( timeElapsed > 173 && endingLight && ( array[k] % 2 === 0 ) ) {
+  if( timeElapsed > 169 && endingLight && ( array[k] % 2 === 0 ) ) {
     flashEndingLight();
   }
 
@@ -600,14 +609,14 @@ function render() {
   }
 
   if( spinnyThing2 !== undefined ){
-    spinnyThing2.rotateY( angleOfRotation );
+    spinnyThing2.rotateZ( angleOfRotation );
   }
   angleOfRotation += 0.00001;
 
 
   takeMirrorSnapshot();
 
-  if( timeElapsed < 175 ){
+  if( timeElapsed > 50 ){
     fallingWords();
   }
 
@@ -971,40 +980,48 @@ function flashEndingLight() {
 
 }
 
-function fallingWords() {
-  var timeElapsed = clock.getElapsedTime();
-  if ( timeElapsed < 120 ) {
-    for( var i = 0; i < fallingTexts.length; i++ ) {
-      if( fallingTexts[i].position.y > -10 ) {
-        for( var j = 0; j < fallingTexts[i].geometry.vertices.length; j ++ ) {
-          fallingTexts[i].geometry.vertices[j].y -= 2;
-        }
-        // fallingTexts[i].position.y -= 2;
-        fallingTexts[i].geometry.verticesNeedUpdate = true;
-      }
-      else {
-        scene.remove( fallingTexts[i] );
-      }
-    }
-  }
-  else if ( timeElapsed > 120 ) {
-    for( var i = 0; i < fallingTexts.length; i++ ) {
-      if( fallingTexts[i].position.y > 0 ) {
-        for( var j = 0; j < fallingTexts[i].geometry.vertices.length; j ++ ) {
-          fallingTexts[i].geometry.vertices[j].y -= 2;
-        }
-        // fallingTexts[i].position.y -= 2;
-        fallingTexts[i].geometry.verticesNeedUpdate = true;
-      }
-    }
+// function fallingWords() {
+//   var timeElapsed = clock.getElapsedTime();
+//   if ( timeElapsed < 120 ) {
+//     for( var i = 0; i < fallingTexts.length; i++ ) {
+//       if( fallingTexts[i].position.y > -10 ) {
+//         for( var j = 0; j < fallingTexts[i].geometry.vertices.length; j ++ ) {
+//           fallingTexts[i].geometry.vertices[j].y -= 2;
+//         }
+//         // fallingTexts[i].position.y -= 2;
+//         fallingTexts[i].geometry.verticesNeedUpdate = true;
+//       }
+//       else {
+//         scene.remove( fallingTexts[i] );
+//       }
+//     }
+//   }
+//   else if ( timeElapsed > 120 ) {
+//     for( var i = 0; i < fallingTexts.length; i++ ) {
+//       if( fallingTexts[i].position.y > 0 ) {
+//         for( var j = 0; j < fallingTexts[i].geometry.vertices.length; j ++ ) {
+//           fallingTexts[i].geometry.vertices[j].y -= 2;
+//         }
+//         // fallingTexts[i].position.y -= 2;
+//         fallingTexts[i].geometry.verticesNeedUpdate = true;
+//       }
+//     }
 
+//   }
+// }
+
+function fallingWords() {
+  for( i = 0; i < allTextMesh.geometry.vertices.length; i++ ) {
+
+    allTextMesh.geometry.vertices[i].y -= 5;
   }
+  allTextMesh.geometry.verticesNeedUpdate = true;
 }
 
 function takeMirrorSnapshot() {
-  mirrorCube.visible = false;
-  mirrorCubeCamera.updateCubeMap( renderer, scene );
-  mirrorCube.visible = true;
+  // mirrorCube.visible = false;
+  // mirrorCubeCamera.updateCubeMap( renderer, scene );
+  // mirrorCube.visible = true;
 
   mirrorSphere.visible = false;
   mirrorSphereCamera.updateCubeMap( renderer, scene );
@@ -1439,7 +1456,7 @@ function initParticles() {
 
 function words( wordArray, locationPoints ) {
   // debugger;
-  var wordPosAtStart = wordPos;
+  // var wordPosAtStart = wordPos;
   var textGeometry = new THREE.Geometry();
   textGeometry.dynamic = true;
   var textMaterial = new THREE.MeshLambertMaterial( {
@@ -1448,14 +1465,14 @@ function words( wordArray, locationPoints ) {
     emissive: new THREE.Color().setHSL( Math.random() * 0.2 + 0.2, 0.9, Math.random() * 0.25 + 0.7 ),
     overdraw: true
   });
-  for( var i = wordPos; i < wordPosAtStart + 2; i++ ) {
+  for( var i = 0; i < wordArray.length ; i++ ) {
 
     if( locationPoints[i] !== undefined && wordArray[i] !== undefined ) {
 
       var text = new THREE.TextGeometry( wordArray[i], {
         size: 50,
         height: 10,
-        curveSegments: 2,
+        curveSegments: 1,
         font: "helvetiker",
         weight: "normal",
         style: 'normal'
@@ -1463,26 +1480,26 @@ function words( wordArray, locationPoints ) {
       });
       var textMesh = new THREE.Mesh( text );
       text.applyMatrix( new THREE.Matrix4().makeRotationY( - Math.PI / 2) );
-      text.applyMatrix( new THREE.Matrix4().makeRotationX( Math.random() * Math.PI / 2) );
+      text.applyMatrix( new THREE.Matrix4().makeRotationZ( Math.random() * Math.PI / 2) );
       var lat = locationPoints[i][0];
       var lng = locationPoints[i][1];
       var xCoord = ( ( lat - 40 ) * 10 ) + Math.floor( Math.random() * 1000 ) ;
       var zCoord = ( ( lng - 70 ) / Math.round( Math.random() * 10 ) ) + Math.floor( Math.random() * 1000 );
       textMesh.position.x = xCoord;
-      textMesh.position.y = 400 + ( Math.random() * 200 );
+      textMesh.position.y = 5000 + ( i * 1000);
       textMesh.position.z = zCoord;
     // scene.add( textObj );
     // fallingTexts.push( textMesh );
     allObjects.push( textMesh );
     THREE.GeometryUtils.merge( textGeometry, textMesh );
-    wordPos += 1;
   }
 
 }
 
-var allTextMesh = new THREE.Mesh( textGeometry, textMaterial );
+allTextMesh = new THREE.Mesh( textGeometry, textMaterial );
 scene.add( allTextMesh );
-fallingTexts.push( allTextMesh );
+console.log("words");
+// fallingTexts.push( allTextMesh );
   // var text = new THREE.TextGeometry( "hi", {font: 'helvetiker', weight: 'normal', style: 'normal'});
   // var material = new THREE.MeshPhongMaterial({ color: 0xdddddd });
   // var textMesh = new THREE.Mesh( text, material );
@@ -1520,7 +1537,7 @@ function optimizedDynamicBuildings( locationPoints ) {
     {
       size: 10,
       height: 2,
-      curveSegments: 2,
+      curveSegments: 1,
       font: "helvetiker",
       weight: "normal",
       style: "normal"
@@ -1694,19 +1711,19 @@ function addMirrorSphere( x, y ) {
 }
 
 
-function addMirrorCube( x, y ) {
-  var cubeGeom = new THREE.CubeGeometry(100, 100, 10, 1, 1, 1);
-  mirrorCubeCamera = new THREE.CubeCamera( 0.1, 5000, 512 );
-  // mirrorCubeCamera.renderTarget.minFilter = THREE.LinearMipMapLinearFilter;
-  scene.add( mirrorCubeCamera );
-  var mirrorCubeMaterial = new THREE.MeshBasicMaterial( { envMap: mirrorCubeCamera.renderTarget } );
-  mirrorCube = new THREE.Mesh( cubeGeom, mirrorCubeMaterial );
-  mirrorCube.position.set( x, y, 0 );
-  mirrorCubeCamera.position = mirrorCube.position;
-  scene.add(mirrorCube);
-  movingObjects.push( mirrorCube );
+// function addMirrorCube( x, y ) {
+//   var cubeGeom = new THREE.CubeGeometry(100, 100, 10, 1, 1, 1);
+//   mirrorCubeCamera = new THREE.CubeCamera( 0.1, 5000, 512 );
+//   // mirrorCubeCamera.renderTarget.minFilter = THREE.LinearMipMapLinearFilter;
+//   scene.add( mirrorCubeCamera );
+//   var mirrorCubeMaterial = new THREE.MeshBasicMaterial( { envMap: mirrorCubeCamera.renderTarget } );
+//   mirrorCube = new THREE.Mesh( cubeGeom, mirrorCubeMaterial );
+//   mirrorCube.position.set( x, y, 0 );
+//   mirrorCubeCamera.position = mirrorCube.position;
+//   scene.add(mirrorCube);
+//   movingObjects.push( mirrorCube );
 
-}
+// }
 
 function generateSpinnyThing() {
   var geometry = new THREE.TorusKnotGeometry();
