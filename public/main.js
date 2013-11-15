@@ -64,6 +64,7 @@ var emitter, particleGroup;
 var fallingTexts = [];
 var tweetArray = [];
 var wordPos = 0;
+var tweetsGenerated;
 
 // COUNTING OBJECTS TOUCHED
 var objectsTouched = 0;
@@ -403,9 +404,9 @@ scene = new THREE.Scene();
 
 
 // ADD LIGHTS
-// var light = new THREE.DirectionalLight( 0x888888, 1.5 );
-// light.position.set( 1, 1, 1 );
-// scene.add( light );
+var light = new THREE.DirectionalLight( 0x888888, 1.5 );
+light.position.set( 1, 1, 1 );
+scene.add( light );
 
 // var light2 = new THREE.DirectionalLight( 0x888888, 0.75 );
 // light2.position.set( -1, - 0.5, -1 );
@@ -534,11 +535,13 @@ function render() {
   }
   if( timeElapsed > 105 ) {
     particleGroup.tick( array[k] / 500 );
-    particleGroup.colorize = 1;
   }
-  if ( ( timeElapsed > 60 ) && ((( Math.round( timeElapsed * 10 ) % 100 === 0 )))) {
+  // if ( ( timeElapsed > 60 ) && ((( Math.round( timeElapsed * 10 ) % 100 === 0 )))) {
+  //   words( tweetArray, coordinates );
+  // }
+
+  if( (timeElapsed > 60 ) && !tweetsGenerated ){
     words( tweetArray, coordinates );
-    console.log( "words");
   }
 
   if( Math.round( timeElapsed * 30 ) % 300 === 0 ) {
@@ -550,7 +553,6 @@ function render() {
     if( Math.floor( timeElapsed * 10 ) % 100 === 0 ) {
       generateUserContent();
       animateUserContent();
-      console.log(" user content ");
     }
   }
 
@@ -601,7 +603,7 @@ function render() {
   }
 
   if( spinnyThing2 !== undefined ){
-    spinnyThing2.rotateY( angleOfRotation );
+    spinnyThing2.rotateZ( angleOfRotation );
   }
   angleOfRotation += 0.00001;
 
