@@ -378,6 +378,8 @@ document.body.appendChild( container );
 // INITIALIZE RENDERER
 renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
+renderer.sortObjects = false;
+renderer.sortElements = false;
 // renderer.setClearColor( 0x000000 );
 container.appendChild( renderer.domElement );
 
@@ -475,7 +477,7 @@ function render() {
 
   var timeElapsed = clock.getElapsedTime();
 
-  if( timeElapsed < 30 && !customUserGraphics ){
+  if( timeElapsed < 10 && !customUserGraphics ){
     checkLoggedIn();
 
     if( userContent ){
@@ -558,12 +560,12 @@ function render() {
     }
   }
 
-  if( timeElapsed > 173 && !endingLight ) {
+  if( timeElapsed > 169 && !endingLight ) {
     generateEndingLight();
     bigSphere.material.map = nightTexture;
     bigSphere.material.needsUpdate = true;
   }
-  if( timeElapsed > 173 && endingLight && ( array[k] % 2 === 0 ) ) {
+  if( timeElapsed > 169 && endingLight && ( array[k] % 2 === 0 ) ) {
     flashEndingLight();
   }
 
@@ -1007,7 +1009,11 @@ function flashEndingLight() {
 // }
 
 function fallingWords() {
-  allTextMesh.position.y -= 0.001;
+  for( i = 0; i < allTextMesh.geometry.vertices.length; i++ ) {
+
+  allTextMesh.geometry.vertices[i].y -= 0.5;
+  }
+  allTextMesh.geometry.verticesNeedUpdate = true;
 }
 
 function takeMirrorSnapshot() {
