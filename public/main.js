@@ -1251,7 +1251,7 @@ function generateEndingLight() {
     var xCoord, zCoord;
     if ( i % 2 === 0 ) {
       var xCoord = ( Math.random() * 1000 );
-      var zCoord = ( Math.random() * 1000 );
+      var zCoord = ( Math.random() * 600 );
     }
     else if ( i % 3 === 0 ) {
       var xCoord = ( -Math.random() * 1000 );
