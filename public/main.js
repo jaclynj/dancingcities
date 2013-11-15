@@ -721,7 +721,7 @@ function leaveAMessage(e) {
     controls.lockMoveBackward( true );
     controls.lockMoveForward( true );
     var c = String.fromCharCode( e.which );
-    if( (thisPress - lastPress) > 20 ) {
+    if( (thisPress - lastPress) > 30 ) {
       userMessage += c;
       $( '#user-input').append(c).fadeIn(200);
       console.log(userMessage);
