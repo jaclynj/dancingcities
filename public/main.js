@@ -32,6 +32,7 @@ try {
 var camera, scene, renderer;
 var geometry, material, mesh;
 var controls,time = Date.now();
+// var clock;
 var clock = new THREE.Clock( true );
 
 // ALL OBJECTS THAT MOVE TO THE MUSIC
@@ -1012,7 +1013,7 @@ function flashEndingLight() {
 function fallingWords() {
   for( i = 0; i < allTextMesh.geometry.vertices.length; i++ ) {
 
-  allTextMesh.geometry.vertices[i].y -= 0.5;
+    allTextMesh.geometry.vertices[i].y -= 5;
   }
   allTextMesh.geometry.verticesNeedUpdate = true;
 }
@@ -1479,13 +1480,13 @@ function words( wordArray, locationPoints ) {
       });
       var textMesh = new THREE.Mesh( text );
       text.applyMatrix( new THREE.Matrix4().makeRotationY( - Math.PI / 2) );
-      text.applyMatrix( new THREE.Matrix4().makeRotationX( Math.random() * Math.PI / 2) );
+      text.applyMatrix( new THREE.Matrix4().makeRotationZ( Math.random() * Math.PI / 2) );
       var lat = locationPoints[i][0];
       var lng = locationPoints[i][1];
       var xCoord = ( ( lat - 40 ) * 10 ) + Math.floor( Math.random() * 1000 ) ;
       var zCoord = ( ( lng - 70 ) / Math.round( Math.random() * 10 ) ) + Math.floor( Math.random() * 1000 );
       textMesh.position.x = xCoord;
-      textMesh.position.y = 1000 + ( ( i % 2 ) * i * 100);
+      textMesh.position.y = 5000 + ( i * 1000);
       textMesh.position.z = zCoord;
     // scene.add( textObj );
     // fallingTexts.push( textMesh );
