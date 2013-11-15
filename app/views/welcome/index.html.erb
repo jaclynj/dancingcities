@@ -20,6 +20,7 @@
 
 <div id="end-menu" class ="menu" style= "display:none">
     <h1> Thanks for playing! We hope you enjoyed the experience.</h1>
+    <p style ="font-size:1.2em">Music by <%= link_to "Ducky", "http://duckymusic.com" %></p>
     <% twitter_message = URI.parse('http://twitter.com/home') %>
     <% twitter_message.query = URI.encode_www_form('status' => "I just played #DancingCities at dancingcities.heroku.com")%>
     <div class = "splash-button"><%= link_to "Tweet this", twitter_message.to_s %></div>
