@@ -10,7 +10,7 @@ try {
     }
   }
   catch(e) {
-    alert("Web Audio API is not supported in this browser");
+    alert("Web Audio API is not supported in this browser - Sorry, but Dancing Cities won't work for you :( Have you considered Chrome?");
   }
 
   // web audio api variables
@@ -32,8 +32,8 @@ try {
 var camera, scene, renderer;
 var geometry, material, mesh;
 var controls,time = Date.now();
-// var clock;
-var clock = new THREE.Clock( true );
+var timeElapsed = 0;
+var clock;
 
 // ALL OBJECTS THAT MOVE TO THE MUSIC
 var movingObjects = [];
@@ -477,9 +477,11 @@ function animate() {
 
 function render() {
 
-  var timeElapsed = clock.getElapsedTime();
+  if( clock !== undefined ) {
+    timeElapsed = clock.getElapsedTime();
+  }
 
-  if( timeElapsed < 10 && !customUserGraphics ){
+  if( timeElapsed < 1 && !customUserGraphics ){
     checkLoggedIn();
 
     if( userContent ){
@@ -511,7 +513,7 @@ function render() {
       k += ( k < array.length? 1 : 0 );
     }
 
-    if( timeElapsed > 257 ) {
+    if( timeElapsed > 244 ) {
       var endMenu = document.getElementById('end-menu');
       var instructions = document.getElementById('instructions');
       endMenu.style.display = "";
@@ -562,12 +564,12 @@ function render() {
     }
   }
 
-  if( timeElapsed > 169 && !endingLight ) {
+  if( timeElapsed > 163 && !endingLight ) {
     generateEndingLight();
     bigSphere.material.map = nightTexture;
     bigSphere.material.needsUpdate = true;
   }
-  if( timeElapsed > 169 && endingLight && ( array[k] % 2 === 0 ) ) {
+  if( timeElapsed > 163 && endingLight && ( array[k] % 2 === 0 ) ) {
     flashEndingLight();
   }
 
@@ -576,11 +578,11 @@ function render() {
     weatherUpdated = true;
   }
 
-  if( timeElapsed > 87 && Math.floor( timeElapsed % 5 ) === 0 ) {
+  if( timeElapsed > 83 && Math.floor( timeElapsed % 5 ) === 0 ) {
     allBuildingMesh.material.emissive.setHex( array[j] * 0x772252 );
   }
 
-  if( timeElapsed > 105 && timeElapsed < 115) {
+  if( timeElapsed > 99 && timeElapsed < 115) {
     allNewYork.rotateZ( angleOfRotation );
     for( var j = 0; j < allNewYork.geometry.vertices.length; j ++ ) {
     // if( j % 3 === 0 ){
@@ -898,6 +900,7 @@ function loadAudioRequest( url ) {
 //  LOAD AUDIO BUFFER IN WEB AUDIO API
 
 function loadAudioBuffer() {
+  clock = new THREE.Clock( true );
   $('#loading-animation').fadeOut(200);
   context.decodeAudioData(
     request.response,
