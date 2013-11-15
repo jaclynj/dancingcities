@@ -125,6 +125,7 @@ var placesArray = [];
 
 // SPINNY THING
 var spinnyThing;
+var spinnyThing2;
 
 var testWords = ["new york city", "#i love this town", "beautiful", "lol"];
 
@@ -402,13 +403,13 @@ scene = new THREE.Scene();
 
 
 // ADD LIGHTS
-var light = new THREE.DirectionalLight( 0x888888, 1.5 );
-light.position.set( 1, 1, 1 );
-scene.add( light );
+// var light = new THREE.DirectionalLight( 0x888888, 1.5 );
+// light.position.set( 1, 1, 1 );
+// scene.add( light );
 
-var light2 = new THREE.DirectionalLight( 0x888888, 0.75 );
-light2.position.set( -1, - 0.5, -1 );
-scene.add( light2 );
+// var light2 = new THREE.DirectionalLight( 0x888888, 0.75 );
+// light2.position.set( -1, - 0.5, -1 );
+// scene.add( light2 );
 
 // var ambientLight = new THREE.AmbientLight( 0xff5577 );
 var ambientLight = new THREE.AmbientLight(  0x404040 );
@@ -433,7 +434,7 @@ generateFloor();
 addBigSphere( 0, 0 );
 
 addMirrorSphere( 500, 400 );
-addMirrorCube( 0, 400 );
+// addMirrorCube( 0, 400 );
 
 
 // words();
@@ -1002,9 +1003,9 @@ function fallingWords() {
 }
 
 function takeMirrorSnapshot() {
-  mirrorCube.visible = false;
-  mirrorCubeCamera.updateCubeMap( renderer, scene );
-  mirrorCube.visible = true;
+  // mirrorCube.visible = false;
+  // mirrorCubeCamera.updateCubeMap( renderer, scene );
+  // mirrorCube.visible = true;
 
   mirrorSphere.visible = false;
   mirrorSphereCamera.updateCubeMap( renderer, scene );
@@ -1694,19 +1695,19 @@ function addMirrorSphere( x, y ) {
 }
 
 
-function addMirrorCube( x, y ) {
-  var cubeGeom = new THREE.CubeGeometry(100, 100, 10, 1, 1, 1);
-  mirrorCubeCamera = new THREE.CubeCamera( 0.1, 5000, 512 );
-  // mirrorCubeCamera.renderTarget.minFilter = THREE.LinearMipMapLinearFilter;
-  scene.add( mirrorCubeCamera );
-  var mirrorCubeMaterial = new THREE.MeshBasicMaterial( { envMap: mirrorCubeCamera.renderTarget } );
-  mirrorCube = new THREE.Mesh( cubeGeom, mirrorCubeMaterial );
-  mirrorCube.position.set( x, y, 0 );
-  mirrorCubeCamera.position = mirrorCube.position;
-  scene.add(mirrorCube);
-  movingObjects.push( mirrorCube );
+// function addMirrorCube( x, y ) {
+//   var cubeGeom = new THREE.CubeGeometry(100, 100, 10, 1, 1, 1);
+//   mirrorCubeCamera = new THREE.CubeCamera( 0.1, 5000, 512 );
+//   // mirrorCubeCamera.renderTarget.minFilter = THREE.LinearMipMapLinearFilter;
+//   scene.add( mirrorCubeCamera );
+//   var mirrorCubeMaterial = new THREE.MeshBasicMaterial( { envMap: mirrorCubeCamera.renderTarget } );
+//   mirrorCube = new THREE.Mesh( cubeGeom, mirrorCubeMaterial );
+//   mirrorCube.position.set( x, y, 0 );
+//   mirrorCubeCamera.position = mirrorCube.position;
+//   scene.add(mirrorCube);
+//   movingObjects.push( mirrorCube );
 
-}
+// }
 
 function generateSpinnyThing() {
   var geometry = new THREE.TorusKnotGeometry();
