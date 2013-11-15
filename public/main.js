@@ -721,7 +721,7 @@ function leaveAMessage(e) {
     controls.lockMoveBackward( true );
     controls.lockMoveForward( true );
     var c = String.fromCharCode( e.which );
-    if( (thisPress - lastPress) > 20 ) {
+    if( (thisPress - lastPress) > 30 ) {
       userMessage += c;
       $( '#user-input').append(c).fadeIn(200);
       console.log(userMessage);
@@ -1251,7 +1251,7 @@ function generateEndingLight() {
     var xCoord, zCoord;
     if ( i % 2 === 0 ) {
       var xCoord = ( Math.random() * 1000 );
-      var zCoord = ( Math.random() * 1000 );
+      var zCoord = ( Math.random() * 600 );
     }
     else if ( i % 3 === 0 ) {
       var xCoord = ( -Math.random() * 1000 );
