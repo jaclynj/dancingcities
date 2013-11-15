@@ -24,7 +24,8 @@ try {
   var request;
   var currentSource;
   // var url = 'https://api.soundcloud.com/tracks/118852333/stream?client_id=9907b9176ff3ca255b472d3d22a880bb';
-  var url = 'https://api.soundcloud.com/tracks/120134607/stream?client_id=9907b9176ff3ca255b472d3d22a880bb';
+  // var url = 'https://api.soundcloud.com/tracks/120134607/stream?client_id=9907b9176ff3ca255b472d3d22a880bb';
+  var url = 'https://api.soundcloud.com/tracks/120220655/stream?client_id=9907b9176ff3ca255b472d3d22a880bb';
 
 
 // STANDARD THREE VARIABLES
@@ -352,7 +353,11 @@ loadAudioRequest( url );
 // GET GEODATA
 dynamicGrabFoursquare( userLat, userLng );
 dynamicGrabFoursquare(40.740084,-73.990115);
-// dynamicGrabFoursquare(40.76538,-73.979727);
+
+if( placesArray.length < 20 ) {
+
+  dynamicGrabFoursquare(40.76538,-73.979727);
+}
 // dynamicGrabFoursquare(40.72, -73.85);
 
 getWeatherCode();
