@@ -7,7 +7,7 @@
   <%= form_for @admin do |f| %>
     <% if @admin.errors.any? %>
     <div class = "flash">
-      <h3>Invalid info</h3>
+      <span style="font-size:1.5em"><b>Invalid info</b></span><br>
         <% for message in @admin.errors.full_messages %>
         <%= message %><br>
         <% end %>
