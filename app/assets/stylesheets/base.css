@@ -1,5 +1,5 @@
 body {
-  font-family: "Helvetica", sans-serif;
+  font-family: 'Average Sans', sans-serif;
   font-size: 16px;
   background-color: #F9F9F9;
   color: #38302F;
@@ -18,9 +18,13 @@ li {
   padding: 5px;
 }
 
-h2,h3 {
+h2,h3, h4 {
   margin-top: 0;
-  margin-bottom: 8px;
+  margin-bottom: 0;
+}
+
+h1, h2, h3, h4 {
+  font-family: 'Sonsie One', cursive;
 }
 
 .menu {
@@ -55,7 +59,7 @@ h2,h3 {
 
 #instructions {
   position: absolute;
-  width: 300px;
+  width: 350px;
   margin-left: 500px;
   margin-top: 300px;
   background-color: rgba(255, 255, 255, 0.8);

@@ -1,11 +1,11 @@
 
 
   <div id="start-menu" style= "display:none" class = menu>
-      <span style="font-size:40px">Welcome to Dancing Cities!</span>
+      <h2>Welcome to Dancing Cities!</h2>
       <br><br>
       Dancing Cities is an interactive, visual representation of New York City.
       The virtual city is generated dynamically using NYC data including the current weather, latitude and longitudes points that represent locations within the city, and recent tweets sent from NYC.<br><br> Try finding the graffiti wall with messages from other players, and post your own message!<br><br>
-      <div class = "menu-box"><h3>TO PLAY:</h3>
+      <div class = "menu-box"><h3>To Play:</h3>
       Move MOUSE to look around<br>
       Press UP, DOWN, RIGHT, LEFT to move<br>
       Press SPACEBAR to jump</div>
@@ -32,14 +32,13 @@
 
   <div id="blocker">
     <div id="instructions" style= "display:none">
-      <span style="font-size:40px">Click to play</span>
-      <br><br>
+      <h2>Click to play</h2>
       Move MOUSE to look around<br>
       Press UP, DOWN, RIGHT, LEFT to move<br>
       Press SPACEBAR to jump<br>
       <% twitter_message = URI.parse('http://twitter.com/home') %>
     <% twitter_message.query = URI.encode_www_form('status' => "I'm playing #DancingCities at dancingcities.heroku.com")%><br>
-    <h3 style="color: #FFE4E9"><%= link_to "Tweet about dancing cities to appear in the game!", twitter_message.to_s %></h3>
+    <h4 style="color: #FFE4E9"><%= link_to "Tweet about dancing cities to appear in the game!", twitter_message.to_s %></h4>
     </div>
 
   </div>
