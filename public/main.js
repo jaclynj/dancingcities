@@ -65,6 +65,7 @@ var fallingTexts = [];
 var tweetArray = [];
 var wordPos = 0;
 var tweetsGenerated;
+var allTextMesh;
 
 // COUNTING OBJECTS TOUCHED
 var objectsTouched = 0;
@@ -452,6 +453,7 @@ $.ajax({
   url: '/tweets.json'
 }).done( function( data ) {
   tweetArray = data;
+  words( tweetArray, coordinates );
 });
 
 // UPDATE WEATHER MAP
@@ -540,9 +542,9 @@ function render() {
   //   words( tweetArray, coordinates );
   // }
 
-  if( (timeElapsed > 60 ) && !tweetsGenerated ){
-    words( tweetArray, coordinates );
-  }
+  // if( (timeElapsed > 60 ) && !tweetsGenerated ){
+  //   words( tweetArray, coordinates );
+  // }
 
   if( Math.round( timeElapsed * 30 ) % 300 === 0 ) {
     updateWall();
@@ -610,7 +612,7 @@ function render() {
 
   takeMirrorSnapshot();
 
-  if( timeElapsed < 175 ){
+  if( timeElapsed > 50 ){
     fallingWords();
   }
 
@@ -974,34 +976,38 @@ function flashEndingLight() {
 
 }
 
-function fallingWords() {
-  var timeElapsed = clock.getElapsedTime();
-  if ( timeElapsed < 120 ) {
-    for( var i = 0; i < fallingTexts.length; i++ ) {
-      if( fallingTexts[i].position.y > -10 ) {
-        for( var j = 0; j < fallingTexts[i].geometry.vertices.length; j ++ ) {
-          fallingTexts[i].geometry.vertices[j].y -= 2;
-        }
-        // fallingTexts[i].position.y -= 2;
-        fallingTexts[i].geometry.verticesNeedUpdate = true;
-      }
-      else {
-        scene.remove( fallingTexts[i] );
-      }
-    }
-  }
-  else if ( timeElapsed > 120 ) {
-    for( var i = 0; i < fallingTexts.length; i++ ) {
-      if( fallingTexts[i].position.y > 0 ) {
-        for( var j = 0; j < fallingTexts[i].geometry.vertices.length; j ++ ) {
-          fallingTexts[i].geometry.vertices[j].y -= 2;
-        }
-        // fallingTexts[i].position.y -= 2;
-        fallingTexts[i].geometry.verticesNeedUpdate = true;
-      }
-    }
+// function fallingWords() {
+//   var timeElapsed = clock.getElapsedTime();
+//   if ( timeElapsed < 120 ) {
+//     for( var i = 0; i < fallingTexts.length; i++ ) {
+//       if( fallingTexts[i].position.y > -10 ) {
+//         for( var j = 0; j < fallingTexts[i].geometry.vertices.length; j ++ ) {
+//           fallingTexts[i].geometry.vertices[j].y -= 2;
+//         }
+//         // fallingTexts[i].position.y -= 2;
+//         fallingTexts[i].geometry.verticesNeedUpdate = true;
+//       }
+//       else {
+//         scene.remove( fallingTexts[i] );
+//       }
+//     }
+//   }
+//   else if ( timeElapsed > 120 ) {
+//     for( var i = 0; i < fallingTexts.length; i++ ) {
+//       if( fallingTexts[i].position.y > 0 ) {
+//         for( var j = 0; j < fallingTexts[i].geometry.vertices.length; j ++ ) {
+//           fallingTexts[i].geometry.vertices[j].y -= 2;
+//         }
+//         // fallingTexts[i].position.y -= 2;
+//         fallingTexts[i].geometry.verticesNeedUpdate = true;
+//       }
+//     }
 
-  }
+//   }
+// }
+
+function fallingWords() {
+  allTextMesh.position.y -= 0.001;
 }
 
 function takeMirrorSnapshot() {
@@ -1442,7 +1448,7 @@ function initParticles() {
 
 function words( wordArray, locationPoints ) {
   // debugger;
-  var wordPosAtStart = wordPos;
+  // var wordPosAtStart = wordPos;
   var textGeometry = new THREE.Geometry();
   textGeometry.dynamic = true;
   var textMaterial = new THREE.MeshLambertMaterial( {
@@ -1451,14 +1457,14 @@ function words( wordArray, locationPoints ) {
     emissive: new THREE.Color().setHSL( Math.random() * 0.2 + 0.2, 0.9, Math.random() * 0.25 + 0.7 ),
     overdraw: true
   });
-  for( var i = wordPos; i < wordPosAtStart + 2; i++ ) {
+  for( var i = 0; i < wordArray ; i++ ) {
 
     if( locationPoints[i] !== undefined && wordArray[i] !== undefined ) {
 
       var text = new THREE.TextGeometry( wordArray[i], {
         size: 50,
         height: 10,
-        curveSegments: 2,
+        curveSegments: 1,
         font: "helvetiker",
         weight: "normal",
         style: 'normal'
@@ -1472,18 +1478,17 @@ function words( wordArray, locationPoints ) {
       var xCoord = ( ( lat - 40 ) * 10 ) + Math.floor( Math.random() * 1000 ) ;
       var zCoord = ( ( lng - 70 ) / Math.round( Math.random() * 10 ) ) + Math.floor( Math.random() * 1000 );
       textMesh.position.x = xCoord;
-      textMesh.position.y = 400 + ( Math.random() * 200 );
+      textMesh.position.y = 1000 + ( (i % 2) * (i  * 500) ) ;
       textMesh.position.z = zCoord;
     // scene.add( textObj );
     // fallingTexts.push( textMesh );
     allObjects.push( textMesh );
     THREE.GeometryUtils.merge( textGeometry, textMesh );
-    wordPos += 1;
   }
 
 }
 
-var allTextMesh = new THREE.Mesh( textGeometry, textMaterial );
+allTextMesh = new THREE.Mesh( textGeometry, textMaterial );
 scene.add( allTextMesh );
 fallingTexts.push( allTextMesh );
   // var text = new THREE.TextGeometry( "hi", {font: 'helvetiker', weight: 'normal', style: 'normal'});
@@ -1523,7 +1528,7 @@ function optimizedDynamicBuildings( locationPoints ) {
     {
       size: 10,
       height: 2,
-      curveSegments: 2,
+      curveSegments: 1,
       font: "helvetiker",
       weight: "normal",
       style: "normal"
