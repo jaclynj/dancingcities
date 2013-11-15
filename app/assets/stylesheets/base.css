@@ -74,13 +74,15 @@ h2,h3 {
   display: none;
   position: absolute;
   margin: 50px 260px;
-  color: RGBA(137.00, 137.00, 137.00, 0.5);
+  color: RGBA(137.00, 137.00, 137.00, 0.8);
   font-size: 40px;
   background-image: url('http://static.freepik.com/free-photo/free-sun-on-blue-sky-vector-background_48-10085.jpg');
+  border-radius: 5px;
+  border: 1.5px solid #919393;
   height: 250px;
   width: 600px;
-  opacity:0.80;
-  filter:alpha(opacity=80); /* For IE8 and earlier */
+  opacity:0.90;
+  filter:alpha(opacity=90); /* For IE8 and earlier */
 }
 
 #user-input {
