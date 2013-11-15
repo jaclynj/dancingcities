@@ -3,8 +3,7 @@ class Admin < ActiveRecord::Base
   attr_accessor :password
   before_save :encrypt_password
 
-# TODO Only admins can add new admins
-# TODO Admins should be able to change their passwords
+
 
   validates_confirmation_of :password
   validates_presence_of :password, :on => :create
