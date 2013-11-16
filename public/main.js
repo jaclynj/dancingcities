@@ -1,3 +1,6 @@
+// By Morgan Neiman and Jaclyn Jimenez, with many thanks to Mr. Doob and Lee Stemkoski for their extensive work with Three.js
+
+
 // LOAD WEB AUDIO CONTEXT FOR WEB AUDIO API
 var context;
 var container;
