@@ -1,4 +1,7 @@
-// Load Web Audio Context for Web Audio API
+// By Morgan Neiman and Jaclyn Jimenez, with many thanks to Mr. Doob and Lee Stemkoski for their extensive work with Three.js
+
+
+// LOAD WEB AUDIO CONTEXT FOR WEB AUDIO API
 var context;
 var container;
 try {
@@ -13,7 +16,7 @@ try {
     alert("Web Audio API is not supported in this browser - Sorry, but Dancing Cities won't work for you :( Have you considered Chrome?");
   }
 
-  // web audio api variables
+  // WEB AUDIO API VARIABLES
   var source;
   var sourceJs;
   var analyser;
@@ -23,8 +26,6 @@ try {
   var songPlaying;
   var request;
   var currentSource;
-  // var url = 'https://api.soundcloud.com/tracks/118852333/stream?client_id=9907b9176ff3ca255b472d3d22a880bb';
-  // var url = 'https://api.soundcloud.com/tracks/120134607/stream?client_id=9907b9176ff3ca255b472d3d22a880bb';
   var url = 'https://api.soundcloud.com/tracks/120220655/stream?client_id=9907b9176ff3ca255b472d3d22a880bb';
 
 
@@ -126,20 +127,12 @@ var allNewYork;
 // COORDINATES - FOURSQUARE
 var placesArray = [];
 
-// SPINNY THING
+// SPINNING GEOMETRIES
 var spinnyThing;
 var spinnyThing2;
 
-var testWords = ["new york city", "#i love this town", "beautiful", "lol"];
-
 // RAYCASTERS - NOT OPTIMIZED
 var ray;
-var xray;
-var zray;
-
-// PHYSIJS SETUP
-// Physijs.scripts.worker = 'helper_libraries/physijs_worker.js';
-// Physijs.scripts.ammo = 'ammo.js';
 
 var blocker = document.getElementById( 'blocker' );
 var instructions = document.getElementById( 'instructions' );
@@ -154,7 +147,7 @@ startMenu.style.display = '';
 
 
 
-      // POINTERLOCK CODE - FROM http://www.html5rocks.com/en/tutorials/pointerlock/intro/
+      // POINTERLOCK CODE
       var havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
 
       if ( havePointerLock ) {
@@ -199,12 +192,12 @@ startMenu.style.display = '';
         document.addEventListener( 'webkitpointerlockerror', pointerlockerror, false );
 
 
-
+        // HIDE INSTRUCTIONS
         instructions.addEventListener( 'click', function ( event ) {
 
           instructions.style.display = 'none';
 
-          // Ask the browser to lock the pointer
+          // LOCK POINTER
           element.requestPointerLock = element.requestPointerLock || element.mozRequestPointerLock || element.webkitRequestPointerLock;
 
           if ( /Firefox/i.test( navigator.userAgent ) ) {
@@ -301,7 +294,6 @@ startButton.addEventListener( 'click', function ( event ) {
             element.requestFullscreen();
 
           } else {
-
             element.requestPointerLock();
 
           }
@@ -310,6 +302,7 @@ startButton.addEventListener( 'click', function ( event ) {
 
 } else {
 
+  // CATCH FOR NO POINTERLOCK
   instructions.innerHTML = 'Your browser doesn\'t seem to support Pointer Lock API';
 
 }
@@ -348,6 +341,10 @@ $(document).on("keydown", function (e) {
 //         event.preventDefault();
 //     }
 // });
+
+if( !Detector.webgl ) {
+  alert( "Sorry, but your browser doesn't support WebGL. Dancing cities won't work without WebGL - please try Chrome or Firefox!");
+}
 
 getUserLocation();
 
@@ -401,20 +398,11 @@ camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight
 scene = new THREE.Scene();
 // scene = new Physijs.Scene;
 
-// FOG OPTIONS
-// scene.fog = new THREE.Fog( 0xff5588, 0, 2000 );
-// scene.fog = new THREE.FogExp2( 0xff5566, 0.0015 );
-// scene.fog = new THREE.FogExp2( 0x88888888, 0.0015 );
-
 
 // ADD LIGHTS
 var light = new THREE.DirectionalLight( 0x888888, 1.5 );
 light.position.set( 1, 1, 1 );
 scene.add( light );
-
-// var light2 = new THREE.DirectionalLight( 0x888888, 0.75 );
-// light2.position.set( -1, - 0.5, -1 );
-// scene.add( light2 );
 
 // var ambientLight = new THREE.AmbientLight( 0xff5577 );
 var ambientLight = new THREE.AmbientLight(  0x404040 );
@@ -427,19 +415,12 @@ scene.add( controls.getObject() );
 // ADD RAYCASTER
 ray = new THREE.Raycaster();
 ray.ray.direction.set( 0, -1, 0 );
-xray = new THREE.Raycaster();
-xray.far = 100;
-zray = new THREE.Raycaster();
-zray.far = 100;
-xray.ray.direction.set( 1, 0, 0 );
-zray.ray.direction.set( 0, 0, 1 );
 
 // INITIALIZE GEOMETRY
 generateFloor();
 addBigSphere( 0, 0 );
 
 addMirrorSphere( 500, 400 );
-// addMirrorCube( 0, 400 );
 
 
 // words();
@@ -459,9 +440,6 @@ $.ajax({
   tweetArray = data;
   words( tweetArray, coordinates );
 });
-
-// UPDATE WEATHER MAP
-// updateWeather( weatherCode );
 }
 
 function animate() {
@@ -489,7 +467,8 @@ function render() {
     }
   }
 
-    // animate all shapes in "movingObjects" array based on song
+    // ANIMATE OBJECTS IN MOVING OBJECTS ARRAY BASED ON SONG
+    // AND CHANGE CENTRAL PARK COLOR BASED ON SONG
     var k = 0;
     for( var i = 0; i < movingObjects.length; i++ ) {
       var scale = ( array[k] ) / 80;
@@ -507,12 +486,11 @@ function render() {
         movingObjects[i].scale.x = ( scale < 1 ? 1 : scale );
         allBuildingMesh.scale.y = ( scale < 1 ?  1 : scale );
 
-        // movingObjects[i].geometry.vertices[3].y = array[k];
       }
-      movingObjects[i].geometry.verticesNeedUpdate = true;
       k += ( k < array.length? 1 : 0 );
     }
 
+    // DISPLAY ENDING SPLASH SCREEN
     if( timeElapsed > 244 ) {
       var endMenu = document.getElementById('end-menu');
       var instructions = document.getElementById('instructions');
@@ -521,6 +499,7 @@ function render() {
 
     }
 
+    // MAKE CENTRAL PARK DANCE TO MUSIC
     var j = 0;
     if( timeElapsed > 115 ) {
       for( var i = 0; i < dancingGrass.length; i++ ){
@@ -531,98 +510,80 @@ function render() {
     }
 
 
-      // if( timeElapsed > 130 && userMesh2 !== undefined ){
-
-      // }
-
-
-  // time event to begin particles
+  // BEGIN PARTICLES
   if( timeElapsed > 35 && timeElapsed < 120 ) {
     particleGroup.tick( array[k] / 1000);
-    // console.log("should be working");
   }
+  // SPEED UP PARTICLES
   if( timeElapsed > 105 ) {
     particleGroup.tick( array[k] / 500 );
   }
-  // if ( ( timeElapsed > 60 ) && ((( Math.round( timeElapsed * 10 ) % 100 === 0 )))) {
-  //   words( tweetArray, coordinates );
-  // }
 
-  // if( (timeElapsed > 60 ) && !tweetsGenerated ){
-  //   words( tweetArray, coordinates );
-  // }
+// UPDATE GRAFFITI WALL MESSAGES
+if( Math.round( timeElapsed * 30 ) % 300 === 0 ) {
+  updateWall();
 
-  if( Math.round( timeElapsed * 30 ) % 300 === 0 ) {
-    updateWall();
+}
 
+// CUSTOM USER MESSAGES
+if( timeElapsed > 30 && customUserGraphics ) {
+  if( Math.floor( timeElapsed * 10 ) % 100 === 0 ) {
+    generateUserContent();
+    animateUserContent();
   }
+}
 
-  if( timeElapsed > 30 && customUserGraphics ) {
-    if( Math.floor( timeElapsed * 10 ) % 100 === 0 ) {
-      generateUserContent();
-      animateUserContent();
-    }
-  }
+// END OF SONG FLASHING LIGHT CYLINDERS
+// AND CHANGE THE SKY TO NIGHT
+if( timeElapsed > 163 && !endingLight ) {
+  generateEndingLight();
+  bigSphere.material.map = nightTexture;
+  bigSphere.material.needsUpdate = true;
+}
+if( timeElapsed > 163 && endingLight && ( array[k] % 2 === 0 ) ) {
+  flashEndingLight();
+}
 
-  if( timeElapsed > 163 && !endingLight ) {
-    generateEndingLight();
-    bigSphere.material.map = nightTexture;
-    bigSphere.material.needsUpdate = true;
-  }
-  if( timeElapsed > 163 && endingLight && ( array[k] % 2 === 0 ) ) {
-    flashEndingLight();
-  }
+// UPDATE WEATHER IF WEATHER API CONNECTED
+if( weatherCode !== 100 && !weatherUpdated ) {
+  updateWeather( weatherCode );
+  weatherUpdated = true;
+}
 
-  if( weatherCode !== 100 && !weatherUpdated ) {
-    updateWeather( weatherCode );
-    weatherUpdated = true;
-  }
+// CHANGE COLOR OF BUILDINGS
+if( timeElapsed > 83 && Math.floor( timeElapsed % 5 ) === 0 ) {
+  allBuildingMesh.material.emissive.setHex( array[j] * 0x772252 );
+}
 
-  if( timeElapsed > 83 && Math.floor( timeElapsed % 5 ) === 0 ) {
-    allBuildingMesh.material.emissive.setHex( array[j] * 0x772252 );
-  }
+// ROTATE SPHERES
+if( timeElapsed > 99 && timeElapsed < 115) {
+  allNewYork.rotateZ( angleOfRotation );
+}
 
-  if( timeElapsed > 99 && timeElapsed < 115) {
-    allNewYork.rotateZ( angleOfRotation );
-    for( var j = 0; j < allNewYork.geometry.vertices.length; j ++ ) {
-    // if( j % 3 === 0 ){
+if( timeElapsed > 115 ) {
+  scene.remove( allNewYork );
+}
 
-      allNewYork.geometry.vertices[j].y += 0.1 ;
-    // }
-    // else {
-    //   allNewYork.geometry.vertices[j].y -=5 ;
-    // }
-        // fallingTexts[i].position.y -= 2;
-      }
-      allNewYork.geometry.verticesNeedUpdate = true;
-    }
+bigSphere.rotateY( angleOfRotation );
 
-    if( timeElapsed > 115 ) {
-      scene.remove( allNewYork );
-    }
+// ROTATE RESPECTIVE GEOMETRIES FOR LOGGED IN OR NON LOGGED IN USER
+if( spinnyThing !== undefined ) {
+  spinnyThing.rotateY( angleOfRotation );
+}
+if( spinnyThing2 !== undefined ){
+  spinnyThing2.rotateZ( angleOfRotation );
+}
+angleOfRotation += 0.00001;
 
-  // var quaternion = new THREE.Quaternion().setFromAxisAngle( new THREE.Vector3( 0, 0, 0 ) , angleOfRotation) ;
-  // bigSphere.rotation.setEulerFromQuaternion( quaternion );
-  bigSphere.rotateY( angleOfRotation );
+// UPDATE MIRROR SPHERE
+takeMirrorSnapshot();
 
-  if( spinnyThing !== undefined ) {
+if( timeElapsed > 50 ){
+  fallingWords();
+}
 
-    spinnyThing.rotateY( angleOfRotation );
-  }
-
-  if( spinnyThing2 !== undefined ){
-    spinnyThing2.rotateZ( angleOfRotation );
-  }
-  angleOfRotation += 0.00001;
-
-
-  takeMirrorSnapshot();
-
-  if( timeElapsed > 50 ){
-    fallingWords();
-  }
-
-  renderer.render( scene, camera );
+// RENDER SCENE
+renderer.render( scene, camera );
 }
 
 function detectCollision() {
@@ -632,7 +593,6 @@ function detectCollision() {
   var cameraDirection = controls.getDirection(new THREE.Vector3(0, 0, 0)).clone();
 
   if (controls.moveForward()) {
-    // Nothing to do!
   }
   else if (controls.moveBackward()) {
     rotationMatrix = new THREE.Matrix4();
@@ -646,7 +606,7 @@ function detectCollision() {
     rotationMatrix = new THREE.Matrix4();
     rotationMatrix.makeRotationY((360-90) * Math.PI / 180);
   }
-  // else return;
+  else return;
 
   if (rotationMatrix !== undefined){
     cameraDirection.applyMatrix4(rotationMatrix);
@@ -706,7 +666,6 @@ function leaveAMessage(e) {
   if( keycode == '13' ) {
     messageLeft = true;
     leavingMessage = false;
-    // $( '#graffiti-form' ).css( "display", "none" );
     $( '#graffiti-form' ).fadeOut(400);
     $( document.body ).off( "keypress", leaveAMessage );
     controls.blockJump( false );
@@ -784,11 +743,7 @@ function controlCheck() {
     var distance = intersections[0].distance;
 
     if( distance > 0 && distance < 10 ) {
-      // debugger;
-      // intersections[0].object.material.color.setHex( 0x64f544 );
-      // intersections[0].object.material.needsUpdate = true;
       controls.isOnObject( true );
-
     }
   }
 
@@ -799,7 +754,7 @@ function controlCheck() {
 }
 
 
-
+// CHECK FOR WINDOW RESIZE
 function onWindowResize() {
 
   camera.aspect = window.innerWidth / window.innerHeight;
@@ -810,54 +765,25 @@ function onWindowResize() {
 }
 
 // GRAB FOURSQUARE GEODATA
-
 function dynamicGrabFoursquare(lat, lng) {
-  //example: var lat = 40.7; var lng = -74
   places = $.ajax({
     type: "GET",
     url: "https://api.foursquare.com/v2/venues/explore?ll=" + lat + "," + lng + "&section=topPicks&limit=50&oauth_token=K4UCTP1LAKJNTMLHCF4ZGITHNAV1344HNO3BATADR0LFLVGI",
     async: false
   });
-// debugger;
-var parsedResponse = JSON.parse(places.responseText);
-var locations = parsedResponse.response.groups[0].items;
-for( var i = 0; i < locations.length; i++ ) {
-  var place = [];
-  var longitude = locations[i].venue.location.lng;
-  var latitude = locations[i].venue.location.lat;
-  var name = locations[i].venue.name;
-  place.push( latitude, longitude, name );
-  placesArray.push( place );
-}
-console.log( placesArray );
-    // optimizedDynamicBuildings( placesArray );
-  // });
+  var parsedResponse = JSON.parse(places.responseText);
+  var locations = parsedResponse.response.groups[0].items;
+  for( var i = 0; i < locations.length; i++ ) {
+    var place = [];
+    var longitude = locations[i].venue.location.lng;
+    var latitude = locations[i].venue.location.lat;
+    var name = locations[i].venue.name;
+    place.push( latitude, longitude, name );
+    placesArray.push( place );
+  }
 }
 
-
-
-function grabFoursquare() {
- places = $.ajax({
-  type: "GET",
-  url: "https://api.foursquare.com/v2/venues/explore?ll=40.7,-74&section=topPicks&limit=50&oauth_token=K4UCTP1LAKJNTMLHCF4ZGITHNAV1344HNO3BATADR0LFLVGI",
-  async: false
-});
- // debugger;
- var locations = places.responseJSON.response.groups[0].items;
- for( var i = 0; i < locations.length; i++ ) {
-  var place = [];
-  var lng = locations[i].venue.location.lng;
-  var lat = locations[i].venue.location.lat;
-  var name = locations[i].venue.name;
-  place.push( lat, lng, name );
-  placesArray.push( place );
-
-  console.log( placesArray );
-    // optimizedDynamicBuildings( placesArray );
-  // });
-}
-}
-
+// GET WEATHER CODE FROM YAHOO API
 function getWeatherCode(){
 
   var weather = $.ajax({
@@ -874,39 +800,26 @@ function getWeatherCode(){
 }
 
 // LOAD AUDIO REQUEST TO/FROM SOUNDCLOUD API
-
 function loadAudioRequest( url ) {
-  // GENERATE LOADING SCREEN
-  // var loadingAnimation = document.createElement('div');
-  // loadingAnimation.id = "loading-animation";
-  // loadingAnimation.textContent = "Loading your city...";
-  // document.body.appendChild( loadingAnimation );
-
-
 
   request = new XMLHttpRequest();
   request.open("GET", url, true);
   request.responseType = "arraybuffer";
   request.send();
 
-  // do {
-  //   $('#loading-animation').fadeIn(100);
-  //   $('#loading-animation').fadeOut(100);
-  // } while( request.readyState !== 4 );
-
   request.onload = loadAudioBuffer;
 }
 
 //  LOAD AUDIO BUFFER IN WEB AUDIO API
-
 function loadAudioBuffer() {
+  // SET CLOCK HERE, SO IT STARTS WHEN MUSIC LOADS
   clock = new THREE.Clock( true );
   $('#loading-animation').fadeOut(200);
   context.decodeAudioData(
     request.response,
     function(buffer) {
       if(!buffer) {
-                // Error decoding file data
+                // ERROR DECODING FILE
                 alert("error decoding buffer");
                 return;
               }
@@ -937,7 +850,7 @@ function loadAudioBuffer() {
               startTime = new Date();
             },
             function(error) {
-            // Decoding error
+            // DECODING ERROR
           }
           );
 }
@@ -973,64 +886,30 @@ function generateNewYorkShapes() {
     }));
   scene.add( allNewYork );
   allObjects.push( allNewYork );
-  // movingObjects.push( allNewYork );
 }
 
 // UPDATE FUNCTIONS
-
 function flashEndingLight() {
   endingLightAmbient.material.emissive.setHex( Math.random() * 0xffffff );
 
 }
 
-// function fallingWords() {
-//   var timeElapsed = clock.getElapsedTime();
-//   if ( timeElapsed < 120 ) {
-//     for( var i = 0; i < fallingTexts.length; i++ ) {
-//       if( fallingTexts[i].position.y > -10 ) {
-//         for( var j = 0; j < fallingTexts[i].geometry.vertices.length; j ++ ) {
-//           fallingTexts[i].geometry.vertices[j].y -= 2;
-//         }
-//         // fallingTexts[i].position.y -= 2;
-//         fallingTexts[i].geometry.verticesNeedUpdate = true;
-//       }
-//       else {
-//         scene.remove( fallingTexts[i] );
-//       }
-//     }
-//   }
-//   else if ( timeElapsed > 120 ) {
-//     for( var i = 0; i < fallingTexts.length; i++ ) {
-//       if( fallingTexts[i].position.y > 0 ) {
-//         for( var j = 0; j < fallingTexts[i].geometry.vertices.length; j ++ ) {
-//           fallingTexts[i].geometry.vertices[j].y -= 2;
-//         }
-//         // fallingTexts[i].position.y -= 2;
-//         fallingTexts[i].geometry.verticesNeedUpdate = true;
-//       }
-//     }
-
-//   }
-// }
-
+// MOVE TWEETS DOWN Y AXIS
 function fallingWords() {
-  for( i = 0; i < allTextMesh.geometry.vertices.length; i++ ) {
-
+  for( var i = 0; i < allTextMesh.geometry.vertices.length; i++ ) {
     allTextMesh.geometry.vertices[i].y -= 5;
   }
   allTextMesh.geometry.verticesNeedUpdate = true;
 }
 
+// UPDATE MIRROR SPHERE
 function takeMirrorSnapshot() {
-  // mirrorCube.visible = false;
-  // mirrorCubeCamera.updateCubeMap( renderer, scene );
-  // mirrorCube.visible = true;
-
   mirrorSphere.visible = false;
   mirrorSphereCamera.updateCubeMap( renderer, scene );
   mirrorSphere.visible = true;
 }
 
+// UPDATE SPHERE MAP TO REFLECT WEATHER CONDITIONS
 function updateWeather( weatherCode ) {
 
   if( ( weatherCode < 13 && weatherCode !== 7) || weatherCode ===  17 || weatherCode === 35 || ( weatherCode > 36 && weatherCode <= 40 )  ) {
@@ -1055,10 +934,7 @@ else if( weatherCode === 7 || ( weatherCode > 12 && weatherCode <= 18) || ( weat
   }
 }
 
-function updateTime() {
-
-}
-
+// ANIMATE USER CONTENT
 function animateUserContent() {
   for( var i = 0; i < allUserMessages.length / 2; i++ ){
     var message = allUserMessages[i];
@@ -1068,6 +944,7 @@ function animateUserContent() {
   allUserMessages.splice( 0, allUserMessages.length / 2 );
 }
 
+// CHECK IF USER SIGNED IN WITH TWITTER
 function checkLoggedIn() {
   $.ajax({ 
     type: "GET", 
@@ -1077,11 +954,13 @@ function checkLoggedIn() {
       userContent = true;
     }
     else {
+      // GENERATE GEOMETRY FOR NON LOGGED IN USER
       generateSpinnyThing();
     }
   })
 }
 
+// GRAB USER DATA FROM RAILS CONTROLLER
 function getUserData() {
   $.ajax({
     type: "GET",
@@ -1091,24 +970,17 @@ function getUserData() {
       userName = data.name;
       userImageURL = data.image;
       customUserGraphics = true;
-      userContent = false;
-      // debugger;
       getUserPicture( userImageURL );
     }
   })
 }
 
-function utf8_to_b64( str ) {
-  return window.btoa(encodeURIComponent( str ));
-}
-
+// CONVERT USER TWITTER PIC TO TEXTURE FOR GEOMETRY
 function getUserPicture( URL ) {
   $.ajax({
     type: "GET",
     url: "/convert?image_url=" + URL
   }).done( function( data ) {
-    // userImage = THREE.ImageUtils.loadTexture( data );
-    // userImageSpheres();
     var canvas = document.createElement('canvas');
     canvas.height = window.innerHeight;
     canvas.width = window.innerWidth;
@@ -1116,20 +988,16 @@ function getUserPicture( URL ) {
     var imgSrc = "data:image/png;base64, " + data;
     var threeImage = document.createElement('img');
     threeImage.src = imgSrc;
-    // threeImage.width = 128;
     userTexture = new THREE.Texture( threeImage );
 
     threeImage.onload = function() {
-      // var pattern = context.createPattern( this, "repeat" );
-      // context.fillStyle = pattern;
-      // context.rect(0, 0, 100, 100);
-      // context.fill();
       userTexture.needsUpdate = true;
     }
     userImageSpinny();
   });
 }
 
+// GENERATE SPINNING CIRCLE WITH USER PIC
 function userImageSpinny() {
   var geometry = new THREE.CircleGeometry( 50, 100 );
   var material = new THREE.MeshLambertMaterial({
@@ -1144,31 +1012,7 @@ function userImageSpinny() {
   scene.add( spinnyThing );
 }
 
-// function userImageSpheres() {
-//   var geometry =  new THREE.CircleGeometry( 10 );
-//   geometry.applyMatrix( new THREE.Matrix4().makeRotationX(  Math.PI / 2) );
-//   var material = new THREE.MeshLambertMaterial({
-//     map: userTexture,
-//     overdraw: true,
-//     side: THREE.DoubleSide
-//   });
-//   var bigGeometry1 = new THREE.Geometry();
-//   var circle = new THREE.Mesh( geometry );
-//   // material.transparent = true;
-//   for( var i = 0; i < 50; i ++ ) {
-
-//     circle.position.z = Math.random() * -500;
-//     circle.position.x = Math.random() * 500;
-//     circle.position.y = 2000;
-//     THREE.GeometryUtils.merge(bigGeometry1, circle);
-//   }
-
-//   userMesh1 = new THREE.Mesh( bigGeometry1, material );
-
-//   scene.add( userMesh1 );
-//   console.log("sphere");
-// }
-
+// GENERATE MESSAGES TO USER
 function generateUserContent() {
   var direction = controls.getDirection(new THREE.Vector3(0, 0, 0)).clone();
   var i = Math.floor( Math.random() * 10 );
@@ -1195,8 +1039,6 @@ function generateUserContent() {
   var newMesh = new THREE.Mesh(
     newGeometry );
   for( var i = 0; i < 20; i ++ ){
-    // newGeometry.applyMatrix( new THREE.Matrix4().makeRotationZ( -Math.PI/ 4 ) );
-      // newGeometry.applyMatrix( new THREE.Matrix4().makeRotationX( Math.PI/ 4 ) );
 
       newMesh.position.x = direction.x + 400 * Math.random();
       newMesh.position.z =  direction.z - 500 * Math.random();
@@ -1210,6 +1052,7 @@ function generateUserContent() {
 
   }
 
+// UPDATE GRAFFITI WALL WITH NEW USER MESSAGES
   function updateWall() {
    $.ajax({
     type: "GET",
@@ -1243,9 +1086,6 @@ function generateUserContent() {
         newMesh.position.z = 690;
         newMesh.position.y = ( Math.random() * 50 ) + ( Math.random() * 100 );
         scene.add( newMesh );
-    // textCount += 1;
-    // console.log(textCount);
-    // console.log(message);
   }
 }
 });
@@ -1253,11 +1093,9 @@ function generateUserContent() {
 
 
 
-
-
-
 // GEOMETRY FUNCTIONS
 
+// GENERATE ENDING LIGHT CYLINDERS
 function generateEndingLight() {
   var geometry =   new THREE.CylinderGeometry( 20, 20, 1000 );
   var cylinderMesh = new THREE.Mesh( geometry );
@@ -1298,6 +1136,7 @@ function generateEndingLight() {
   endingLight = true;
 }
 
+// GENERATE CENTRAL PARK SPHERES
 function centralPark() {
   var xCoord = -1000;
   var zCoord = -500;
@@ -1318,8 +1157,6 @@ function centralPark() {
       sphere.position.y = 1;
       sphere.position.x = xCoord;
       sphere.position.z = zCoord;
-      // sphere.receiveShadow = true;
-      // sphere.castShadow = true;
       dancingGrass.push( sphere );
       allObjects.push( sphere );
       xCoord += 100;
@@ -1332,7 +1169,6 @@ function centralPark() {
   centralParkMesh = new THREE.Mesh( centralParkGeometry, material );
   scene.add( centralParkMesh );
   allObjects.push( centralParkMesh );
-  // movingObjects.push( centralParkMesh );
 }
 
 function graffitiWall() {
@@ -1358,32 +1194,11 @@ function generateFloor() {
   var geometry = new THREE.PlaneGeometry( 2500, 2500, 200, 200 );
   geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2) );
 
-
-
- // OPTIONAL FLOOR PATTERN GENERATION
-//  for( var i = 0; i < geometry.faces.length; i ++ ) {
-//   var face = geometry.faces[i];
-//   face.vertexColors[0] = new THREE.Color(Math.random() * 0x111111 );
-//   face.vertexColors[1] = new THREE.Color().setHSL( Math.random() * 0.7 + 0.9, 0.3, Math.random() * 0.25 + 0.9 );
-//   face.vertexColors[2] = new THREE.Color().setHSL( Math.random() * 0.7 + 0.9, 0.3, Math.random() * 0.25 + 0.9 );
-// }
-
-//  SECOND OPTION
-// for( var i = 0; i < geometry.faces.length; i ++ ) {
-//   var face = geometry.faces[i];
-//   face.vertexColors[0] = new THREE.Color(Math.random() * 0x111111 );
-//   face.vertexColors[1] = new THREE.Color(Math.random() * 0x111111 );
-//   face.vertexColors[2] = new THREE.Color(Math.random() * 0x111111 );
-// }
-  // var material = new THREE.MeshBasicMaterial( { color: 0x222222, wireframe: true });
-
  // MATERIAL FOR BASIC PLANE
  var material = new THREE.MeshPhongMaterial( {
   specular: 0x222222,
   color: 0xffffff,
   emissive: 0x773366,
-    // vertexColors: THREE.VertexColors,
-    // wireframe: true,
     overdraw: true
 
   });
@@ -1402,30 +1217,10 @@ var mesh2 = new THREE.Mesh( wireframeGeometry, wireframeMaterial );
 mesh2.position.y = 1;
 
 scene.add( mesh2 );
-
-
-  // // SQUARE PLANE GEOMETRY
-  // var geometry = new THREE.Geometry();
-  // geometry.vertices.push(new THREE.Vector3( 1000, 0, 0 ) );
-  // geometry.vertices.push(new THREE.Vector3( -1000, 0, 0 ) );
-
-  // linesMaterial = new THREE.LineBasicMaterial( { color: 0x787878, opacity: 0.2, linewidth: 0.1 } );
-
-  // for ( var i = 0; i <= 20; i ++ ) {
-
-  //   var line = new THREE.Line( geometry, linesMaterial );
-  //   line.position.z = ( i * 50 ) - 1000;
-  //   scene.add( line );
-
-  //   var line = new THREE.Line( geometry, linesMaterial );
-  //   line.position.x = ( i * 50 ) - 1000;
-  //   line.rotation.y = 90 * Math.PI / 180;
-  //   scene.add( line );
-  // }
 }
 
 
-
+// INITIALIZE PARTICLE SYSTEM
 function initParticles() {
   particleGroup = new ShaderParticleGroup({
     texture: THREE.ImageUtils.loadTexture('assets/particle.png'),
@@ -1452,14 +1247,9 @@ function initParticles() {
 
 }
 
-// function optimizedWords( wordArray, locationPoints ) {
-//   var wordPosAtStart = wordPos;
-//   var textGeometry
-// }
-
+// GENERATE TWEET GEOMETRIES
 function words( wordArray, locationPoints ) {
-  // debugger;
-  // var wordPosAtStart = wordPos;
+
   var textGeometry = new THREE.Geometry();
   textGeometry.dynamic = true;
   var textMaterial = new THREE.MeshLambertMaterial( {
@@ -1491,8 +1281,6 @@ function words( wordArray, locationPoints ) {
       textMesh.position.x = xCoord;
       textMesh.position.y = 5000 + ( i * 1000);
       textMesh.position.z = zCoord;
-    // scene.add( textObj );
-    // fallingTexts.push( textMesh );
     allObjects.push( textMesh );
     THREE.GeometryUtils.merge( textGeometry, textMesh );
   }
@@ -1502,29 +1290,11 @@ function words( wordArray, locationPoints ) {
 allTextMesh = new THREE.Mesh( textGeometry, textMaterial );
 scene.add( allTextMesh );
 console.log("words");
-// fallingTexts.push( allTextMesh );
-  // var text = new THREE.TextGeometry( "hi", {font: 'helvetiker', weight: 'normal', style: 'normal'});
-  // var material = new THREE.MeshPhongMaterial({ color: 0xdddddd });
-  // var textMesh = new THREE.Mesh( text, material );
-  // scene.add( textMesh );
 }
 
-
-function dynamicBuildings( locationPoints ) {
-
-  for( var i = 0; i < locationPoints.length; i ++ ) {
-    var lat = locationPoints[i][0];
-    var lng = locationPoints[i][1];
-    var xCoord = ( ( lat - 40 ) * 10 ) + Math.floor( Math.random() * 1000 ) ;
-    var zCoord = ( ( lng - 70 ) / Math.round( Math.random() * 10 ) ) + Math.floor( Math.random() * 1000 );
-    addCube( xCoord, 125, zCoord );
-    console.log(xCoord);
-    console.log(zCoord);
-  }
-}
-
+// GENERATE BUILDINGS
 function optimizedDynamicBuildings( locationPoints ) {
-  // debugger;
+
   if( placesArray.length < 40 ) {
     dynamicGrabFoursquare(40.72, -73.85);
     dynamicGrabFoursquare(40.76538,-73.979727);
@@ -1549,9 +1319,6 @@ function optimizedDynamicBuildings( locationPoints ) {
     var lat = locationPoints[i][0];
     var lng = locationPoints[i][1];
 
-    // var xCoord = ( ( lat - 40 ) * 1000 ) -;
-    // var zCoord = ( ( lng + 70 ) * 1000 );
-
     //  RANDOMIZED LOCATIONS
     if ( i % 2 === 0 ) {
       var xCoord = ( ( lat - 40 ) * 10 ) + Math.floor( Math.random() * 850 ) ;
@@ -1573,21 +1340,11 @@ function optimizedDynamicBuildings( locationPoints ) {
     cube.position.x = xCoord;
     cube.position.y = 0;
     cube.position.z = zCoord;
-    // allObjects.push( cube );
-    // movingObjects.push( cube );
-    // debugger;
-    // for ( var i = 0; i < geometry.faces.length; i ++ ) {
 
-    //   var face = geometry.faces[ i ];
-    //   face.vertexColors[ 0 ] = new THREE.Color().setHSL( Math.random() * 0.9 + 0.5, 0.9, Math.random() * 0.25 + 0.9 );
-    //   face.vertexColors[ 1 ] = new THREE.Color().setHSL( Math.random() * 0.9 + 0.5, 0.9, Math.random() * 0.25 + 0.9 );
-    //   face.vertexColors[ 2 ] = new THREE.Color().setHSL( Math.random() * 0.9 + 0.5, 0.9, Math.random() * 0.25 + 0.9 );
-
-    // }
     THREE.GeometryUtils.merge( buildingGeometry, textMesh );
     THREE.GeometryUtils.merge( buildingGeometry, cube );
   }
-  // // debugger;
+
   var basicMaterial = new THREE.MeshPhongMaterial({
     specular: 0x222222,
     color: 0x000000,
@@ -1597,50 +1354,13 @@ function optimizedDynamicBuildings( locationPoints ) {
   allBuildingMesh = new THREE.Mesh( buildingGeometry, basicMaterial );
   scene.add( allBuildingMesh );
   allObjects.push( allBuildingMesh );
-  // allBuildingMesh.geometry.computeBoundingBox();
-  // allObjects.push( buildingGeometry );
-  // movingObjects.push( buildingMesh );
+
 }
 
-// function optimizedDynamicBuildings( locationPoints ) {
-//   var geometry = new THREE.CubeGeometry( 50, 100, 50, 1, 1 );
-//   var buildingGeometry = new THREE.Geometry();
-//   var cube = new THREE.Mesh( geometry );
-
-//   for( var i = 0; i < locationPoints.length; i++ ) {
-//     var lat = locationPoints[i][0];
-//     var lng = locationPoints[i][1];
-//     var xCoord = ( ( lat - 40 ) * 10 ) + Math.floor( Math.random() * 1000 ) ;
-//     var zCoord = ( ( lng - 70 ) / Math.round( Math.random() * 10 ) ) + Math.floor( Math.random() * 1000 );
-//     cube.position.x = xCoord;
-//     cube.position.y = 0;
-//     cube.position.z = zCoord;
-//     allObjects.push( cube );
-//     movingObjects.push( cube );
-
-//     for ( var i = 0, l = geometry.faces.length; i < l; i ++ ) {
-
-//       var face = geometry.faces[ i ];
-//       face.vertexColors[ 0 ] = new THREE.Color().setHSL( Math.random() * 0.9 + 0.5, 0.9, Math.random() * 0.25 + 0.9 );
-//       face.vertexColors[ 1 ] = new THREE.Color().setHSL( Math.random() * 0.9 + 0.5, 0.9, Math.random() * 0.25 + 0.9 );
-//       face.vertexColors[ 2 ] = new THREE.Color().setHSL( Math.random() * 0.9 + 0.5, 0.9, Math.random() * 0.25 + 0.9 );
-
-//     }
-//     // buildingMesh.material = colorMaterial;
-//     THREE.GeometryUtils.merge( buildingGeometry, cube );
-//   }
-//   // debugger;
-//   var basicMaterial = new THREE.MeshLambertMaterial({
-//     vertexColors: THREE.VertexColors
-//   });
-//   var allBuildingMesh = new THREE.Mesh( buildingGeometry, basicMaterial );
-//   scene.add( allBuildingMesh );
-// }
 
 function addCube( x, y, z ) {
-  var geometry = new THREE.CubeGeometry( 50, 100, 50, 1, 1 );
-  // var material = new THREE.MeshPhongMaterial();
 
+  var geometry = new THREE.CubeGeometry( 50, 100, 50, 1, 1 );
 
   for ( var i = 0, l = geometry.faces.length; i < l; i ++ ) {
 
@@ -1655,13 +1375,13 @@ function addCube( x, y, z ) {
 
   var cube = new THREE.Mesh( geometry, material );
   cube.position.x = x;
-  // cube.position.y = y;
   cube.position.z = z;
   movingObjects.push( cube );
   scene.add( cube );
   allObjects.push( cube );
 }
 
+// GENERATE SKY SPHERE
 function addBigSphere( x, y ) {
   var sphereGeom = new THREE.SphereGeometry( 3000, 100, 100 );
   var skyColor;
@@ -1687,12 +1407,8 @@ function addBigSphere( x, y ) {
     color: 0x000000,
     emissive: skyColor,
     side: THREE.DoubleSide,
-    // vertexColors: THREE.VertexColors,
-    // wireframe: true,
     shininess: 100,
     overdraw: true });
-  // sphereMaterial.bumpMap = THREE.ImageUtils.loadTexture('assets/clouds_NRM.png');
-  // sphereMaterial.bumpScale = 0.5;
   bigSphere = new THREE.Mesh( sphereGeom, sphereMaterial );
   bigSphere.position.x = x;
   bigSphere.position.y = y;
@@ -1700,10 +1416,10 @@ function addBigSphere( x, y ) {
   scene.add( bigSphere );
 }
 
+// GENERATE MIRROR SPHERE
 function addMirrorSphere( x, y ) {
-    var sphereGeom =  new THREE.SphereGeometry( 50, 32, 16 ); // radius, segmentsWidth, segmentsHeight
+    var sphereGeom =  new THREE.SphereGeometry( 50, 32, 16 );
     mirrorSphereCamera = new THREE.CubeCamera( 0.1, 5000, 512 );
-  // mirrorCubeCamera.renderTarget.minFilter = THREE.LinearMipMapLinearFilter;
   scene.add( mirrorSphereCamera );
   var mirrorSphereMaterial = new THREE.MeshBasicMaterial( { envMap: mirrorSphereCamera.renderTarget } );
   mirrorSphere = new THREE.Mesh( sphereGeom, mirrorSphereMaterial );
@@ -1713,21 +1429,7 @@ function addMirrorSphere( x, y ) {
   movingObjects.push( mirrorSphere );
 }
 
-
-// function addMirrorCube( x, y ) {
-//   var cubeGeom = new THREE.CubeGeometry(100, 100, 10, 1, 1, 1);
-//   mirrorCubeCamera = new THREE.CubeCamera( 0.1, 5000, 512 );
-//   // mirrorCubeCamera.renderTarget.minFilter = THREE.LinearMipMapLinearFilter;
-//   scene.add( mirrorCubeCamera );
-//   var mirrorCubeMaterial = new THREE.MeshBasicMaterial( { envMap: mirrorCubeCamera.renderTarget } );
-//   mirrorCube = new THREE.Mesh( cubeGeom, mirrorCubeMaterial );
-//   mirrorCube.position.set( x, y, 0 );
-//   mirrorCubeCamera.position = mirrorCube.position;
-//   scene.add(mirrorCube);
-//   movingObjects.push( mirrorCube );
-
-// }
-
+// GENERATE TORUS KNOT GEOMETRY
 function generateSpinnyThing() {
   var geometry = new THREE.TorusKnotGeometry();
   var material = new THREE.MeshLambertMaterial({
@@ -1743,7 +1445,7 @@ function generateSpinnyThing() {
 }
 
 
-
+// FUNCTION TO GENERATE SPHERES
 function generateSpheres() {
   var sphereGeometry = new THREE.SphereGeometry(20);
   var sphere = new THREE.Mesh( sphereGeometry, new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } ) );
