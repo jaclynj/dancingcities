@@ -1,4 +1,4 @@
-// Load Web Audio Context for Web Audio API
+// LOAD WEB AUDIO CONTEXT FOR WEB AUDIO API
 var context;
 var container;
 try {
@@ -13,7 +13,7 @@ try {
     alert("Web Audio API is not supported in this browser - Sorry, but Dancing Cities won't work for you :( Have you considered Chrome?");
   }
 
-  // web audio api variables
+  // WEB AUDIO API VARIABLES
   var source;
   var sourceJs;
   var analyser;
@@ -23,8 +23,6 @@ try {
   var songPlaying;
   var request;
   var currentSource;
-  // var url = 'https://api.soundcloud.com/tracks/118852333/stream?client_id=9907b9176ff3ca255b472d3d22a880bb';
-  // var url = 'https://api.soundcloud.com/tracks/120134607/stream?client_id=9907b9176ff3ca255b472d3d22a880bb';
   var url = 'https://api.soundcloud.com/tracks/120220655/stream?client_id=9907b9176ff3ca255b472d3d22a880bb';
 
 
@@ -137,10 +135,6 @@ var ray;
 var xray;
 var zray;
 
-// PHYSIJS SETUP
-// Physijs.scripts.worker = 'helper_libraries/physijs_worker.js';
-// Physijs.scripts.ammo = 'ammo.js';
-
 var blocker = document.getElementById( 'blocker' );
 var instructions = document.getElementById( 'instructions' );
 var startMenu = document.getElementById( 'start-menu' );
@@ -154,7 +148,7 @@ startMenu.style.display = '';
 
 
 
-      // POINTERLOCK CODE - FROM http://www.html5rocks.com/en/tutorials/pointerlock/intro/
+      // POINTERLOCK CODE
       var havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
 
       if ( havePointerLock ) {
@@ -301,7 +295,6 @@ startButton.addEventListener( 'click', function ( event ) {
             element.requestFullscreen();
 
           } else {
-
             element.requestPointerLock();
 
           }
@@ -348,6 +341,10 @@ $(document).on("keydown", function (e) {
 //         event.preventDefault();
 //     }
 // });
+
+if( !Detector.webgl ) {
+  alert( "Sorry, but your browser doesn't support WebGL. Dancing cities won't work without WebGL - please try Chrome or Firefox!");
+}
 
 getUserLocation();
 
