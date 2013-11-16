@@ -997,6 +997,7 @@ function getUserPicture( URL ) {
   });
 }
 
+// GENERATE SPINNING CIRCLE WITH USER PIC
 function userImageSpinny() {
   var geometry = new THREE.CircleGeometry( 50, 100 );
   var material = new THREE.MeshLambertMaterial({
@@ -1011,31 +1012,7 @@ function userImageSpinny() {
   scene.add( spinnyThing );
 }
 
-// function userImageSpheres() {
-//   var geometry =  new THREE.CircleGeometry( 10 );
-//   geometry.applyMatrix( new THREE.Matrix4().makeRotationX(  Math.PI / 2) );
-//   var material = new THREE.MeshLambertMaterial({
-//     map: userTexture,
-//     overdraw: true,
-//     side: THREE.DoubleSide
-//   });
-//   var bigGeometry1 = new THREE.Geometry();
-//   var circle = new THREE.Mesh( geometry );
-//   // material.transparent = true;
-//   for( var i = 0; i < 50; i ++ ) {
-
-//     circle.position.z = Math.random() * -500;
-//     circle.position.x = Math.random() * 500;
-//     circle.position.y = 2000;
-//     THREE.GeometryUtils.merge(bigGeometry1, circle);
-//   }
-
-//   userMesh1 = new THREE.Mesh( bigGeometry1, material );
-
-//   scene.add( userMesh1 );
-//   console.log("sphere");
-// }
-
+// GENERATE MESSAGES TO USER
 function generateUserContent() {
   var direction = controls.getDirection(new THREE.Vector3(0, 0, 0)).clone();
   var i = Math.floor( Math.random() * 10 );
@@ -1062,8 +1039,6 @@ function generateUserContent() {
   var newMesh = new THREE.Mesh(
     newGeometry );
   for( var i = 0; i < 20; i ++ ){
-    // newGeometry.applyMatrix( new THREE.Matrix4().makeRotationZ( -Math.PI/ 4 ) );
-      // newGeometry.applyMatrix( new THREE.Matrix4().makeRotationX( Math.PI/ 4 ) );
 
       newMesh.position.x = direction.x + 400 * Math.random();
       newMesh.position.z =  direction.z - 500 * Math.random();
@@ -1077,6 +1052,7 @@ function generateUserContent() {
 
   }
 
+// UPDATE GRAFFITI WALL WITH NEW USER MESSAGES
   function updateWall() {
    $.ajax({
     type: "GET",
@@ -1110,9 +1086,6 @@ function generateUserContent() {
         newMesh.position.z = 690;
         newMesh.position.y = ( Math.random() * 50 ) + ( Math.random() * 100 );
         scene.add( newMesh );
-    // textCount += 1;
-    // console.log(textCount);
-    // console.log(message);
   }
 }
 });
@@ -1120,11 +1093,9 @@ function generateUserContent() {
 
 
 
-
-
-
 // GEOMETRY FUNCTIONS
 
+// GENERATE ENDING LIGHT CYLINDERS
 function generateEndingLight() {
   var geometry =   new THREE.CylinderGeometry( 20, 20, 1000 );
   var cylinderMesh = new THREE.Mesh( geometry );
@@ -1165,6 +1136,7 @@ function generateEndingLight() {
   endingLight = true;
 }
 
+// GENERATE CENTRAL PARK SPHERES
 function centralPark() {
   var xCoord = -1000;
   var zCoord = -500;
@@ -1185,8 +1157,6 @@ function centralPark() {
       sphere.position.y = 1;
       sphere.position.x = xCoord;
       sphere.position.z = zCoord;
-      // sphere.receiveShadow = true;
-      // sphere.castShadow = true;
       dancingGrass.push( sphere );
       allObjects.push( sphere );
       xCoord += 100;
@@ -1199,7 +1169,6 @@ function centralPark() {
   centralParkMesh = new THREE.Mesh( centralParkGeometry, material );
   scene.add( centralParkMesh );
   allObjects.push( centralParkMesh );
-  // movingObjects.push( centralParkMesh );
 }
 
 function graffitiWall() {
@@ -1225,32 +1194,11 @@ function generateFloor() {
   var geometry = new THREE.PlaneGeometry( 2500, 2500, 200, 200 );
   geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2) );
 
-
-
- // OPTIONAL FLOOR PATTERN GENERATION
-//  for( var i = 0; i < geometry.faces.length; i ++ ) {
-//   var face = geometry.faces[i];
-//   face.vertexColors[0] = new THREE.Color(Math.random() * 0x111111 );
-//   face.vertexColors[1] = new THREE.Color().setHSL( Math.random() * 0.7 + 0.9, 0.3, Math.random() * 0.25 + 0.9 );
-//   face.vertexColors[2] = new THREE.Color().setHSL( Math.random() * 0.7 + 0.9, 0.3, Math.random() * 0.25 + 0.9 );
-// }
-
-//  SECOND OPTION
-// for( var i = 0; i < geometry.faces.length; i ++ ) {
-//   var face = geometry.faces[i];
-//   face.vertexColors[0] = new THREE.Color(Math.random() * 0x111111 );
-//   face.vertexColors[1] = new THREE.Color(Math.random() * 0x111111 );
-//   face.vertexColors[2] = new THREE.Color(Math.random() * 0x111111 );
-// }
-  // var material = new THREE.MeshBasicMaterial( { color: 0x222222, wireframe: true });
-
  // MATERIAL FOR BASIC PLANE
  var material = new THREE.MeshPhongMaterial( {
   specular: 0x222222,
   color: 0xffffff,
   emissive: 0x773366,
-    // vertexColors: THREE.VertexColors,
-    // wireframe: true,
     overdraw: true
 
   });
@@ -1269,30 +1217,10 @@ var mesh2 = new THREE.Mesh( wireframeGeometry, wireframeMaterial );
 mesh2.position.y = 1;
 
 scene.add( mesh2 );
-
-
-  // // SQUARE PLANE GEOMETRY
-  // var geometry = new THREE.Geometry();
-  // geometry.vertices.push(new THREE.Vector3( 1000, 0, 0 ) );
-  // geometry.vertices.push(new THREE.Vector3( -1000, 0, 0 ) );
-
-  // linesMaterial = new THREE.LineBasicMaterial( { color: 0x787878, opacity: 0.2, linewidth: 0.1 } );
-
-  // for ( var i = 0; i <= 20; i ++ ) {
-
-  //   var line = new THREE.Line( geometry, linesMaterial );
-  //   line.position.z = ( i * 50 ) - 1000;
-  //   scene.add( line );
-
-  //   var line = new THREE.Line( geometry, linesMaterial );
-  //   line.position.x = ( i * 50 ) - 1000;
-  //   line.rotation.y = 90 * Math.PI / 180;
-  //   scene.add( line );
-  // }
 }
 
 
-
+// INITIALIZE PARTICLE SYSTEM
 function initParticles() {
   particleGroup = new ShaderParticleGroup({
     texture: THREE.ImageUtils.loadTexture('assets/particle.png'),
@@ -1319,14 +1247,9 @@ function initParticles() {
 
 }
 
-// function optimizedWords( wordArray, locationPoints ) {
-//   var wordPosAtStart = wordPos;
-//   var textGeometry
-// }
-
+// GENERATE TWEET GEOMETRIES
 function words( wordArray, locationPoints ) {
-  // debugger;
-  // var wordPosAtStart = wordPos;
+
   var textGeometry = new THREE.Geometry();
   textGeometry.dynamic = true;
   var textMaterial = new THREE.MeshLambertMaterial( {
@@ -1358,8 +1281,6 @@ function words( wordArray, locationPoints ) {
       textMesh.position.x = xCoord;
       textMesh.position.y = 5000 + ( i * 1000);
       textMesh.position.z = zCoord;
-    // scene.add( textObj );
-    // fallingTexts.push( textMesh );
     allObjects.push( textMesh );
     THREE.GeometryUtils.merge( textGeometry, textMesh );
   }
@@ -1369,29 +1290,11 @@ function words( wordArray, locationPoints ) {
 allTextMesh = new THREE.Mesh( textGeometry, textMaterial );
 scene.add( allTextMesh );
 console.log("words");
-// fallingTexts.push( allTextMesh );
-  // var text = new THREE.TextGeometry( "hi", {font: 'helvetiker', weight: 'normal', style: 'normal'});
-  // var material = new THREE.MeshPhongMaterial({ color: 0xdddddd });
-  // var textMesh = new THREE.Mesh( text, material );
-  // scene.add( textMesh );
 }
 
-
-function dynamicBuildings( locationPoints ) {
-
-  for( var i = 0; i < locationPoints.length; i ++ ) {
-    var lat = locationPoints[i][0];
-    var lng = locationPoints[i][1];
-    var xCoord = ( ( lat - 40 ) * 10 ) + Math.floor( Math.random() * 1000 ) ;
-    var zCoord = ( ( lng - 70 ) / Math.round( Math.random() * 10 ) ) + Math.floor( Math.random() * 1000 );
-    addCube( xCoord, 125, zCoord );
-    console.log(xCoord);
-    console.log(zCoord);
-  }
-}
-
+// GENERATE BUILDINGS
 function optimizedDynamicBuildings( locationPoints ) {
-  // debugger;
+
   if( placesArray.length < 40 ) {
     dynamicGrabFoursquare(40.72, -73.85);
     dynamicGrabFoursquare(40.76538,-73.979727);
@@ -1416,9 +1319,6 @@ function optimizedDynamicBuildings( locationPoints ) {
     var lat = locationPoints[i][0];
     var lng = locationPoints[i][1];
 
-    // var xCoord = ( ( lat - 40 ) * 1000 ) -;
-    // var zCoord = ( ( lng + 70 ) * 1000 );
-
     //  RANDOMIZED LOCATIONS
     if ( i % 2 === 0 ) {
       var xCoord = ( ( lat - 40 ) * 10 ) + Math.floor( Math.random() * 850 ) ;
@@ -1440,21 +1340,11 @@ function optimizedDynamicBuildings( locationPoints ) {
     cube.position.x = xCoord;
     cube.position.y = 0;
     cube.position.z = zCoord;
-    // allObjects.push( cube );
-    // movingObjects.push( cube );
-    // debugger;
-    // for ( var i = 0; i < geometry.faces.length; i ++ ) {
 
-    //   var face = geometry.faces[ i ];
-    //   face.vertexColors[ 0 ] = new THREE.Color().setHSL( Math.random() * 0.9 + 0.5, 0.9, Math.random() * 0.25 + 0.9 );
-    //   face.vertexColors[ 1 ] = new THREE.Color().setHSL( Math.random() * 0.9 + 0.5, 0.9, Math.random() * 0.25 + 0.9 );
-    //   face.vertexColors[ 2 ] = new THREE.Color().setHSL( Math.random() * 0.9 + 0.5, 0.9, Math.random() * 0.25 + 0.9 );
-
-    // }
     THREE.GeometryUtils.merge( buildingGeometry, textMesh );
     THREE.GeometryUtils.merge( buildingGeometry, cube );
   }
-  // // debugger;
+
   var basicMaterial = new THREE.MeshPhongMaterial({
     specular: 0x222222,
     color: 0x000000,
@@ -1464,50 +1354,13 @@ function optimizedDynamicBuildings( locationPoints ) {
   allBuildingMesh = new THREE.Mesh( buildingGeometry, basicMaterial );
   scene.add( allBuildingMesh );
   allObjects.push( allBuildingMesh );
-  // allBuildingMesh.geometry.computeBoundingBox();
-  // allObjects.push( buildingGeometry );
-  // movingObjects.push( buildingMesh );
+
 }
 
-// function optimizedDynamicBuildings( locationPoints ) {
-//   var geometry = new THREE.CubeGeometry( 50, 100, 50, 1, 1 );
-//   var buildingGeometry = new THREE.Geometry();
-//   var cube = new THREE.Mesh( geometry );
-
-//   for( var i = 0; i < locationPoints.length; i++ ) {
-//     var lat = locationPoints[i][0];
-//     var lng = locationPoints[i][1];
-//     var xCoord = ( ( lat - 40 ) * 10 ) + Math.floor( Math.random() * 1000 ) ;
-//     var zCoord = ( ( lng - 70 ) / Math.round( Math.random() * 10 ) ) + Math.floor( Math.random() * 1000 );
-//     cube.position.x = xCoord;
-//     cube.position.y = 0;
-//     cube.position.z = zCoord;
-//     allObjects.push( cube );
-//     movingObjects.push( cube );
-
-//     for ( var i = 0, l = geometry.faces.length; i < l; i ++ ) {
-
-//       var face = geometry.faces[ i ];
-//       face.vertexColors[ 0 ] = new THREE.Color().setHSL( Math.random() * 0.9 + 0.5, 0.9, Math.random() * 0.25 + 0.9 );
-//       face.vertexColors[ 1 ] = new THREE.Color().setHSL( Math.random() * 0.9 + 0.5, 0.9, Math.random() * 0.25 + 0.9 );
-//       face.vertexColors[ 2 ] = new THREE.Color().setHSL( Math.random() * 0.9 + 0.5, 0.9, Math.random() * 0.25 + 0.9 );
-
-//     }
-//     // buildingMesh.material = colorMaterial;
-//     THREE.GeometryUtils.merge( buildingGeometry, cube );
-//   }
-//   // debugger;
-//   var basicMaterial = new THREE.MeshLambertMaterial({
-//     vertexColors: THREE.VertexColors
-//   });
-//   var allBuildingMesh = new THREE.Mesh( buildingGeometry, basicMaterial );
-//   scene.add( allBuildingMesh );
-// }
 
 function addCube( x, y, z ) {
-  var geometry = new THREE.CubeGeometry( 50, 100, 50, 1, 1 );
-  // var material = new THREE.MeshPhongMaterial();
 
+  var geometry = new THREE.CubeGeometry( 50, 100, 50, 1, 1 );
 
   for ( var i = 0, l = geometry.faces.length; i < l; i ++ ) {
 
@@ -1522,13 +1375,13 @@ function addCube( x, y, z ) {
 
   var cube = new THREE.Mesh( geometry, material );
   cube.position.x = x;
-  // cube.position.y = y;
   cube.position.z = z;
   movingObjects.push( cube );
   scene.add( cube );
   allObjects.push( cube );
 }
 
+// GENERATE SKY SPHERE
 function addBigSphere( x, y ) {
   var sphereGeom = new THREE.SphereGeometry( 3000, 100, 100 );
   var skyColor;
@@ -1554,12 +1407,8 @@ function addBigSphere( x, y ) {
     color: 0x000000,
     emissive: skyColor,
     side: THREE.DoubleSide,
-    // vertexColors: THREE.VertexColors,
-    // wireframe: true,
     shininess: 100,
     overdraw: true });
-  // sphereMaterial.bumpMap = THREE.ImageUtils.loadTexture('assets/clouds_NRM.png');
-  // sphereMaterial.bumpScale = 0.5;
   bigSphere = new THREE.Mesh( sphereGeom, sphereMaterial );
   bigSphere.position.x = x;
   bigSphere.position.y = y;
@@ -1567,10 +1416,10 @@ function addBigSphere( x, y ) {
   scene.add( bigSphere );
 }
 
+// GENERATE MIRROR SPHERE
 function addMirrorSphere( x, y ) {
-    var sphereGeom =  new THREE.SphereGeometry( 50, 32, 16 ); // radius, segmentsWidth, segmentsHeight
+    var sphereGeom =  new THREE.SphereGeometry( 50, 32, 16 );
     mirrorSphereCamera = new THREE.CubeCamera( 0.1, 5000, 512 );
-  // mirrorCubeCamera.renderTarget.minFilter = THREE.LinearMipMapLinearFilter;
   scene.add( mirrorSphereCamera );
   var mirrorSphereMaterial = new THREE.MeshBasicMaterial( { envMap: mirrorSphereCamera.renderTarget } );
   mirrorSphere = new THREE.Mesh( sphereGeom, mirrorSphereMaterial );
@@ -1580,21 +1429,7 @@ function addMirrorSphere( x, y ) {
   movingObjects.push( mirrorSphere );
 }
 
-
-// function addMirrorCube( x, y ) {
-//   var cubeGeom = new THREE.CubeGeometry(100, 100, 10, 1, 1, 1);
-//   mirrorCubeCamera = new THREE.CubeCamera( 0.1, 5000, 512 );
-//   // mirrorCubeCamera.renderTarget.minFilter = THREE.LinearMipMapLinearFilter;
-//   scene.add( mirrorCubeCamera );
-//   var mirrorCubeMaterial = new THREE.MeshBasicMaterial( { envMap: mirrorCubeCamera.renderTarget } );
-//   mirrorCube = new THREE.Mesh( cubeGeom, mirrorCubeMaterial );
-//   mirrorCube.position.set( x, y, 0 );
-//   mirrorCubeCamera.position = mirrorCube.position;
-//   scene.add(mirrorCube);
-//   movingObjects.push( mirrorCube );
-
-// }
-
+// GENERATE TORUS KNOT GEOMETRY
 function generateSpinnyThing() {
   var geometry = new THREE.TorusKnotGeometry();
   var material = new THREE.MeshLambertMaterial({
@@ -1610,7 +1445,7 @@ function generateSpinnyThing() {
 }
 
 
-
+// FUNCTION TO GENERATE SPHERES
 function generateSpheres() {
   var sphereGeometry = new THREE.SphereGeometry(20);
   var sphere = new THREE.Mesh( sphereGeometry, new THREE.MeshLambertMaterial( { color: Math.random() * 0xffffff } ) );
