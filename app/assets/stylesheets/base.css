@@ -18,13 +18,17 @@ li {
   padding: 5px;
 }
 
-h2,h3, h4 {
+h2,h3, h4, h5 {
   margin-top: 0;
   margin-bottom: 0;
 }
 
 h1, h2, h3, h4 {
   font-family: 'Sonsie One', cursive;
+}
+
+h5 {
+  font-size: 1.5em;
 }
 
 .menu {
@@ -148,4 +152,9 @@ h1, h2, h3, h4 {
   font-size: 100px;
   top: 10px;
   left: 10px;
+}
+
+.about {
+  font-size: 1.3em;
+  width: 800px;
 }
