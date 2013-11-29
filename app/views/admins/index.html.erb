@@ -1,23 +1,23 @@
 <div class = "admins">
 
-<h1>Dancing Cities Administrator Control Panel</h1>
-<% if current_admin %>
-  <b>Logged in as: <%= current_admin.admin_name %></b> |
-  <%= link_to "Sign Out", "/admin_logout" %> | <%= link_to "Add New Administrator", new_admin_path %><br>
+<h1 style="color: #FFE8EE">Dancing Cities Administrator Control Panel</h1>
 
 <!-- This lists each message -->
 <div class = "messages">
+  <% if current_admin %>
+  <b>Logged in as: <%= current_admin.admin_name %></b><br>
+  <%= link_to "Sign Out", "/admin_logout" %> | <%= link_to "Add New Administrator", new_admin_path %><br><br>
 <h2>Messages</h2>
 <ul><% Message.all.each do |m|%>
     <%@m = m%>
 <li><%=@m.message %> <div class = "delete">[<%= link_to "Delete", @m, :method => :delete, :confirm => 'Are you sure?' %>]</div></li>
 <%end%>
 </ul>
-</div>
-
-<!-- if not logged in as admin -->
 <% else %>
   <%= link_to "Login As Admin", "/admin_login" %>
 <% end %>
+</div>
+
+<!-- if not logged in as admin -->
 
 </div>

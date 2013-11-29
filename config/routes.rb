@@ -11,6 +11,7 @@ DancingCityApp::Application.routes.draw do
   get "admin_logout" => "admin_sessions#destroy", :as => "admin_logout"
   get "/convert" => "image#convert"
   get "/about" => "welcome#about"
+  get "/game" => "welcome#game"
 
   #below is for twitter authentication
   match '/auth/twitter/callback' => 'sessions#create'

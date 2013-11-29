@@ -1,0 +1,57 @@
+
+
+  <div id="start-menu" style= "display:none; font-size: 1.3em" class = menu>
+      <h2>Welcome to Dancing Cities!</h2>
+      <br>
+      Dancing Cities is an interactive, visual representation of New York City that moves to music.
+      <br><br> Try finding the graffiti wall with messages from other players, and post your own message! <u><%=link_to "Learn more about how the city is generated.", "/about" %></u><br><br>
+
+      <div class = "menu-box"><h3>To Play:</h3>
+      Move MOUSE to look around<br>
+      Press UP, DOWN, RIGHT, LEFT to move<br>
+      Press SPACEBAR to jump</div>
+
+      <% if current_user %>
+      You are signed into Dancing Cities through Twitter.
+      <%= link_to "Sign out of twitter", signout_path  %><br><br>
+      <% else %>
+      <%= link_to "To Personalize your experience, Sign In with Twitter", "/auth/twitter", class: "splash-button" %> <br>
+      <% end %>
+
+      <div class = "splash-button", id = "start-button">Explore the city as it moves to music!</div>
+  </div>
+
+<div id="end-menu" class ="menu" style= "display:none">
+    <h1> Thanks for playing! We hope you enjoyed the experience.</h1>
+    <p style ="font-size:1.2em">Music by <%= link_to "Ducky", "http://duckymusic.com" %></p>
+    <% twitter_message = URI.parse('http://twitter.com/home') %>
+    <% twitter_message.query = URI.encode_www_form('status' => "I just played #DancingCities at dancingcities.heroku.com")%>
+    <div class = "splash-button"><%= link_to "Tweet this", twitter_message.to_s %></div>
+    <div class = "splash-button", id = "start-button"><%= link_to "Play again", root_path%></div>
+    <% if current_user %>
+    <div class = "splash-button"><%= link_to "Sign Out of Twitter", signout_path %></div>
+    <% end %>
+  </div>
+
+
+  <div id="blocker">
+    <div id="instructions" style= "display:none">
+      <h2>Click to play</h2>
+      Move MOUSE to look around<br>
+      Press UP, DOWN, RIGHT, LEFT to move<br>
+      Press SPACEBAR to jump<br>
+      <% twitter_message = URI.parse('http://twitter.com/home') %>
+    <% twitter_message.query = URI.encode_www_form('status' => "I'm playing #DancingCities at dancingcities.heroku.com")%><br>
+    <h4 style="color: #FFE4E9"><%= link_to "Tweet about dancing cities to appear in the game!", twitter_message.to_s %></h4>
+    </div>
+
+  </div>
+  <div id="graffiti-form">
+    Leave a message for the world.<br>Hit "Enter" when you're finished.
+    <p id="user-input", class = "user-input"></p>
+  </div>
+
+
+  <div id="loading-animation" class = "loading-animation">Loading your city...</div>
+
+  <div id="ThreeJS" style="position: absolute; left:0px; top:0px"></div>
